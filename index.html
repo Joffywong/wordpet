@@ -1236,18 +1236,106 @@ body{
 .dex-pet-head-name{font-size:15px;font-weight:700;color:#f1f0ff}
 .dex-pet-head-type{font-size:11px;margin-top:3px}
 .dex-pet-head-stage{font-size:12px;color:rgba(241,240,255,0.45);margin-top:2px}
-.dex-evo-chain{padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,0.06);display:none;overflow-x:auto}
-.dex-evo-chain.open{display:flex;gap:6px;align-items:flex-start}
-.dex-evo-node{display:flex;flex-direction:column;align-items:center;min-width:68px;gap:3px;flex-shrink:0}
-.dex-evo-node svg{width:56px;height:56px}
-.dex-evo-node.locked svg{opacity:0.2;filter:grayscale(1)}
-.dex-evo-node-lbl{font-size:10px;color:rgba(241,240,255,0.4);text-align:center}
-.dex-evo-node-name{font-size:11px;font-weight:700;color:#a78bfa;text-align:center}
-.dex-evo-node.locked .dex-evo-node-name{color:rgba(241,240,255,0.2)}
-.dex-evo-node-cond{font-size:9px;color:rgba(245,158,11,0.7);text-align:center}
-.dex-evo-sep{font-size:18px;color:rgba(241,240,255,0.25);flex-shrink:0;padding-top:16px}
-.dex-trait{font-size:11px;color:rgba(241,240,255,0.5);background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 10px;margin-top:4px;text-align:left}
+/* ── 图鉴展开详情 ── */
+.dex-detail{display:none;border-top:1px solid rgba(255,255,255,0.07)}
+.dex-detail.open{display:block}
+
+/* 天赋说明条 */
+.dex-trait-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px;background:rgba(255,255,255,0.03);
+  font-size:12px;color:rgba(241,240,255,0.65);border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.dex-trait-icon{font-size:18px;flex-shrink:0}
+
+/* 描述文字 */
+.dex-desc-txt{
+  font-size:12px;color:rgba(241,240,255,0.45);
+  padding:10px 16px 4px;line-height:1.6;
+}
+
+/* 进化链区 */
+.dex-evo-chain-wrap{
+  padding:12px 16px;overflow-x:auto;
+  /* 允许横向滚动 */
+  -webkit-overflow-scrolling:touch;
+}
+.dex-evo-chain{
+  display:flex;align-items:flex-start;gap:4px;
+  min-width:max-content;
+}
+.dex-evo-node{
+  display:flex;flex-direction:column;align-items:center;
+  width:80px;gap:4px;flex-shrink:0;cursor:pointer;
+  padding:8px 4px;border-radius:12px;
+  transition:background .15s;
+}
+.dex-evo-node:not(.locked):active{background:rgba(255,255,255,0.07)}
+.dex-evo-node svg{width:64px;height:64px}
+.dex-evo-node.locked svg{opacity:0.18;filter:grayscale(1)}
+.dex-evo-node-name{font-size:11px;font-weight:700;color:#a78bfa;text-align:center;line-height:1.3}
+.dex-evo-node.locked .dex-evo-node-name{color:rgba(241,240,255,0.18)}
+.dex-evo-node-cond{font-size:10px;color:rgba(245,158,11,0.75);text-align:center}
+.dex-evo-sep{font-size:20px;color:rgba(241,240,255,0.2);flex-shrink:0;padding-top:22px;margin:0 2px}
+
+/* 选中形态高亮 */
+.dex-evo-node.selected{
+  background:rgba(167,139,250,0.12);
+  outline:1px solid rgba(167,139,250,0.3);
+}
+
+/* 形态详情卡 */
+.dex-stage-detail{
+  margin:0 16px 14px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;overflow:hidden;
+}
+.dex-stage-head{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.dex-stage-head svg{width:72px;height:72px;flex-shrink:0}
+.dex-stage-head-info{flex:1}
+.dex-stage-name{font-size:16px;font-weight:800;color:#f1f0ff}
+.dex-stage-cond{
+  font-size:11px;margin-top:4px;
+  color:rgba(245,158,11,0.85);
+  background:rgba(245,158,11,0.1);
+  display:inline-block;padding:2px 8px;border-radius:99px;
+}
+.dex-stage-locked-hint{font-size:12px;color:rgba(241,240,255,0.25);margin-top:4px}
+.dex-stage-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  padding:12px 16px;gap:8px;
+}
+.dex-stat-item{
+  display:flex;flex-direction:column;align-items:center;
+  background:rgba(255,255,255,0.04);border-radius:10px;
+  padding:8px 4px;gap:3px;
+}
+.dex-stat-icon{font-size:16px}
+.dex-stat-val{font-size:17px;font-weight:800;color:#a78bfa}
+.dex-stat-val.locked-val{color:rgba(241,240,255,0.2)}
+.dex-stat-lbl{font-size:10px;color:rgba(241,240,255,0.4)}
+/* 进化提升对比条 */
+.dex-stage-diff{
+  padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:6px;
+}
+.dex-diff-chip{
+  font-size:11px;color:#4ade80;
+  background:rgba(74,222,128,0.1);
+  padding:3px 9px;border-radius:99px;
+}
+
 .dex-new-badge{background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:99px;margin-left:6px;vertical-align:middle}
+/* 形态标签：当前/未解锁 */
+.dex-stage-tag{
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;
+  display:inline-block;margin-top:4px;
+}
+.dex-stage-tag.current{background:rgba(74,222,128,0.15);color:#4ade80}
+.dex-stage-tag.locked{background:rgba(255,255,255,0.06);color:rgba(241,240,255,0.25)}
 
 .vip-card{
   padding:16px;border-radius:16px;
@@ -2490,7 +2578,7 @@ function buildDexPage(){
   // 统计解锁数
   let unlocked=0, total=0;
   PET_CONFIGS.forEach(cfg=>{
-    cfg.evo.forEach(e=>{ total++; if(isEvoUnlocked(cfg,e.stage)) unlocked++; });
+    cfg.evo.forEach((e,si)=>{ total++; if(isEvoUnlocked(cfg,si)) unlocked++; });
   });
   const pct = total>0 ? unlocked/total*100 : 0;
   document.getElementById('dex-progress-fill').style.width=pct+'%';
@@ -2499,52 +2587,147 @@ function buildDexPage(){
   const list = document.getElementById('dex-pet-list');
   list.innerHTML = PET_CONFIGS.map((cfg,ci)=>{
     const myPet = gd.petIndex===ci;
-    const curStage = myPet ? (gd.evoStage||0) : -1;
-    const headEvo = myPet ? cfg.evo[curStage] : cfg.evo[0];
-    const typeColor = {type_atk:'type-atk',type_def:'type-def',type_spd:'type-spd'}[cfg.typeClass]||cfg.typeClass;
+    const curStage = myPet ? (gd.evoStage||0) : 0;
+    const headEvo = cfg.evo[curStage];
     return `
     <div class="dex-pet-card" id="dex-card-${ci}">
-      <div class="dex-pet-head" onclick="toggleDexChain(${ci})">
+      <div class="dex-pet-head" onclick="toggleDexDetail(${ci})">
         <svg viewBox="0 0 100 100">${SVG_PETS[headEvo.key]||''}</svg>
         <div class="dex-pet-head-info">
           <div class="dex-pet-head-name">${headEvo.name}${myPet?'<span class="dex-new-badge">我的</span>':''}</div>
           <div class="dex-pet-head-type"><span class="pet-type-badge ${cfg.typeClass}">${cfg.type}</span></div>
-          <div class="dex-pet-head-stage">${myPet?`当前 · Lv.${gd.level} · 第 ${curStage+1} 进化阶段`:`${isEvoUnlocked(cfg,0)?'已领养过':'尚未领养'}`}</div>
+          <div class="dex-pet-head-stage">${myPet
+            ? `当前 · Lv.${gd.level} · 第 ${curStage+1} 进化阶段`
+            : `点击查看详情`}</div>
         </div>
-        <span style="color:rgba(241,240,255,0.3);font-size:18px" id="dex-arrow-${ci}">›</span>
+        <span style="color:rgba(241,240,255,0.3);font-size:20px;transition:transform .25s" id="dex-arrow-${ci}">›</span>
       </div>
-      <div class="dex-evo-chain" id="dex-chain-${ci}">
-        ${cfg.evo.map((e,si)=>{
-          const locked = !isEvoUnlocked(cfg,si);
-          return `${si>0?'<div class="dex-evo-sep">›</div>':''}
-          <div class="dex-evo-node ${locked?'locked':''}">
-            <svg viewBox="0 0 100 100">${locked?'<rect width="100" height="100" fill="rgba(255,255,255,0.05)" rx="50"/><text x="50" y="58" text-anchor="middle" font-size="30" fill="rgba(255,255,255,0.2)">?</text>':SVG_PETS[e.key]||''}</svg>
-            <div class="dex-evo-node-name">${locked?'???':e.name}</div>
-            <div class="dex-evo-node-lbl">Lv.${e.condLv||1}</div>
-            ${si>0?`<div class="dex-evo-node-cond">Lv.${e.condLv} 进化</div>`:'<div class="dex-evo-node-cond">初始形态</div>'}
-          </div>`;
-        }).join('')}
-        <div style="flex-shrink:0;width:8px"></div>
-        <div class="dex-trait">${cfg.trait}</div>
+      <div class="dex-detail" id="dex-detail-${ci}">
+        <!-- 天赋条 -->
+        <div class="dex-trait-bar">
+          <div class="dex-trait-icon">${cfg.trait.split(' ')[0]}</div>
+          <div>${cfg.trait.replace(/^[^ ]+ /,'')}</div>
+        </div>
+        <!-- 宠物简介 -->
+        <div class="dex-desc-txt">${cfg.desc}</div>
+        <!-- 进化链横排 -->
+        <div class="dex-evo-chain-wrap">
+          <div class="dex-evo-chain" id="dex-chain-${ci}">
+            ${cfg.evo.map((e,si)=>{
+              const locked = !isEvoUnlocked(cfg,si);
+              return `${si>0?'<div class="dex-evo-sep">›</div>':''}
+              <div class="dex-evo-node ${locked?'locked':''}" id="dex-node-${ci}-${si}" onclick="selectDexStage(${ci},${si})">
+                <svg viewBox="0 0 100 100">${locked
+                  ?'<rect width="100" height="100" fill="rgba(255,255,255,0.05)" rx="50"/><text x="50" y="58" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.18)">?</text>'
+                  :SVG_PETS[e.key]||''}</svg>
+                <div class="dex-evo-node-name">${locked?'???':e.name}</div>
+                <div class="dex-evo-node-cond">${si===0?'初始形态':`Lv.${e.condLv} 进化`}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <!-- 选中形态详情卡（默认展示当前/第0阶段） -->
+        <div id="dex-stage-detail-${ci}"></div>
       </div>
     </div>`;
   }).join('');
+
+  // 展开我的宠物，默认选中当前阶段
+  if(gd.petIndex>=0){
+    toggleDexDetail(gd.petIndex, false);
+    selectDexStage(gd.petIndex, gd.evoStage||0);
+  }
+}
+
+/* 展开/收起图鉴卡片 */
+function toggleDexDetail(ci, animate=true){
+  const detail = document.getElementById('dex-detail-'+ci);
+  const arrow  = document.getElementById('dex-arrow-'+ci);
+  if(!detail) return;
+  const open = detail.classList.toggle('open');
+  if(arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
+  // 展开时默认选中阶段0或当前阶段
+  if(open){
+    const myPet = gd.petIndex===ci;
+    const stage = myPet ? (gd.evoStage||0) : 0;
+    selectDexStage(ci, stage);
+  }
+}
+
+/* 点击进化链节点，展示该阶段属性详情 */
+function selectDexStage(ci, si){
+  const cfg = PET_CONFIGS[ci];
+  if(!cfg) return;
+  const e = cfg.evo[si];
+  const locked = !isEvoUnlocked(cfg, si);
+  const myPet = gd.petIndex===ci;
+  const isCurrent = myPet && (gd.evoStage||0)===si;
+  const prevE = si>0 ? cfg.evo[si-1] : null;
+
+  // 高亮选中节点
+  cfg.evo.forEach((_,idx)=>{
+    const node = document.getElementById(`dex-node-${ci}-${idx}`);
+    if(node) node.classList.toggle('selected', idx===si);
+  });
+
+  // 构建属性详情卡
+  const wrap = document.getElementById(`dex-stage-detail-${ci}`);
+  if(!wrap) return;
+
+  // 进化提升 chips（与上一阶段对比）
+  let diffHtml = '';
+  if(prevE && !locked){
+    const diffs = [
+      {lbl:'HP', diff: e.maxHp - prevE.maxHp},
+      {lbl:'ATK', diff: e.atk - prevE.atk},
+      {lbl:'DEF', diff: e.def - prevE.def},
+    ];
+    diffHtml = `<div class="dex-stage-diff">${
+      diffs.filter(d=>d.diff>0).map(d=>`<span class="dex-diff-chip">↑ ${d.lbl} +${d.diff}</span>`).join('')
+    }</div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="dex-stage-detail">
+      <div class="dex-stage-head">
+        <svg viewBox="0 0 100 100">${locked
+          ?'<rect width="100" height="100" fill="rgba(255,255,255,0.04)" rx="50"/><text x="50" y="60" text-anchor="middle" font-size="32" fill="rgba(255,255,255,0.15)">?</text>'
+          :SVG_PETS[e.key]||''}</svg>
+        <div class="dex-stage-head-info">
+          <div class="dex-stage-name">${locked?'???':e.name}</div>
+          <div class="dex-stage-cond">${si===0?'🐣 初始形态':'✨ Lv.'+e.condLv+' 进化'}</div>
+          ${isCurrent ? '<span class="dex-stage-tag current">▶ 当前形态</span>'
+            : locked   ? '<span class="dex-stage-tag locked">🔒 尚未解锁</span>'
+            :             '<span class="dex-stage-tag current" style="background:rgba(167,139,250,0.1);color:#a78bfa">✓ 已解锁</span>'}
+        </div>
+      </div>
+      <div class="dex-stage-stats">
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">❤️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.maxHp}</div>
+          <div class="dex-stat-lbl">HP 上限</div>
+        </div>
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">⚔️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.atk}</div>
+          <div class="dex-stat-lbl">攻击力</div>
+        </div>
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">🛡️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.def}</div>
+          <div class="dex-stat-lbl">防御力</div>
+        </div>
+      </div>
+      ${diffHtml}
+    </div>`;
 }
 
 function isEvoUnlocked(cfg, stage){
-  // 如果是我的宠物，已到达的阶段视为解锁
   const idx = PET_CONFIGS.indexOf(cfg);
   if(gd.petIndex===idx) return stage <= (gd.evoStage||0);
   return false;
 }
 
-function toggleDexChain(ci){
-  const chain = document.getElementById('dex-chain-'+ci);
-  const arrow = document.getElementById('dex-arrow-'+ci);
-  if(!chain) return;
-  const open = chain.classList.toggle('open');
-  if(arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
-}
 
 /* ══════════════════════════════════════════════════
    我的页面
