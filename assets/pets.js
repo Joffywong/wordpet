@@ -276,5 +276,117 @@ const SVG_PETS = {
     <path d="M16 30 Q4 20 6 32" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#thunder3_glow)"/>
     <path d="M84 30 Q96 20 94 32" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#thunder3_glow)"/>
     <path d="M10 46 Q0 38 2 48" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>
-    <path d="M90 46 Q100 38 98 48" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>`
+    <path d="M90 46 Q100 38 98 48" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>`,
+
+  /* ══════ 宠物蛋 ══════ */
+
+  /* 火系蛋：橙红色，有火纹 */
+  egg_fire: `
+    <defs>
+      <radialGradient id="eggf_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#fed7aa"/>
+        <stop offset="55%" stop-color="#f97316"/>
+        <stop offset="100%" stop-color="#7c2d12"/>
+      </radialGradient>
+      <radialGradient id="eggf_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+      <filter id="eggf_glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <!-- 阴影 -->
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.28)"/>
+    <!-- 蛋身 -->
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggf_bg)"/>
+    <!-- 高光 -->
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggf_shine)" opacity=".8"/>
+    <!-- 火纹路 -->
+    <path d="M40 62 Q44 54 42 48 Q50 56 48 44 Q56 54 54 48 Q60 58 56 68 Q52 72 46 70 Q42 68 40 62Z"
+          fill="#fef08a" opacity=".85" filter="url(#eggf_glow)"/>
+    <path d="M36 72 Q38 66 36 62 Q41 66 40 60 Q44 66 42 72Z"
+          fill="#fbbf24" opacity=".6"/>
+    <!-- 裂纹（即将孵化感）-->
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+
+  /* 水系蛋：蓝绿色，有六角龟纹 */
+  egg_shield: `
+    <defs>
+      <radialGradient id="eggs_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#a7f3d0"/>
+        <stop offset="55%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#064e3b"/>
+      </radialGradient>
+      <radialGradient id="eggs_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.28)"/>
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggs_bg)"/>
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggs_shine)" opacity=".8"/>
+    <!-- 六角纹 -->
+    <polygon points="50,42 56,46 56,54 50,58 44,54 44,46" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+    <polygon points="50,50 54,52 54,56 50,58 46,56 46,52" fill="rgba(255,255,255,0.12)"/>
+    <polygon points="36,54 40,56 40,62 36,64 32,62 32,56" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <polygon points="64,54 68,56 68,62 64,64 60,62 60,56" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <polygon points="43,68 47,70 47,76 43,78 39,76 39,70" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <polygon points="57,68 61,70 61,76 57,78 53,76 53,70" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+
+  /* 雷系蛋：金黄色，有闪电纹 */
+  egg_thunder: `
+    <defs>
+      <radialGradient id="eggt_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#fef9c3"/>
+        <stop offset="55%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#78350f"/>
+      </radialGradient>
+      <radialGradient id="eggt_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.6)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+      <filter id="eggt_glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.28)"/>
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggt_bg)"/>
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggt_shine)" opacity=".8"/>
+    <!-- 闪电纹 -->
+    <path d="M54 38 L46 56 L52 56 L44 74" stroke="#fff7ed" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#eggt_glow)" opacity=".9"/>
+    <path d="M54 38 L46 56 L52 56 L44 74" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+    <!-- 小闪电装饰 -->
+    <path d="M64 44 L61 51 L64 51 L60 60" stroke="rgba(255,251,235,0.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M36 48 L33 55 L36 55 L32 64" stroke="rgba(255,251,235,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+
+  /* 通用神秘蛋（未选宠物时主页显示） */
+  egg_mystery: `
+    <defs>
+      <radialGradient id="eggm_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#e9d5ff"/>
+        <stop offset="55%" stop-color="#7c3aed"/>
+        <stop offset="100%" stop-color="#2e1065"/>
+      </radialGradient>
+      <radialGradient id="eggm_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.6)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+      <filter id="eggm_glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggm_bg)"/>
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggm_shine)" opacity=".85"/>
+    <!-- 星光纹 -->
+    <circle cx="50" cy="55" r="4" fill="#c4b5fd" filter="url(#eggm_glow)" opacity=".9"/>
+    <circle cx="40" cy="62" r="2.5" fill="#a78bfa" filter="url(#eggm_glow)" opacity=".7"/>
+    <circle cx="62" cy="58" r="2" fill="#ddd6fe" opacity=".6"/>
+    <path d="M50 44 L51.2 48.6 L56 48.6 L52.4 51.4 L53.6 56 L50 53.2 L46.4 56 L47.6 51.4 L44 48.6 L48.8 48.6Z"
+          fill="rgba(255,255,255,0.35)" filter="url(#eggm_glow)"/>
+    <!-- ??? 文字 -->
+    <text x="50" y="76" text-anchor="middle" font-size="12" font-weight="bold" fill="rgba(255,255,255,0.4)" font-family="sans-serif">???</text>
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`
+
 };

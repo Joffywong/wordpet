@@ -299,12 +299,12 @@ body{
     <div class="sel-logo">🐾 WordPet</div>
     <div class="sel-tagline">背单词 · 养宠物 · 打副本</div>
   </div>
-  <div class="sel-prompt">✨ 选择你的冒险伙伴</div>
+  <div class="sel-prompt">🥚 选择你的宠物蛋</div>
   <div class="pet-cards" id="pet-list"></div>
   <div class="sel-bottom">
     <div class="sel-chosen" id="sel-chosen"></div>
     <button class="btn btn-primary" id="start-btn" onclick="startAdventure()" disabled>
-      🚀 开始冒险
+      🥚 孵化宠物蛋！
     </button>
   </div>
 </div>
@@ -618,7 +618,7 @@ body{
 /* ══ 宝可梦战场区 ══ */
 .poke-arena{
   position:relative;z-index:2;flex-shrink:0;
-  height:190px;
+  height:160px;
   /* 草地渐变背景 */
   background:
     linear-gradient(180deg,
@@ -650,18 +650,18 @@ body{
   border-radius:50%;
   filter:blur(3px);
 }
-/* 敌方精灵：左上 */
+/* 敌方精灵：右上（宝可梦正面朝向玩家，远处偏右） */
 .enemy-sprite{
   position:absolute;
-  left:6%;top:4%;
+  right:8%;top:4%;
   animation:mFloat 3s ease-in-out infinite;
 }
-.enemy-sprite svg{width:90px;height:90px;drop-shadow:0 8px 16px rgba(0,0,0,0.5)}
+.enemy-sprite svg{width:76px;height:76px}
 .enemy-sprite.hit{animation:monsterHit .35s ease!important}
-/* 敌方血量 HUD：右上 */
+/* 敌方血量 HUD：左上 */
 .enemy-hud{
   position:absolute;
-  right:4%;top:6%;
+  left:4%;top:6%;
   width:150px;
   background:rgba(0,0,0,0.55);
   backdrop-filter:blur(10px);
@@ -669,19 +669,19 @@ body{
   border-radius:14px;
   padding:8px 12px;
 }
-/* 己方精灵：右下（放大，背对玩家感） */
+/* 己方精灵：左下（近处偏左，背对/侧面朝向）*/
 .player-sprite{
   position:absolute;
-  right:4%;bottom:8%;
+  left:6%;bottom:6%;
   animation:pFloat 3.5s ease-in-out infinite .4s;
   filter:drop-shadow(0 6px 12px rgba(0,0,0,0.6));
 }
-.player-sprite svg{width:100px;height:100px}
+.player-sprite svg{width:84px;height:84px;transform:scaleX(-1)}
 @keyframes pFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-/* 己方血量 HUD：左下 */
+/* 己方血量 HUD：右下 */
 .player-hud{
   position:absolute;
-  left:4%;bottom:6%;
+  right:4%;bottom:6%;
   width:145px;
   background:rgba(0,0,0,0.55);
   backdrop-filter:blur(10px);
@@ -723,7 +723,6 @@ body{
   font-size:10px;color:rgba(241,240,255,0.4);
 }
 /* 旧样式兼容（JS引用 monster-art 抖动动画） */
-.enemy-sprite.hit{animation:monsterHit .35s ease!important}
 /* 倒计时 */
 .timer-row{
   position:relative;z-index:2;flex-shrink:0;
@@ -814,6 +813,11 @@ body{
 @keyframes feverBigFlash{
   0%{opacity:0}15%{opacity:1}100%{opacity:0}
 }
+@keyframes hatchPop{
+  0%{transform:translate(-50%,-50%) scale(.4);opacity:0}
+  40%{transform:translate(-50%,-60%) scale(1.2);opacity:1}
+  100%{transform:translate(-50%,-80%) scale(1);opacity:0}
+}
 @keyframes feverDmgPop{
   0%{transform:translate(-50%,-50%) scale(.3);opacity:0}
   35%{transform:translate(-50%,-60%) scale(1.3);opacity:1}
@@ -849,7 +853,6 @@ body{
   60%{transform:translateX(-4px) rotate(-1deg)}
   80%{transform:translateX(3px)}
 }
-.enemy-sprite.hit{animation:monsterHit .35s ease!important}
 
 /* ── 答对连击数字爆字 ── */
 .combo-burst{
@@ -1875,15 +1878,17 @@ function setMonsterSvg(el, key){
 ══════════════════════════════════════════════════ */
 let selectedPet = -1;
 function buildSelectPage(){
+  // 蛋的 key 映射
+  const eggKeyMap = {fire:'egg_fire', shield:'egg_shield', thunder:'egg_thunder'};
   const list = document.getElementById('pet-list');
   list.innerHTML = PET_CONFIGS.map((p,i)=>`
     <div class="pet-card" id="pc${i}" onclick="selectPet(${i})">
       <div class="pet-card-inner">
         <div class="pet-card-art ${p.artBgClass}">
-          <svg class="pet-card-svg" viewBox="0 0 100 100">${SVG_PETS[p.key]}</svg>
+          <svg class="pet-card-svg" viewBox="0 0 100 100">${SVG_PETS[eggKeyMap[p.key]]||SVG_PETS[p.key]}</svg>
         </div>
         <div class="pet-card-info">
-          <div class="pet-card-name">${p.name}</div>
+          <div class="pet-card-name">${p.type}系宠物蛋</div>
           <span class="pet-type-badge ${p.typeClass}">${p.type}</span>
           <div class="pet-card-desc">${p.desc}</div>
           <div class="pet-mini-stats">
@@ -1900,16 +1905,65 @@ function selectPet(idx){
   document.querySelectorAll('.pet-card').forEach((c,i)=>c.classList.toggle('selected',i===idx));
   document.getElementById('start-btn').disabled=false;
   const p=PET_CONFIGS[idx];
-  document.getElementById('sel-chosen').textContent=`✨ 已选择：${p.name}`;
+  document.getElementById('sel-chosen').textContent=`🥚 选择了：${p.type}系宠物蛋`;
 }
 function startAdventure(){
   if(selectedPet<0) return;
   const cfg=PET_CONFIGS[selectedPet];
-  gd.petIndex=selectedPet; gd.petKey=cfg.key;
-  gd.petName=cfg.name; gd.petType=cfg.type;
-  gd.maxHp=cfg.maxHp; gd.hp=cfg.maxHp;
-  gd.evoStage=0;
-  saveGame(); updateHomeUI(); tab('home');
+  // 孵化动画：先进主页显示蛋的状态（petIndex还是-1），再做破壳动画
+  tab('home');
+  updateHomeUI(); // 此时 petIndex=-1，显示神秘蛋
+  // 稍后执行孵化动画
+  setTimeout(()=>hatchEgg(cfg, selectedPet), 300);
+}
+function hatchEgg(cfg, petIdx){
+  // 找到主页蛋的 SVG 容器
+  const wrap = document.getElementById('pet-main-wrap');
+  const svg = document.getElementById('pet-main-svg');
+  // 孵化动画：摇晃 → 放大闪光 → 切换宠物
+  wrap.style.transition = 'transform .15s';
+  let shakes = 0;
+  const shakeTimer = setInterval(()=>{
+    shakes++;
+    wrap.style.transform = shakes%2===0 ? 'translateX(-8px) rotate(-5deg)' : 'translateX(8px) rotate(5deg)';
+    if(shakes>=8){
+      clearInterval(shakeTimer);
+      wrap.style.transform = '';
+      // 白色爆光
+      const flash = document.createElement('div');
+      flash.style.cssText='position:fixed;inset:0;background:#fff;opacity:0;z-index:500;pointer-events:none;transition:opacity .12s';
+      document.body.appendChild(flash);
+      requestAnimationFrame(()=>{ flash.style.opacity='1'; });
+      setTimeout(()=>{
+        flash.style.opacity='0';
+        // 设置宠物数据
+        gd.petIndex=petIdx; gd.petKey=cfg.key;
+        gd.petName=cfg.name; gd.petType=cfg.type;
+        gd.maxHp=cfg.maxHp; gd.hp=cfg.maxHp;
+        gd.evoStage=0;
+        saveGame(); updateHomeUI();
+        // 孵化成功弹出文字
+        setTimeout(()=>{
+          flash.remove();
+          showHatchToast(cfg.name);
+        }, 120);
+      }, 150);
+    }
+  }, 100);
+}
+function showHatchToast(petName){
+  const toast = document.createElement('div');
+  toast.style.cssText=`
+    position:fixed;left:50%;top:30%;transform:translate(-50%,-50%);
+    font-family:'Fredoka One','Noto Sans SC',cursive;
+    font-size:26px;font-weight:900;color:#fff;
+    text-shadow:0 0 20px rgba(167,139,250,0.8);
+    pointer-events:none;z-index:600;white-space:nowrap;
+    animation:hatchPop .6s cubic-bezier(.175,.885,.32,1.275) forwards;
+  `;
+  toast.textContent = `🎉 ${petName} 孵化成功！`;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 2200);
 }
 
 /* ══════════════════════════════════════════════════
@@ -1923,19 +1977,27 @@ function updateHomeUI(){
   document.getElementById('h-stamina').textContent=`${p.stamina}/${p.maxStamina}`;
   setBar('h-stamina-bar', p.stamina, p.maxStamina, 'bar-stamina');
 
-  // 当前进化阶段 SVG
-  const curEvo = getCurrentEvoData();
-  setPetSvg(document.getElementById('pet-main-svg'), curEvo.key);
-  document.getElementById('h-pet-name').textContent=`${curEvo.name} · Lv.${p.level}`;
-  document.getElementById('h-pet-type').textContent=p.petType||'';
+  // 当前进化阶段 SVG（未选宠物则显示神秘蛋）
+  if(gd.petIndex < 0){
+    const mainSvg = document.getElementById('pet-main-svg');
+    mainSvg.innerHTML = SVG_PETS['egg_mystery'] || '';
+    document.getElementById('h-pet-name').textContent = '神秘宠物蛋';
+    document.getElementById('h-pet-type').textContent = '🥚 等待孵化…';
+    const aura0 = document.getElementById('pet-aura');
+    if(aura0){ aura0.className = 'pet-aura'; aura0.style.background = 'radial-gradient(circle,#7c3aed,transparent 70%)'; }
+  } else {
+    const curEvo = getCurrentEvoData();
+    setPetSvg(document.getElementById('pet-main-svg'), curEvo.key);
+    document.getElementById('h-pet-name').textContent=`${curEvo.name} · Lv.${p.level}`;
+    document.getElementById('h-pet-type').textContent=p.petType||'';
+    const aura=document.getElementById('pet-aura');
+    if(aura){ aura.className='pet-aura '+(PET_CONFIGS[p.petIndex]?.auraClass||'pet-aura-fire'); aura.style.background=''; }
+  }
   const hpPct = p.maxHp>0 ? p.hp/p.maxHp*100 : 0;
   setBar('h-hp-bar', p.hp, p.maxHp, hpPct<30?'bar-hp danger':hpPct<60?'bar-hp warning':'bar-hp');
   document.getElementById('h-hp-text').textContent=`${p.hp}/${p.maxHp}`;
   setBar('h-exp-bar', p.exp, 50, 'bar-exp');
   document.getElementById('h-exp-text').textContent=`${p.exp}/50`;
-  // 宠物光晕
-  const aura=document.getElementById('pet-aura');
-  if(aura){ aura.className='pet-aura '+(PET_CONFIGS[p.petIndex]?.auraClass||'pet-aura-fire'); }
 
   // 进化提示 banner
   checkEvoBanner();
@@ -2114,8 +2176,8 @@ function updateBattleUI(){
   const pPct=bs.playerMaxHp>0?bs.playerHp/bs.playerMaxHp*100:0;
   const pFill=document.getElementById('player-hp-fill');
   pFill.style.width=pPct+'%';
-  pFill.className='player-hp-fill'+(pPct<30?' danger':'');
-  document.getElementById('player-hp-num').textContent=`HP ${bs.playerHp}/${bs.playerMaxHp}`;
+  pFill.className='hud-hp-fill player-fill'+(pPct<30?' danger':'');
+  document.getElementById('player-hp-num').textContent=`${bs.playerHp}/${bs.playerMaxHp}`;
   document.getElementById('combo-badge').textContent=bs.combo>1?`🔥 ${bs.combo} 连击!`:'';
 }
 function nextQ(){
