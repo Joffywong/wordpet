@@ -1020,11 +1020,12 @@ body{
 <style>
 /* ══ RESULT PAGE ══ */
 #result-page{
-  display:flex;flex-direction:column;align-items:center;
+  flex-direction:column;align-items:center;
   justify-content:center;min-height:100vh;
   background:radial-gradient(ellipse at 50% 30%,#1e0a3c 0%,#0f0a1e 70%);
   padding:32px 20px;overflow-y:auto;
 }
+#result-page.active{display:flex}
 .res-burst{
   font-size:92px;margin-bottom:16px;
   animation:resIn .5s cubic-bezier(.175,.885,.32,1.275) both;
