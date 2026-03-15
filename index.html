@@ -1487,9 +1487,9 @@ body{
   <!-- 地图视口 -->
   <div class="map-viewport" id="map-viewport">
     <div class="map-grid" id="map-grid"></div>
+    <!-- 底部提示（悬浮） -->
+    <div class="map-hint" id="map-hint">点击任意位置移动 · 遇到怪物自动战斗</div>
   </div>
-  <!-- 底部提示 -->
-  <div class="map-hint" id="map-hint">点击相邻格子移动 · 触碰怪物发起战斗</div>
 </div>
 <style>
 /* ══ MAP PAGE ══ */
@@ -1560,18 +1560,34 @@ body{
   border:1px solid rgba(34,197,94,0.1);
 }
 .map-cell.ground:active{ background:#1a3a1a; }
-/* 可移动目标高亮（相邻格） */
-.map-cell.reachable{
+/* 可移动目标高亮（路径格） */
+.map-cell.path{
   background:#1a3a20;
-  border:1px solid rgba(74,222,128,0.45);
-  box-shadow:inset 0 0 8px rgba(74,222,128,0.15);
+  border:1px solid rgba(74,222,128,0.3);
 }
-.map-cell.reachable::after{
+.map-cell.path::after{
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(circle,rgba(74,222,128,0.12),transparent 70%);
+  pointer-events:none;
+}
+/* 目标格高亮 */
+.map-cell.destination{
+  background:#1e3d24;
+  border:2px solid rgba(74,222,128,0.7);
+  box-shadow:inset 0 0 12px rgba(74,222,128,0.25);
+}
+.map-cell.destination::after{
   content:'';
   position:absolute; inset:0;
   border-radius:2px;
-  background:radial-gradient(circle,rgba(74,222,128,0.18),transparent 70%);
+  background:radial-gradient(circle,rgba(74,222,128,0.3),transparent 70%);
   pointer-events:none;
+  animation:destPulse 1s ease-in-out infinite;
+}
+@keyframes destPulse{
+  0%,100%{ opacity:.6; }
+  50%{ opacity:1; }
 }
 /* 墙/树 */
 .map-cell.wall{
@@ -1622,13 +1638,17 @@ body{
   50%{ transform:translateY(-3px); }
 }
 
-/* 底部提示 */
+/* 底部提示（悬浮在地图上，不占高度） */
 .map-hint{
-  text-align:center; font-size:12px;
-  color:rgba(255,255,255,0.3);
-  padding:6px 0 10px;
-  flex-shrink:0;
+  position:absolute; bottom:12px; left:50%; transform:translateX(-50%);
+  text-align:center; font-size:11px;
+  color:rgba(255,255,255,0.25);
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(4px);
+  padding:4px 14px; border-radius:20px;
   letter-spacing:.3px;
+  pointer-events:none;
+  z-index:5; white-space:nowrap;
 }
 
 /* 遭遇战斗过场动画遮罩 */
@@ -2433,6 +2453,7 @@ let ms = {
   monsters:[],          // [{id, x, y, key, emoji, defeated}]
   spawnTimer:null,
   pendingBattle:null,   // 当前即将触发战斗的怪物
+  isWalking:false,      // 是否正在寻路移动中
 };
 
 /* ── 进入地图 ── */
@@ -2444,6 +2465,7 @@ function enterMap(dungId){
   ms.playerX = md.playerStart.x;
   ms.playerY = md.playerStart.y;
   ms.pendingBattle = null;
+  ms.isWalking = false;
   // 初始化怪物
   ms.monsters = spawnMonsters(md, []);
   // 更新顶部信息
@@ -2507,7 +2529,7 @@ function respawnMonsters(){
 }
 
 /* ── 渲染地图 ── */
-function renderMap(){
+function renderMap(pathSet, destKey){
   const md = ms.mapData;
   if(!md) return;
   const grid = document.getElementById('map-grid');
@@ -2530,18 +2552,7 @@ function renderMap(){
   const monMap = {};
   ms.monsters.filter(m=>!m.defeated).forEach(m=>{ monMap[`${m.x},${m.y}`]=m; });
 
-  // 相邻可达格
-  const reachable = new Set([
-    `${ms.playerX-1},${ms.playerY}`,
-    `${ms.playerX+1},${ms.playerY}`,
-    `${ms.playerX},${ms.playerY-1}`,
-    `${ms.playerX},${ms.playerY+1}`,
-  ].filter(k=>{
-    const [x,y]=k.split(',').map(Number);
-    return x>=0&&y>=0&&y<md.rows&&x<md.cols&&md.tiles[y][x]===0;
-  }));
-
-  // 逐格渲染（仅在内容变化时重建）
+  // 逐格渲染
   const cells = [];
   for(let y=0;y<md.rows;y++){
     for(let x=0;x<md.cols;x++){
@@ -2549,12 +2560,14 @@ function renderMap(){
       const isPlayer = (x===ms.playerX && y===ms.playerY);
       const isWall   = md.tiles[y][x]===1;
       const isMon    = monMap[k];
-      const isReach  = reachable.has(k);
+      const isDest   = destKey === k;
+      const isPath   = pathSet && pathSet.has(k) && !isDest;
 
       let cls = 'map-cell ';
       if(isPlayer)    cls += 'player-cell';
       else if(isWall) cls += 'wall';
-      else if(isReach)cls += 'reachable ground';
+      else if(isDest) cls += 'destination ground';
+      else if(isPath) cls += 'path ground';
       else            cls += 'ground';
 
       let inner = '';
@@ -2566,7 +2579,7 @@ function renderMap(){
         inner = `<span class="cell-monster">${isMon.emoji}</span>`;
       }
 
-      const onclick = (!isWall && !isPlayer)
+      const onclick = (!isWall && !isPlayer && !ms.isWalking)
         ? `onclick="handleMapClick(${x},${y})"`
         : '';
       cells.push(`<div class="${cls}" ${onclick}>${inner}</div>`);
@@ -2575,30 +2588,89 @@ function renderMap(){
   grid.innerHTML = cells.join('');
 }
 
-/* ── 点击格子处理 ── */
-function handleMapClick(tx, ty){
+/* ── BFS寻路 ── 返回从(sx,sy)到(tx,ty)的路径(不含起点)，找不到返回null */
+function bfsPath(sx, sy, tx, ty){
   const md = ms.mapData;
-  const dx = Math.abs(tx - ms.playerX);
-  const dy = Math.abs(ty - ms.playerY);
-  // 只允许点相邻（上下左右1格）
-  if(dx + dy !== 1) return;
-  if(md.tiles[ty][tx] === 1) return; // 墙
+  if(!md) return null;
+  if(sx===tx && sy===ty) return [];
+  const queue = [[sx, sy, []]];
+  const visited = new Set([`${sx},${sy}`]);
+  const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+  while(queue.length){
+    const [cx, cy, path] = queue.shift();
+    for(const [dx,dy] of dirs){
+      const nx=cx+dx, ny=cy+dy;
+      const nk=`${nx},${ny}`;
+      if(nx<0||ny<0||ny>=md.rows||nx>=md.cols) continue;
+      if(visited.has(nk)) continue;
+      if(md.tiles[ny][nx]===1) continue; // 墙
+      visited.add(nk);
+      const newPath = [...path, [nx,ny]];
+      if(nx===tx && ny===ty) return newPath;
+      queue.push([nx, ny, newPath]);
+    }
+  }
+  return null; // 不可达
+}
 
-  // 移动玩家
-  ms.playerX = tx;
-  ms.playerY = ty;
+/* ── 点击格子处理（寻路移动） ── */
+function handleMapClick(tx, ty){
+  if(ms.isWalking) return; // 移动中忽略
+  const md = ms.mapData;
+  if(md.tiles[ty][tx]===1) return; // 墙
 
-  // 更新 HP 显示
-  document.getElementById('map-hp-txt').textContent = gd.hp;
+  // 点击怪物格：直接走过去触发遭遇
+  // 找路径
+  const path = bfsPath(ms.playerX, ms.playerY, tx, ty);
+  if(!path || path.length===0) return;
 
-  // 检测是否踩到怪物
-  const mon = ms.monsters.find(m=>!m.defeated && m.x===tx && m.y===ty);
-  if(mon){
-    triggerEncounter(mon);
+  // 高亮路径+目标
+  const pathSet = new Set(path.slice(0,-1).map(([x,y])=>`${x},${y}`));
+  const destKey = `${tx},${ty}`;
+  renderMap(pathSet, destKey);
+
+  // 逐步走
+  ms.isWalking = true;
+  walkAlongPath(path, 0);
+}
+
+/* ── 沿路径逐格移动 ── */
+function walkAlongPath(path, idx){
+  if(idx >= path.length){
+    ms.isWalking = false;
+    renderMap();
     return;
   }
-  renderMap();
+  const [nx, ny] = path[idx];
+
+  // 检查该格是否有怪物（可能在移动过程中被刷出来）
+  const mon = ms.monsters.find(m=>!m.defeated && m.x===nx && m.y===ny);
+
+  ms.playerX = nx;
+  ms.playerY = ny;
+  document.getElementById('map-hp-txt').textContent = gd.hp;
+
+  if(mon){
+    // 踩到怪物：停下，渲染当前位置，触发遭遇
+    ms.isWalking = false;
+    renderMap();
+    setTimeout(()=>triggerEncounter(mon), 80);
+    return;
+  }
+
+  // 计算剩余路径高亮
+  const remaining = path.slice(idx+1);
+  const pathSet = remaining.length > 1
+    ? new Set(remaining.slice(0,-1).map(([x,y])=>`${x},${y}`))
+    : null;
+  const lastStep = remaining[remaining.length-1];
+  const destKey = lastStep ? `${lastStep[0]},${lastStep[1]}` : null;
+  renderMap(pathSet, destKey);
+
+  // 继续下一步（移动速度：每格120ms）
+  setTimeout(()=>walkAlongPath(path, idx+1), 120);
 }
+
 
 /* ── 触发遭遇战 ── */
 function triggerEncounter(mon){
@@ -2623,6 +2695,7 @@ function returnToMap(win, exp, coins, correctCount){
     mon.defeated = true;
     ms.pendingBattle = null;
   }
+  ms.isWalking = false;
   // 更新 HP
   document.getElementById('map-hp-txt').textContent = gd.hp;
   go('map-page');
@@ -3012,6 +3085,7 @@ function exitBattle(){
   if(ms.dungId){
     // 逃跑：取消本次遭遇，回到地图（怪物保留）
     ms.pendingBattle = null;
+    ms.isWalking = false;
     go('map-page');
     renderMap();
     document.getElementById('map-hp-txt').textContent = gd.hp;
