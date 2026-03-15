@@ -1473,6 +1473,247 @@ body{
   </div>
 </div>
 
+<!-- ══════ MAP PAGE ══════ -->
+<div id="map-page" class="page">
+  <!-- 顶部状态栏 -->
+  <div class="map-topbar">
+    <button class="map-back-btn" onclick="exitMap()">← 离开</button>
+    <div class="map-dungeon-name" id="map-dungeon-name">🌲 森林冒险</div>
+    <div class="map-hp-wrap">
+      <span class="map-hp-icon">❤️</span>
+      <span class="map-hp-txt" id="map-hp-txt">100</span>
+    </div>
+  </div>
+  <!-- 地图视口 -->
+  <div class="map-viewport" id="map-viewport">
+    <div class="map-grid" id="map-grid"></div>
+  </div>
+  <!-- 底部提示 -->
+  <div class="map-hint" id="map-hint">点击相邻格子移动 · 触碰怪物发起战斗</div>
+</div>
+<style>
+/* ══ MAP PAGE ══ */
+#map-page{ background:#0a1628; overflow:hidden; position:relative; }
+#map-page.active{ display:flex; flex-direction:column; }
+
+/* 顶部状态栏 */
+.map-topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 14px 8px;
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  flex-shrink:0; z-index:10; position:relative;
+}
+.map-back-btn{
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff; border-radius:10px; padding:6px 12px;
+  font-size:13px; font-weight:700; cursor:pointer;
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+}
+.map-dungeon-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:16px; color:#e2e8f0; letter-spacing:.5px;
+}
+.map-hp-wrap{
+  display:flex; align-items:center; gap:4px;
+  background:rgba(239,68,68,0.15);
+  border:1px solid rgba(239,68,68,0.3);
+  border-radius:10px; padding:4px 10px;
+}
+.map-hp-icon{ font-size:14px; }
+.map-hp-txt{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:15px; color:#fca5a5; font-weight:700;
+}
+
+/* 地图视口 */
+.map-viewport{
+  flex:1; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+
+/* 地图网格 */
+.map-grid{
+  position:absolute;
+  display:grid;
+  transition:transform .15s cubic-bezier(.25,.46,.45,.94);
+  /* grid-template-columns 由 JS 动态设置 */
+}
+
+/* 地图格子 */
+.map-cell{
+  width:52px; height:52px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; cursor:pointer;
+  position:relative; box-sizing:border-box;
+  transition:background .1s;
+  user-select:none;
+}
+/* 地面：深色草地 */
+.map-cell.ground{
+  background:
+    radial-gradient(ellipse at 50% 100%,rgba(22,101,52,0.5) 0%,transparent 70%),
+    #0f2010;
+  border:1px solid rgba(34,197,94,0.1);
+}
+.map-cell.ground:active{ background:#1a3a1a; }
+/* 可移动目标高亮（相邻格） */
+.map-cell.reachable{
+  background:#1a3a20;
+  border:1px solid rgba(74,222,128,0.45);
+  box-shadow:inset 0 0 8px rgba(74,222,128,0.15);
+}
+.map-cell.reachable::after{
+  content:'';
+  position:absolute; inset:0;
+  border-radius:2px;
+  background:radial-gradient(circle,rgba(74,222,128,0.18),transparent 70%);
+  pointer-events:none;
+}
+/* 墙/树 */
+.map-cell.wall{
+  background:#06100a;
+  border:1px solid rgba(0,0,0,0.4);
+  cursor:default;
+  pointer-events:none;
+}
+/* 玩家格 */
+.map-cell.player-cell{
+  background:
+    radial-gradient(circle at 50% 60%,rgba(167,139,250,0.35) 0%,transparent 65%),
+    #1a1030;
+  border:1px solid rgba(167,139,250,0.4);
+  box-shadow:0 0 12px rgba(167,139,250,0.3);
+  cursor:default;
+}
+
+/* 格子内容图标 */
+.cell-icon{
+  font-size:24px; line-height:1;
+  pointer-events:none; position:relative; z-index:2;
+}
+/* 怪物图标 */
+.cell-monster{
+  font-size:26px; line-height:1;
+  animation:monFloat 2.2s ease-in-out infinite;
+  pointer-events:none; position:relative; z-index:2;
+  filter:drop-shadow(0 2px 6px rgba(239,68,68,0.5));
+}
+@keyframes monFloat{
+  0%,100%{ transform:translateY(0) scale(1); }
+  50%{ transform:translateY(-4px) scale(1.06); }
+}
+/* 不同怪物漂浮节奏错开 */
+.map-cell:nth-child(3n) .cell-monster{ animation-delay:-.7s; }
+.map-cell:nth-child(5n) .cell-monster{ animation-delay:-1.3s; }
+
+/* 玩家精灵 */
+.player-sprite-map{
+  font-size:28px; line-height:1;
+  animation:playerBob 1.8s ease-in-out infinite;
+  pointer-events:none; position:relative; z-index:2;
+  filter:drop-shadow(0 0 8px rgba(167,139,250,0.7));
+}
+@keyframes playerBob{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-3px); }
+}
+
+/* 底部提示 */
+.map-hint{
+  text-align:center; font-size:12px;
+  color:rgba(255,255,255,0.3);
+  padding:6px 0 10px;
+  flex-shrink:0;
+  letter-spacing:.3px;
+}
+
+/* 遭遇战斗过场动画遮罩 */
+.encounter-overlay{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  z-index:200; pointer-events:none;
+  transition:background .25s;
+}
+.encounter-overlay.on{
+  background:rgba(0,0,0,0.85);
+  pointer-events:all;
+}
+.encounter-mon{
+  font-size:72px;
+  opacity:0; transform:scale(.4);
+  transition:all .3s cubic-bezier(.175,.885,.32,1.275);
+  filter:drop-shadow(0 0 30px rgba(239,68,68,0.7));
+}
+.encounter-overlay.on .encounter-mon{
+  opacity:1; transform:scale(1.1);
+}
+.encounter-txt{
+  margin-top:14px;
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px; color:#fca5a5;
+  opacity:0; transform:translateY(10px);
+  transition:all .3s .15s;
+}
+.encounter-overlay.on .encounter-txt{
+  opacity:1; transform:translateY(0);
+}
+
+/* 战斗结算小弹窗（地图内） */
+.map-result-toast{
+  position:fixed; left:50%; top:50%;
+  transform:translate(-50%,-50%) scale(.5);
+  background:rgba(15,25,50,0.96);
+  border:1px solid rgba(255,255,255,0.15);
+  backdrop-filter:blur(20px);
+  border-radius:22px; padding:24px 28px;
+  text-align:center; z-index:150;
+  opacity:0; transition:all .3s cubic-bezier(.175,.885,.32,1.275);
+  min-width:220px;
+  pointer-events:none;
+}
+.map-result-toast.show{
+  opacity:1; transform:translate(-50%,-50%) scale(1);
+  pointer-events:all;
+}
+.map-rt-emoji{ font-size:52px; margin-bottom:8px; }
+.map-rt-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:24px; color:#fff; margin-bottom:6px;
+}
+.map-rt-title.win{ color:#fbbf24; }
+.map-rt-title.lose{ color:#f87171; }
+.map-rt-stats{ font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:16px; line-height:1.8; }
+.map-rt-stats span{ color:#a78bfa; font-weight:700; }
+.map-rt-btn{
+  background:linear-gradient(135deg,#7c3aed,#6d28d9);
+  border:none; border-radius:14px; color:#fff;
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:16px; padding:12px 28px; cursor:pointer;
+  width:100%;
+}
+
+/* 怪物刷新提示 */
+.mon-spawn-pop{
+  position:fixed; left:50%; top:20%;
+  transform:translateX(-50%);
+  background:rgba(239,68,68,0.2);
+  border:1px solid rgba(239,68,68,0.4);
+  border-radius:20px; padding:6px 16px;
+  font-size:13px; color:#fca5a5;
+  font-family:'Noto Sans SC',sans-serif;
+  z-index:100; pointer-events:none;
+  animation:spawnPop .4s ease both, spawnFade 1.5s 1s forwards;
+}
+@keyframes spawnPop{0%{transform:translateX(-50%) scale(.7);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
+@keyframes spawnFade{0%{opacity:1}100%{opacity:0}}
+</style>
+
 <!-- ══════ MINE PAGE ══════ -->
 <div id="mine-page" class="page">
   <div class="mine-hero">
@@ -2101,17 +2342,320 @@ function buildDungeonList(){
 function enterDungeon(id){
   const d=DUNGEON_CONFIGS.find(x=>x.id===id);
   if(!d) return;
+  if(gd.petIndex<0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋，再出发冒险！'); return; }
   if(gd.stamina<d.staminaCost){
     showModal('⚡','体力不足',`进入副本需要 ${d.staminaCost} 点体力，当前体力 ${gd.stamina}。`);
     return;
   }
   gd.stamina-=d.staminaCost; saveGame();
-  startBattle(id);
+  enterMap(id);
 }
 
 /* ══════════════════════════════════════════════════
-   战斗系统
+   大地图探索系统
 ══════════════════════════════════════════════════ */
+
+/* ── 地图数据 ── */
+// tile: 0=地面 1=树/墙（不可通行）
+const MAP_DATA = {
+  forest:{
+    name:'🌲 森林冒险', cols:14, rows:11,
+    tiles:[
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,0,0,0,0,0,1],
+      [1,0,1,0,0,0,1,1,0,1,0,1,0,1],
+      [1,0,1,0,1,0,0,0,0,0,0,0,0,1],
+      [1,0,0,0,1,1,0,1,1,0,1,0,0,1],
+      [1,0,1,0,0,0,0,0,0,0,0,0,1,1],
+      [1,0,1,1,1,0,1,0,1,1,0,0,0,1],
+      [1,0,0,0,0,0,1,0,0,0,0,1,0,1],
+      [1,1,0,1,0,1,0,0,1,0,0,0,0,1],
+      [1,0,0,0,0,0,0,0,0,0,1,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    playerStart:{x:1,y:1},
+    tileIcon:{ground:'', wall:'🌲'},
+    monsterPool:['slime','slime','goblin'],
+    monsterCount:5,
+    monsterEmoji:{slime:'🟢', goblin:'🪨'},
+    bgColor:'#091508',
+  },
+  cave:{
+    name:'⛰️ 洞穴探险', cols:14, rows:11,
+    tiles:[
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,1,0,0,0,1,0,0,0,0,0,1],
+      [1,0,1,1,0,1,0,0,0,1,1,0,1,1],
+      [1,0,0,0,0,1,0,1,0,0,0,0,0,1],
+      [1,1,0,1,0,0,0,0,0,1,0,1,0,1],
+      [1,0,0,1,1,0,1,0,1,0,0,0,0,1],
+      [1,0,1,0,0,0,1,0,0,0,1,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,0,0,0,1],
+      [1,1,0,0,0,1,0,1,1,0,1,0,0,1],
+      [1,0,0,1,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    playerStart:{x:1,y:1},
+    tileIcon:{ground:'', wall:'🪨'},
+    monsterPool:['goblin','goblin','dragon'],
+    monsterCount:6,
+    monsterEmoji:{goblin:'🪨', dragon:'🐲'},
+    bgColor:'#100808',
+  },
+  volcano:{
+    name:'🌋 火山试炼', cols:14, rows:11,
+    tiles:[
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,1,0,0,0,1,0,0,0,1],
+      [1,1,0,1,0,0,0,1,0,0,0,1,0,1],
+      [1,0,0,1,1,0,1,0,1,0,1,0,0,1],
+      [1,0,1,0,0,0,0,0,0,0,0,0,1,1],
+      [1,0,0,0,1,0,1,1,0,1,0,0,0,1],
+      [1,1,0,1,0,0,0,0,0,0,1,0,1,1],
+      [1,0,0,0,0,1,0,1,0,0,0,0,0,1],
+      [1,0,1,1,0,0,0,0,0,1,0,1,0,1],
+      [1,0,0,0,0,0,1,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    playerStart:{x:1,y:1},
+    tileIcon:{ground:'', wall:'🔥'},
+    monsterPool:['dragon','dragon','goblin'],
+    monsterCount:7,
+    monsterEmoji:{dragon:'🐲', goblin:'🪨'},
+    bgColor:'#150402',
+  }
+};
+
+/* ── 地图状态 ── */
+let ms = {
+  dungId:'', mapData:null,
+  playerX:1, playerY:1,
+  monsters:[],          // [{id, x, y, key, emoji, defeated}]
+  spawnTimer:null,
+  pendingBattle:null,   // 当前即将触发战斗的怪物
+};
+
+/* ── 进入地图 ── */
+function enterMap(dungId){
+  const md = MAP_DATA[dungId];
+  if(!md){ startBattle(dungId); return; } // 兜底
+  ms.dungId = dungId;
+  ms.mapData = md;
+  ms.playerX = md.playerStart.x;
+  ms.playerY = md.playerStart.y;
+  ms.pendingBattle = null;
+  // 初始化怪物
+  ms.monsters = spawnMonsters(md, []);
+  // 更新顶部信息
+  document.getElementById('map-dungeon-name').textContent = md.name;
+  document.getElementById('map-hp-txt').textContent = gd.hp;
+  document.getElementById('map-page').style.background = md.bgColor;
+  // 渲染地图
+  renderMap();
+  go('map-page');
+  // 启动怪物刷新定时器（30s）
+  if(ms.spawnTimer) clearInterval(ms.spawnTimer);
+  ms.spawnTimer = setInterval(()=>respawnMonsters(), 30000);
+}
+
+/* ── 生成怪物（随机放置在空地上）── */
+function spawnMonsters(md, existing){
+  const occupied = new Set(existing.filter(m=>!m.defeated).map(m=>`${m.x},${m.y}`));
+  // 收集所有可用空地（非墙、非玩家起点）
+  const empty = [];
+  for(let y=0;y<md.rows;y++){
+    for(let x=0;x<md.cols;x++){
+      const k = `${x},${y}`;
+      if(md.tiles[y][x]===0 && !occupied.has(k) &&
+         !(x===ms.playerX && y===ms.playerY) &&
+         !(x===md.playerStart.x && y===md.playerStart.y)){
+        empty.push({x,y});
+      }
+    }
+  }
+  empty.sort(()=>Math.random()-.5);
+  const result = [...existing.filter(m=>!m.defeated)];
+  const need = md.monsterCount - result.length;
+  for(let i=0;i<need&&i<empty.length;i++){
+    const pool = md.monsterPool;
+    const key = pool[Math.floor(Math.random()*pool.length)];
+    result.push({
+      id: Date.now()+i+'_'+Math.random().toString(36).slice(2,6),
+      x: empty[i].x, y: empty[i].y,
+      key, emoji: md.monsterEmoji[key]||'👾',
+      defeated: false
+    });
+  }
+  return result;
+}
+
+/* ── 定时刷新怪物 ── */
+function respawnMonsters(){
+  if(document.getElementById('map-page').classList.contains('active')===false) return;
+  const md = ms.mapData;
+  const before = ms.monsters.filter(m=>!m.defeated).length;
+  ms.monsters = spawnMonsters(md, ms.monsters.filter(m=>!m.defeated));
+  const after = ms.monsters.filter(m=>!m.defeated).length;
+  if(after > before){
+    const pop = document.createElement('div');
+    pop.className = 'mon-spawn-pop';
+    pop.textContent = `👾 新的怪物出现了！`;
+    document.body.appendChild(pop);
+    setTimeout(()=>pop.remove(), 2000);
+  }
+  renderMap();
+}
+
+/* ── 渲染地图 ── */
+function renderMap(){
+  const md = ms.mapData;
+  if(!md) return;
+  const grid = document.getElementById('map-grid');
+  const CELL = 52; // px
+  grid.style.gridTemplateColumns = `repeat(${md.cols}, ${CELL}px)`;
+  grid.style.width  = md.cols * CELL + 'px';
+  grid.style.height = md.rows * CELL + 'px';
+
+  // 获取视口尺寸
+  const vp = document.getElementById('map-viewport');
+  const vpW = vp.clientWidth  || window.innerWidth;
+  const vpH = vp.clientHeight || (window.innerHeight - 80);
+
+  // 计算地图偏移，让玩家格居中
+  const offsetX = Math.round(vpW/2 - ms.playerX*CELL - CELL/2);
+  const offsetY = Math.round(vpH/2 - ms.playerY*CELL - CELL/2);
+  grid.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+  // 构建怪物位置 map
+  const monMap = {};
+  ms.monsters.filter(m=>!m.defeated).forEach(m=>{ monMap[`${m.x},${m.y}`]=m; });
+
+  // 相邻可达格
+  const reachable = new Set([
+    `${ms.playerX-1},${ms.playerY}`,
+    `${ms.playerX+1},${ms.playerY}`,
+    `${ms.playerX},${ms.playerY-1}`,
+    `${ms.playerX},${ms.playerY+1}`,
+  ].filter(k=>{
+    const [x,y]=k.split(',').map(Number);
+    return x>=0&&y>=0&&y<md.rows&&x<md.cols&&md.tiles[y][x]===0;
+  }));
+
+  // 逐格渲染（仅在内容变化时重建）
+  const cells = [];
+  for(let y=0;y<md.rows;y++){
+    for(let x=0;x<md.cols;x++){
+      const k=`${x},${y}`;
+      const isPlayer = (x===ms.playerX && y===ms.playerY);
+      const isWall   = md.tiles[y][x]===1;
+      const isMon    = monMap[k];
+      const isReach  = reachable.has(k);
+
+      let cls = 'map-cell ';
+      if(isPlayer)    cls += 'player-cell';
+      else if(isWall) cls += 'wall';
+      else if(isReach)cls += 'reachable ground';
+      else            cls += 'ground';
+
+      let inner = '';
+      if(isPlayer){
+        inner = `<span class="player-sprite-map">🐾</span>`;
+      } else if(isWall){
+        inner = `<span class="cell-icon">${md.tileIcon.wall||'🌲'}</span>`;
+      } else if(isMon){
+        inner = `<span class="cell-monster">${isMon.emoji}</span>`;
+      }
+
+      const onclick = (!isWall && !isPlayer)
+        ? `onclick="handleMapClick(${x},${y})"`
+        : '';
+      cells.push(`<div class="${cls}" ${onclick}>${inner}</div>`);
+    }
+  }
+  grid.innerHTML = cells.join('');
+}
+
+/* ── 点击格子处理 ── */
+function handleMapClick(tx, ty){
+  const md = ms.mapData;
+  const dx = Math.abs(tx - ms.playerX);
+  const dy = Math.abs(ty - ms.playerY);
+  // 只允许点相邻（上下左右1格）
+  if(dx + dy !== 1) return;
+  if(md.tiles[ty][tx] === 1) return; // 墙
+
+  // 移动玩家
+  ms.playerX = tx;
+  ms.playerY = ty;
+
+  // 更新 HP 显示
+  document.getElementById('map-hp-txt').textContent = gd.hp;
+
+  // 检测是否踩到怪物
+  const mon = ms.monsters.find(m=>!m.defeated && m.x===tx && m.y===ty);
+  if(mon){
+    triggerEncounter(mon);
+    return;
+  }
+  renderMap();
+}
+
+/* ── 触发遭遇战 ── */
+function triggerEncounter(mon){
+  ms.pendingBattle = mon;
+  // 遭遇过场动画
+  const overlay = document.getElementById('encounter-overlay');
+  document.getElementById('encounter-mon').textContent = mon.emoji;
+  document.getElementById('encounter-txt').textContent =
+    `野生 ${MONSTER_CONFIGS.find(m=>m.key===mon.key)?.name||'怪物'} 出现了！`;
+  overlay.classList.add('on');
+  setTimeout(()=>{
+    overlay.classList.remove('on');
+    // 直接进入战斗（传入具体怪物 key）
+    startBattle(ms.dungId, mon.key);
+  }, 900);
+}
+
+/* ── 战斗结束回到地图 ── */
+function returnToMap(win, exp, coins, correctCount){
+  const mon = ms.pendingBattle;
+  if(mon){
+    mon.defeated = true;
+    ms.pendingBattle = null;
+  }
+  // 更新 HP
+  document.getElementById('map-hp-txt').textContent = gd.hp;
+  go('map-page');
+  renderMap();
+  // 显示结算 toast
+  const toast = document.getElementById('map-result-toast');
+  const emoji = document.getElementById('map-rt-emoji');
+  const title = document.getElementById('map-rt-title');
+  const stats = document.getElementById('map-rt-stats');
+  if(win){
+    emoji.textContent = '🏆';
+    title.textContent = '胜利！'; title.className = 'map-rt-title win';
+    stats.innerHTML = `答对 <span>${correctCount}</span> 题 &nbsp;·&nbsp; +<span>${exp}</span> EXP &nbsp;·&nbsp; +<span>${coins}</span> 🪙`;
+  } else {
+    emoji.textContent = '💔';
+    title.textContent = '失败…'; title.className = 'map-rt-title lose';
+    stats.innerHTML = `没关系，继续加油！`;
+  }
+  toast.classList.add('show');
+}
+
+function closeMapResult(){
+  document.getElementById('map-result-toast').classList.remove('show');
+}
+
+/* ── 离开地图 ── */
+function exitMap(){
+  if(ms.spawnTimer){ clearInterval(ms.spawnTimer); ms.spawnTimer=null; }
+  ms.monsters = [];
+  tab('dungeon');
+}
+
+
 const BC={ NORMAL_DMG:12, COMBO_BONUS:0.15, WRONG_PEN:15,
   FEVER_TRIG:3, FEVER_DUR:12, FEVER_DMG:15, FEVER_MULT:1.2,
   NORMAL_TIME:15, FEVER_PAIRS:4 };
@@ -2133,9 +2677,12 @@ function genQ(lv){
   return { correct, opts:[...dis,correct].sort(()=>Math.random()-.5) };
 }
 
-function startBattle(dungId){
+function startBattle(dungId, monsterKeyOverride){
   const dc=DUNGEON_CONFIGS.find(d=>d.id===dungId)||DUNGEON_CONFIGS[0];
-  const mc=MONSTER_CONFIGS[dc.monster]||MONSTER_CONFIGS[0];
+  // 地图遭遇时用具体怪物；否则用副本默认怪物
+  const mc = (monsterKeyOverride
+    ? MONSTER_CONFIGS.find(m=>m.key===monsterKeyOverride)
+    : null) || MONSTER_CONFIGS[dc.monster] || MONSTER_CONFIGS[0];
   wLevel=getWLevel();
   // 四维差异化：雷系计时+3s
   const petCfg = PET_CONFIGS[gd.petIndex];
@@ -2461,7 +3008,16 @@ function exitBattle(){
   document.getElementById('battle-wrap').classList.remove('fever-mode');
   document.getElementById('timer-fill').classList.remove('fever');
   gd.hp=bs.playerHp||gd.hp;
-  saveGame(); updateHomeUI(); tab('dungeon');
+  saveGame();
+  if(ms.dungId){
+    // 逃跑：取消本次遭遇，回到地图（怪物保留）
+    ms.pendingBattle = null;
+    go('map-page');
+    renderMap();
+    document.getElementById('map-hp-txt').textContent = gd.hp;
+  } else {
+    updateHomeUI(); tab('dungeon');
+  }
 }
 
 /* ══════════════════════════════════════════════════
@@ -2482,9 +3038,15 @@ function endBattle(win){
     let leveled=false;
     while(gd.exp>=50){ gd.exp-=50; gd.level++; gd.maxHp+=10; gd.hp=gd.maxHp; taskProgress('levelup',1); leveled=true; }
     if(leveled) showLevelUpToast();
-    gd.hp=Math.min(bs.playerHp + Math.floor(gd.maxHp*0.1), gd.maxHp); // 胜利后回复10% HP
+    gd.hp=Math.min(bs.playerHp + Math.floor(gd.maxHp*0.1), gd.maxHp);
   } else { gd.hp=bs.playerHp; }
   saveGame();
+  // 从地图进入战斗 → 返回地图，用小 toast 结算
+  if(ms.dungId){
+    setTimeout(()=>returnToMap(win, exp, coins, bs.correctCount), 400);
+    return;
+  }
+  // 非地图直接战斗（兜底）→ 原 result-page
   document.getElementById('res-burst').textContent=win?'🏆':'💔';
   document.getElementById('res-heading').textContent=win?'胜利!':'失败…';
   document.getElementById('res-heading').className='res-heading '+(win?'win':'lose');
@@ -2945,6 +3507,18 @@ function init(){
 }
 init();
 </script>
+<!-- 遭遇战斗过场遮罩 -->
+<div class="encounter-overlay" id="encounter-overlay">
+  <div class="encounter-mon" id="encounter-mon">👾</div>
+  <div class="encounter-txt" id="encounter-txt">野生怪物出现了！</div>
+</div>
+<!-- 地图内战斗结算 toast -->
+<div class="map-result-toast" id="map-result-toast">
+  <div class="map-rt-emoji" id="map-rt-emoji">🏆</div>
+  <div class="map-rt-title" id="map-rt-title">胜利!</div>
+  <div class="map-rt-stats" id="map-rt-stats"></div>
+  <button class="map-rt-btn" onclick="closeMapResult()">继续探索</button>
+</div>
 </div>
 </body>
 </html>
