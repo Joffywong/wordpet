@@ -577,7 +577,7 @@ body{
 #battle-page{height:100vh;overflow:hidden}
 .battle-wrap{
   height:100vh;display:flex;flex-direction:column;
-  padding:14px 14px 18px;
+  padding:10px 14px 12px;
   background:
     radial-gradient(ellipse at 50% 15%,rgba(20,40,90,0.7) 0%,transparent 65%),
     linear-gradient(180deg,#080d1a 0%,#0d1827 40%,#100512 100%);
@@ -597,7 +597,7 @@ body{
 }
 .battle-header{
   display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:10px;position:relative;z-index:2;flex-shrink:0;
+  margin-bottom:6px;position:relative;z-index:2;flex-shrink:0;
 }
 .battle-back{
   background:rgba(255,255,255,0.1);
@@ -727,11 +727,11 @@ body{
 .timer-row{
   position:relative;z-index:2;flex-shrink:0;
   display:flex;align-items:center;gap:10px;
-  margin-bottom:10px;
+  margin-bottom:6px;
 }
 .timer-num{
   font-family:'Fredoka One','Noto Sans SC',cursive;
-  font-size:32px;color:#fff;min-width:46px;text-align:center;
+  font-size:26px;color:#fff;min-width:38px;text-align:center;
   text-shadow:0 0 16px rgba(255,220,50,0.7);
 }
 .timer-num.urgent{
@@ -761,31 +761,31 @@ body{
   background:rgba(255,255,255,0.07);
   backdrop-filter:blur(12px);
   border:1px solid rgba(255,255,255,0.14);
-  border-radius:18px;
-  padding:18px 16px;margin-bottom:10px;
+  border-radius:16px;
+  padding:10px 14px 8px;margin-bottom:8px;
   text-align:center;flex-shrink:0;
 }
 .q-cn{
   font-family:'Fredoka One','Noto Sans SC',cursive;
-  font-size:38px;color:#fff;
+  font-size:30px;color:#fff;
   text-shadow:0 0 24px rgba(167,139,250,0.6);
-  line-height:1.2;
+  line-height:1.15;
 }
-.q-sub{font-size:12px;color:rgba(255,255,255,0.35);margin-top:6px}
+.q-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px}
 .opts-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;flex:1;
+  gap:8px;flex:1;max-height:180px;
 }
 .opt-btn{
   background:rgba(255,255,255,0.08);
   backdrop-filter:blur(8px);
   border:1.5px solid rgba(255,255,255,0.14);
-  border-radius:16px;padding:14px 8px;
+  border-radius:14px;padding:8px 6px;
   font-family:'Noto Sans SC',-apple-system,sans-serif;
-  font-size:16px;font-weight:700;color:#fff;cursor:pointer;
+  font-size:15px;font-weight:700;color:#fff;cursor:pointer;
   transition:all .15s;
   display:flex;align-items:center;justify-content:center;
-  min-height:60px;
+  min-height:52px;
   position:relative;overflow:hidden;
 }
 .opt-btn::before{
@@ -1032,7 +1032,7 @@ body{
         </div>
         <div class="enemy-hud-txt" id="monster-hp-txt">150/150</div>
       </div>
-      <div class="enemy-sprite" id="monster-art">
+      <div class="enemy-sprite" id="enemy-sprite">
         <svg id="monster-svg" viewBox="0 0 100 100"></svg>
       </div>
 
