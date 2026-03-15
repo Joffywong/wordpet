@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="fire3_body" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="35%" stop-color="#f59e0b"/>
+      <stop offset="75%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#450a0a"/>
+    </radialGradient>
+    <radialGradient id="fire3_core" cx="50%" cy="35%" r="45%">
+      <stop offset="0%" stop-color="#fff"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="fire3_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="50" cy="90" rx="28" ry="7" fill="rgba(0,0,0,0.35)"/>
+  <!-- 龙翅膀 -->
+  <path d="M18 55 C4 42 0 26 8 20 C16 14 28 24 26 40Z" fill="#dc2626" opacity=".9"/>
+  <path d="M82 55 C96 42 100 26 92 20 C84 14 72 24 74 40Z" fill="#dc2626" opacity=".9"/>
+  <path d="M20 53 C8 42 6 30 12 24 C14 30 18 36 22 40Z" fill="#f97316" opacity=".5"/>
+  <path d="M80 53 C92 42 94 30 88 24 C86 30 82 36 78 40Z" fill="#f97316" opacity=".5"/>
+  <!-- 龙尾 -->
+  <path d="M38 80 C22 94 8 96 6 84 C4 72 18 64 32 72Z" fill="#ef4444" opacity=".9"/>
+  <path d="M62 80 C78 94 92 96 94 84 C96 72 82 64 68 72Z" fill="#ef4444" opacity=".9"/>
+  <!-- 身体 -->
+  <path d="M50 86 C20 86 8 64 8 47 C8 26 24 8 50 6 C76 8 92 26 92 47 C92 64 80 86 50 86Z" fill="url(#fire3_body)"/>
+  <ellipse cx="50" cy="47" rx="30" ry="32" fill="url(#fire3_core)" opacity=".5"/>
+  <!-- 铠甲纹 -->
+  <path d="M36 36 L32 52 L36 68 L50 74 L64 68 L68 52 L64 36 L50 30Z" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity=".4"/>
+  <!-- 眼睛（发光） -->
+  <ellipse cx="36" cy="46" rx="8.5" ry="9.5" fill="#1c1917"/>
+  <ellipse cx="64" cy="46" rx="8.5" ry="9.5" fill="#1c1917"/>
+  <ellipse cx="37.5" cy="44.5" rx="3.5" ry="4" fill="#fef08a" opacity=".95" filter="url(#fire3_glow)"/>
+  <ellipse cx="65.5" cy="44.5" rx="3.5" ry="4" fill="#fef08a" opacity=".95" filter="url(#fire3_glow)"/>
+  <!-- 眉骨（龙角感） -->
+  <path d="M28 36 L38 41" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+  <path d="M62 41 L72 36" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+  <!-- 嘴巴 -->
+  <path d="M41 65 Q50 76 59 65" stroke="#7f1d1d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M43 67 L46 72 L50 69 L54 72 L57 67" stroke="#7f1d1d" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- 龙角冠 -->
+  <path d="M30 20 C22 6 26 -2 32 4 C28 -4 36 -8 38 2 C40 -6 46 -8 46 2 C46 -8 50 -10 50 0 C50 -10 54 -8 54 2 C54 -8 60 -4 58 2 C62 -8 68 -4 66 4 C72 -2 76 6 68 20" fill="#ef4444" filter="url(#fire3_glow)"/>
+  <path d="M34 16 C28 6 32 0 36 6 C37 0 40 -2 42 4 C43 0 46 -2 48 4 C49 0 51 0 53 4 C55 -2 57 0 58 4 C60 -2 63 6 66 16" fill="#fbbf24"/>
+  <!-- 光晕环 -->
+  <circle cx="50" cy="47" r="14" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".3" filter="url(#fire3_glow)"/>
+</svg>

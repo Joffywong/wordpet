@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="thunder2_body" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#fef9c3"/>
+      <stop offset="55%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#713f12"/>
+    </radialGradient>
+    <filter id="thunder2_glow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="50" cy="88" rx="26" ry="6" fill="rgba(0,0,0,0.3)"/>
+  <!-- 九条尾巴 -->
+  <path d="M50 76 C36 90 18 96 16 82 C14 70 28 60 40 68Z" fill="#eab308" opacity=".7"/>
+  <path d="M50 76 C42 94 26 98 26 84 C26 74 38 66 44 72Z" fill="#fbbf24" opacity=".6"/>
+  <path d="M50 76 C52 96 38 100 36 88 C34 78 44 70 48 74Z" fill="#eab308" opacity=".65"/>
+  <path d="M50 76 C64 90 82 96 84 82 C86 70 72 60 60 68Z" fill="#eab308" opacity=".7"/>
+  <path d="M50 76 C58 94 74 98 74 84 C74 74 62 66 56 72Z" fill="#fbbf24" opacity=".6"/>
+  <!-- 身体 -->
+  <ellipse cx="50" cy="50" rx="32" ry="34" fill="url(#thunder2_body)"/>
+  <ellipse cx="50" cy="54" rx="22" ry="22" fill="#fef9c3" opacity=".45"/>
+  <!-- 九尾狐耳 -->
+  <path d="M32 24 C26 10 32 2 38 12Z" fill="#eab308"/>
+  <path d="M68 24 C74 10 68 2 62 12Z" fill="#eab308"/>
+  <path d="M33 22 C28 12 33 6 37 14Z" fill="#fde68a"/>
+  <path d="M67 22 C72 12 67 6 63 14Z" fill="#fde68a"/>
+  <!-- 双闪电 -->
+  <path d="M56 14 L44 36 L54 36 L40 60 L62 30 L52 30Z" fill="#fff" opacity=".9" filter="url(#thunder2_glow)"/>
+  <path d="M56 14 L44 36 L54 36 L40 60 L62 30 L52 30Z" fill="#fbbf24"/>
+  <path d="M44 14 L34 32 L42 32 L30 52 L50 26 L42 26Z" fill="#fde68a" opacity=".6"/>
+  <!-- 眼睛 -->
+  <ellipse cx="39" cy="49" rx="6.5" ry="7.5" fill="#713f12"/>
+  <ellipse cx="61" cy="49" rx="6.5" ry="7.5" fill="#713f12"/>
+  <ellipse cx="40.5" cy="47.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+  <ellipse cx="62.5" cy="47.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+  <circle cx="41" cy="48" r="1.2" fill="#facc15" filter="url(#thunder2_glow)"/>
+  <circle cx="63" cy="48" r="1.2" fill="#facc15" filter="url(#thunder2_glow)"/>
+  <!-- 嘴 -->
+  <path d="M43 63 Q50 70 57 63" stroke="#713f12" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- 电弧（更多） -->
+  <path d="M22 36 Q14 28 16 38" stroke="#fbbf24" stroke-width="2.5" fill="none" stroke-linecap="round" filter="url(#thunder2_glow)"/>
+  <path d="M78 36 Q86 28 84 38" stroke="#fbbf24" stroke-width="2.5" fill="none" stroke-linecap="round" filter="url(#thunder2_glow)"/>
+  <path d="M18 48 Q10 42 12 50" stroke="#fde68a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/>
+  <path d="M82 48 Q90 42 88 50" stroke="#fde68a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/>
+</svg>

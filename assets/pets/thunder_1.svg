@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="thunder1_body" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="60%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </radialGradient>
+    <filter id="thunder1_glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="50" cy="88" rx="22" ry="6" fill="rgba(0,0,0,0.3)"/>
+  <!-- 尾巴 -->
+  <path d="M50 78 C44 86 36 90 38 82 C34 86 28 82 32 74 C28 76 26 70 32 68 L50 72Z" fill="#f59e0b" opacity=".8"/>
+  <!-- 身体 -->
+  <ellipse cx="50" cy="52" rx="28" ry="30" fill="url(#thunder1_body)"/>
+  <!-- 腹部（亮色） -->
+  <ellipse cx="50" cy="56" rx="18" ry="20" fill="#fef9c3" opacity=".5"/>
+  <!-- 耳朵（狐耳） -->
+  <path d="M34 28 C30 16 36 10 40 18Z" fill="#f59e0b"/>
+  <path d="M66 28 C70 16 64 10 60 18Z" fill="#f59e0b"/>
+  <path d="M35 26 C32 18 36 13 39 19Z" fill="#fde68a"/>
+  <path d="M65 26 C68 18 64 13 61 19Z" fill="#fde68a"/>
+  <!-- 闪电纹 -->
+  <path d="M52 22 L44 38 L52 38 L42 58 L58 34 L50 34Z" fill="#fff" opacity=".85" filter="url(#thunder1_glow)"/>
+  <path d="M52 22 L44 38 L52 38 L42 58 L58 34 L50 34Z" fill="#fbbf24"/>
+  <!-- 眼睛 -->
+  <ellipse cx="41" cy="50" rx="5.5" ry="6.5" fill="#78350f"/>
+  <ellipse cx="59" cy="50" rx="5.5" ry="6.5" fill="#78350f"/>
+  <ellipse cx="42" cy="48.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+  <ellipse cx="60" cy="48.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+  <circle cx="42.5" cy="49" r="1" fill="#facc15" filter="url(#thunder1_glow)"/>
+  <circle cx="60.5" cy="49" r="1" fill="#facc15" filter="url(#thunder1_glow)"/>
+  <!-- 腮 -->
+  <ellipse cx="32" cy="56" rx="5" ry="3" fill="#fbbf24" opacity=".35"/>
+  <ellipse cx="68" cy="56" rx="5" ry="3" fill="#fbbf24" opacity=".35"/>
+  <!-- 嘴 -->
+  <path d="M44 63 Q50 68 56 63" stroke="#78350f" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- 电弧 -->
+  <path d="M28 38 Q22 32 24 40" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9" filter="url(#thunder1_glow)"/>
+  <path d="M72 38 Q78 32 76 40" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9" filter="url(#thunder1_glow)"/>
+</svg>

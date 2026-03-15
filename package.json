@@ -1,0 +1,9 @@
+{
+  "name": "wordgame-cc",
+  "version": "1.0.0",
+  "description": "英语对战宠物 - Cocos Creator 版本",
+  "private": true,
+  "engines": {
+    "cocos-creator": "3.8.x"
+  }
+}

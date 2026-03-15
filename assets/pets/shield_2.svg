@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="shield2_body" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#a7f3d0"/>
+      <stop offset="60%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </radialGradient>
+    <linearGradient id="shield2_shell" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="50" cy="89" rx="28" ry="6" fill="rgba(0,0,0,0.3)"/>
+  <!-- 四肢（更粗壮） -->
+  <ellipse cx="22" cy="70" rx="12" ry="10" fill="#059669"/>
+  <ellipse cx="78" cy="70" rx="12" ry="10" fill="#059669"/>
+  <ellipse cx="28" cy="82" rx="10" ry="7" fill="#047857"/>
+  <ellipse cx="72" cy="82" rx="10" ry="7" fill="#047857"/>
+  <!-- 龟壳（更大更厚） -->
+  <ellipse cx="50" cy="55" rx="36" ry="32" fill="url(#shield2_body)"/>
+  <!-- 壳纹（六边形） -->
+  <path d="M34 28 L26 52 L34 74 L50 80 L66 74 L74 52 L66 28 L50 22Z" fill="url(#shield2_shell)" opacity=".5"/>
+  <path d="M50 22 L42 30 L38 52 L42 74 L50 80 L58 74 L62 52 L58 30Z" fill="rgba(255,255,255,0.1)"/>
+  <line x1="50" y1="22" x2="50" y2="80" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  <line x1="26" y1="52" x2="74" y2="52" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  <line x1="34" y1="28" x2="66" y2="74" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+  <line x1="66" y1="28" x2="34" y2="74" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+  <!-- 头部 -->
+  <ellipse cx="50" cy="30" rx="18" ry="16" fill="#059669"/>
+  <ellipse cx="50" cy="28" rx="16" ry="14" fill="#34d399"/>
+  <!-- 重甲颈部装饰 -->
+  <path d="M34 38 L32 42 L50 44 L68 42 L66 38Z" fill="#047857" opacity=".7"/>
+  <!-- 眼睛（更大更威） -->
+  <ellipse cx="42" cy="27" rx="7" ry="7.5" fill="#022c22"/>
+  <ellipse cx="58" cy="27" rx="7" ry="7.5" fill="#022c22"/>
+  <ellipse cx="43.5" cy="25.5" rx="3" ry="3.5" fill="#fff" opacity=".92"/>
+  <ellipse cx="59.5" cy="25.5" rx="3" ry="3.5" fill="#fff" opacity=".92"/>
+  <!-- 眉骨 -->
+  <path d="M36 21 L44 24" stroke="#022c22" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M56 24 L64 21" stroke="#022c22" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- 嘴 -->
+  <path d="M44 37 Q50 43 56 37" stroke="#022c22" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- 护盾符文 -->
+  <path d="M40 48 L36 58 L40 68 L50 72 L60 68 L64 58 L60 48 L50 44Z" fill="rgba(255,255,255,0.1)" stroke="#6ee7b7" stroke-width="2" opacity=".8"/>
+  <path d="M44 52 L42 58 L44 64 L50 66 L56 64 L58 58 L56 52 L50 50Z" fill="none" stroke="#a7f3d0" stroke-width="1" opacity=".5"/>
+</svg>

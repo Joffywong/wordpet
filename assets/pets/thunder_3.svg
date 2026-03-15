@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="thunder3_body" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#fefce8"/>
+      <stop offset="30%" stop-color="#facc15"/>
+      <stop offset="70%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#431407"/>
+    </radialGradient>
+    <filter id="thunder3_glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="50" cy="91" rx="30" ry="7" fill="rgba(0,0,0,0.35)"/>
+  <!-- 雷神光环 -->
+  <circle cx="50" cy="48" r="42" fill="none" stroke="#facc15" stroke-width="2" opacity=".2" filter="url(#thunder3_glow)"/>
+  <!-- 九尾（发光） -->
+  <path d="M50 76 C30 94 8 100 6 84 C4 70 22 60 36 68Z" fill="#b45309" opacity=".8" filter="url(#thunder3_glow)"/>
+  <path d="M50 76 C38 98 18 100 18 84 C18 72 34 62 42 70Z" fill="#eab308" opacity=".7"/>
+  <path d="M50 76 C46 98 30 100 30 86 C30 76 42 68 46 74Z" fill="#b45309" opacity=".75"/>
+  <path d="M50 76 C70 94 92 100 94 84 C96 70 78 60 64 68Z" fill="#b45309" opacity=".8" filter="url(#thunder3_glow)"/>
+  <path d="M50 76 C62 98 82 100 82 84 C82 72 66 62 58 70Z" fill="#eab308" opacity=".7"/>
+  <path d="M50 76 C54 98 70 100 70 86 C70 76 58 68 54 74Z" fill="#b45309" opacity=".75"/>
+  <!-- 身体 -->
+  <ellipse cx="50" cy="48" rx="36" ry="36" fill="url(#thunder3_body)"/>
+  <ellipse cx="50" cy="52" rx="24" ry="24" fill="#fefce8" opacity=".35"/>
+  <!-- 神兽耳 -->
+  <path d="M30 22 C22 4 28 -4 36 8Z" fill="#b45309"/>
+  <path d="M70 22 C78 4 72 -4 64 8Z" fill="#b45309"/>
+  <path d="M31 20 C25 6 30 0 35 10Z" fill="#fde68a"/>
+  <path d="M69 20 C75 6 70 0 65 10Z" fill="#fde68a"/>
+  <!-- 雷神三叉闪 -->
+  <path d="M62 8 L46 36 L58 36 L36 72 L72 28 L58 28Z" fill="#fff" opacity=".92" filter="url(#thunder3_glow)"/>
+  <path d="M62 8 L46 36 L58 36 L36 72 L72 28 L58 28Z" fill="#fbbf24"/>
+  <path d="M48 8 L32 32 L44 32 L24 62 L56 24 L44 24Z" fill="#fde68a" opacity=".7"/>
+  <path d="M38 12 L26 30 L36 30 L20 52 L44 22 L34 22Z" fill="#fff" opacity=".3"/>
+  <!-- 眼睛（神目） -->
+  <ellipse cx="37" cy="47" rx="8.5" ry="9.5" fill="#431407"/>
+  <ellipse cx="63" cy="47" rx="8.5" ry="9.5" fill="#431407"/>
+  <ellipse cx="38.5" cy="45.5" rx="3.5" ry="4" fill="#fef9c3" opacity=".95" filter="url(#thunder3_glow)"/>
+  <ellipse cx="64.5" cy="45.5" rx="3.5" ry="4" fill="#fef9c3" opacity=".95" filter="url(#thunder3_glow)"/>
+  <!-- 嘴 -->
+  <path d="M42 64 Q50 73 58 64" stroke="#431407" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- 大电弧 -->
+  <path d="M16 30 Q4 20 6 32" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#thunder3_glow)"/>
+  <path d="M84 30 Q96 20 94 32" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#thunder3_glow)"/>
+  <path d="M10 46 Q0 38 2 48" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>
+  <path d="M90 46 Q100 38 98 48" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>
+</svg>

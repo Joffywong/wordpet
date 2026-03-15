@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="fire1_body" cx="50%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="60%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
+    </radialGradient>
+    <radialGradient id="fire1_belly" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </radialGradient>
+    <filter id="fire1_glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- 阴影 -->
+  <ellipse cx="50" cy="88" rx="20" ry="5" fill="rgba(0,0,0,0.3)"/>
+  <!-- 火焰尾巴 -->
+  <path d="M46 78 C40 88 30 92 28 84 C26 76 34 70 40 74Z" fill="#f97316" opacity=".7"/>
+  <path d="M54 78 C60 88 70 92 72 84 C74 76 66 70 60 74Z" fill="#f97316" opacity=".7"/>
+  <!-- 身体 -->
+  <path d="M50 82 C30 82 18 68 18 52 C18 36 30 20 50 14 C70 20 82 36 82 52 C82 68 70 82 50 82Z" fill="url(#fire1_body)"/>
+  <!-- 腹部 -->
+  <ellipse cx="50" cy="54" rx="18" ry="20" fill="url(#fire1_belly)" opacity=".8"/>
+  <!-- 眼睛 -->
+  <ellipse cx="40" cy="48" rx="6" ry="7" fill="#1c1917"/>
+  <ellipse cx="60" cy="48" rx="6" ry="7" fill="#1c1917"/>
+  <ellipse cx="41.5" cy="46.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+  <ellipse cx="61.5" cy="46.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+  <circle cx="42" cy="47" r="1" fill="#ff6b35"/>
+  <circle cx="62" cy="47" r="1" fill="#ff6b35"/>
+  <!-- 嘴巴 -->
+  <path d="M44 62 Q50 68 56 62" stroke="#7f1d1d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- 火焰头冠 -->
+  <path d="M38 22 C36 14 40 8 44 13 C42 7 48 4 50 10 C52 4 58 7 56 13 C60 8 64 14 62 22" fill="#f97316" filter="url(#fire1_glow)"/>
+  <path d="M42 19 C41 13 44 9 46 14 C47 10 50 8 52 13 C54 9 57 13 58 19" fill="#fbbf24"/>
+  <!-- 腮红 -->
+  <ellipse cx="32" cy="58" rx="5" ry="3" fill="#f97316" opacity=".3"/>
+  <ellipse cx="68" cy="58" rx="5" ry="3" fill="#f97316" opacity=".3"/>
+</svg>

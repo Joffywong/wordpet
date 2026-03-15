@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="fire2_body" cx="50%" cy="55%" r="52%">
+      <stop offset="0%" stop-color="#fed7aa"/>
+      <stop offset="50%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#7c2d12"/>
+    </radialGradient>
+    <radialGradient id="fire2_belly" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </radialGradient>
+    <filter id="fire2_glow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="50" cy="88" rx="24" ry="6" fill="rgba(0,0,0,0.3)"/>
+  <!-- 尾巴（更大更威） -->
+  <path d="M40 76 C28 88 14 94 12 82 C10 70 24 62 36 68Z" fill="#ef4444" opacity=".85"/>
+  <path d="M60 76 C72 88 86 94 88 82 C90 70 76 62 64 68Z" fill="#ef4444" opacity=".85"/>
+  <!-- 翅膀雏形 -->
+  <path d="M18 52 C8 44 4 34 10 30 C16 26 24 34 22 44Z" fill="#fb923c" opacity=".6"/>
+  <path d="M82 52 C92 44 96 34 90 30 C84 26 76 34 78 44Z" fill="#fb923c" opacity=".6"/>
+  <!-- 身体 -->
+  <path d="M50 84 C26 84 14 66 14 50 C14 32 28 14 50 10 C72 14 86 32 86 50 C86 66 74 84 50 84Z" fill="url(#fire2_body)"/>
+  <!-- 腹部 -->
+  <ellipse cx="50" cy="52" rx="20" ry="22" fill="url(#fire2_belly)" opacity=".75"/>
+  <!-- 眼睛（更锐利） -->
+  <ellipse cx="39" cy="47" rx="7" ry="8" fill="#1c1917"/>
+  <ellipse cx="61" cy="47" rx="7" ry="8" fill="#1c1917"/>
+  <ellipse cx="40.5" cy="45.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+  <ellipse cx="62.5" cy="45.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+  <circle cx="41" cy="46" r="1.2" fill="#ff6b35"/>
+  <circle cx="63" cy="46" r="1.2" fill="#ff6b35"/>
+  <!-- 眉毛（凶狠） -->
+  <path d="M34 40 L44 43" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M56 43 L66 40" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- 嘴巴 -->
+  <path d="M43 62 Q50 70 57 62" stroke="#7c2d12" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M44 64 L46 68 L50 66 L54 68 L56 64" stroke="#7c2d12" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- 火焰冠（更大） -->
+  <path d="M34 20 C30 10 34 4 38 10 C36 3 42 -1 44 6 C46 -1 50 -3 50 5 C50 -3 54 -1 56 6 C58 -1 64 3 62 10 C66 4 70 10 66 20" fill="#ef4444" filter="url(#fire2_glow)"/>
+  <path d="M38 17 C36 9 40 5 42 10 C43 6 46 4 48 8 C49 4 51 4 53 8 C55 4 57 6 58 10 C60 5 64 9 62 17" fill="#fbbf24"/>
+  <ellipse cx="32" cy="56" rx="6" ry="3.5" fill="#f97316" opacity=".3"/>
+  <ellipse cx="68" cy="56" rx="6" ry="3.5" fill="#f97316" opacity=".3"/>
+</svg>

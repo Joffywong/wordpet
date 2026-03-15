@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="shield3_body" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#d1fae5"/>
+      <stop offset="40%" stop-color="#10b981"/>
+      <stop offset="80%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </radialGradient>
+    <linearGradient id="shield3_shell" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a7f3d0"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="shield3_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <ellipse cx="50" cy="91" rx="32" ry="7" fill="rgba(0,0,0,0.35)"/>
+  <!-- 神光环 -->
+  <circle cx="50" cy="50" r="44" fill="none" stroke="#10b981" stroke-width="1.5" opacity=".2" filter="url(#shield3_glow)"/>
+  <!-- 四肢（神兽级） -->
+  <ellipse cx="18" cy="68" rx="14" ry="12" fill="#065f46"/>
+  <ellipse cx="82" cy="68" rx="14" ry="12" fill="#065f46"/>
+  <ellipse cx="24" cy="82" rx="12" ry="8" fill="#022c22"/>
+  <ellipse cx="76" cy="82" rx="12" ry="8" fill="#022c22"/>
+  <!-- 巨型龟壳 -->
+  <ellipse cx="50" cy="55" rx="40" ry="36" fill="url(#shield3_body)"/>
+  <!-- 壳纹（玄武纹） -->
+  <path d="M30 24 L22 52 L30 76 L50 84 L70 76 L78 52 L70 24 L50 18Z" fill="url(#shield3_shell)" opacity=".45"/>
+  <path d="M50 18 L40 28 L36 52 L40 76 L50 84 L60 76 L64 52 L60 28Z" fill="rgba(255,255,255,0.12)"/>
+  <line x1="50" y1="18" x2="50" y2="84" stroke="rgba(255,255,255,0.2)" stroke-width="2.5"/>
+  <line x1="22" y1="52" x2="78" y2="52" stroke="rgba(255,255,255,0.2)" stroke-width="2.5"/>
+  <line x1="30" y1="24" x2="70" y2="76" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  <line x1="70" y1="24" x2="30" y2="76" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  <!-- 发光符文 -->
+  <path d="M42 48 L38 58 L42 68 L50 72 L58 68 L62 58 L58 48 L50 44Z" fill="none" stroke="#bbf7d0" stroke-width="2.5" opacity=".9" filter="url(#shield3_glow)"/>
+  <!-- 头部（神龟） -->
+  <ellipse cx="50" cy="28" rx="20" ry="18" fill="#065f46"/>
+  <ellipse cx="50" cy="26" rx="18" ry="16" fill="#10b981"/>
+  <!-- 角（玄武独角） -->
+  <path d="M44 12 C42 4 46 0 50 6 C54 0 58 4 56 12" fill="#059669"/>
+  <path d="M47 11 C46 5 48 2 50 6 C52 2 54 5 53 11" fill="#a7f3d0" opacity=".8"/>
+  <!-- 眼睛（发光翡翠眼） -->
+  <ellipse cx="40" cy="25" rx="8.5" ry="9" fill="#022c22"/>
+  <ellipse cx="60" cy="25" rx="8.5" ry="9" fill="#022c22"/>
+  <ellipse cx="41.5" cy="23.5" rx="3.5" ry="4" fill="#bbf7d0" opacity=".95" filter="url(#shield3_glow)"/>
+  <ellipse cx="61.5" cy="23.5" rx="3.5" ry="4" fill="#bbf7d0" opacity=".95" filter="url(#shield3_glow)"/>
+  <!-- 眉 -->
+  <path d="M32 17 L42 21" stroke="#022c22" stroke-width="3" stroke-linecap="round"/>
+  <path d="M58 21 L68 17" stroke="#022c22" stroke-width="3" stroke-linecap="round"/>
+  <!-- 嘴 -->
+  <path d="M43 37 Q50 44 57 37" stroke="#022c22" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>

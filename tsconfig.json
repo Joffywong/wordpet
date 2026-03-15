@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "cc": ["./node_modules/cc/cc.d.ts"]
+    }
+  },
+  "include": ["assets/**/*.ts"],
+  "exclude": ["node_modules"]
+}
