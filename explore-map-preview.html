@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WordPet · 副本探索地图预览</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ff-title: 'Fredoka One', 'Noto Sans SC', cursive;
+  --ff-body: 'Noto Sans SC', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; background: #1a0a2e; }
+body { display: flex; justify-content: center; align-items: center; font-family: var(--ff-body); }
+
+/* =============================================
+   SHELL
+   ============================================= */
+#shell {
+  width: 390px; height: 844px;
+  position: relative; overflow: hidden;
+  border-radius: 40px;
+  box-shadow: 0 0 0 2px #333, 0 30px 80px rgba(0,0,0,0.8);
+  background: #000;
+}
+
+/* =============================================
+   DUNGEON SELECT PAGE
+   ============================================= */
+#page-dungeon {
+  width: 100%; height: 100%;
+  background: linear-gradient(160deg, #0f0a1e 0%, #1e0a3e 100%);
+  display: flex; flex-direction: column;
+  padding: 0 0 80px;
+}
+.top-bar {
+  padding: 54px 24px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.top-bar h1 {
+  font-family: var(--ff-title);
+  font-size: 22px; color: #f1f0ff; flex: 1;
+  letter-spacing: 0.5px;
+}
+.stamina-badge {
+  background: rgba(245,158,11,0.15);
+  border: 1px solid rgba(245,158,11,0.4);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 12px; color: #fbbf24;
+  font-weight: 700;
+}
+.dungeon-list { padding: 8px 20px; display: flex; flex-direction: column; gap: 14px; }
+.dungeon-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px; padding: 18px;
+  display: flex; align-items: center; gap: 16px;
+  cursor: pointer; transition: all 0.25s ease;
+  position: relative; overflow: hidden;
+}
+.dungeon-card::before {
+  content: ''; position: absolute; inset: 0; opacity: 0;
+  transition: opacity 0.25s;
+}
+.dungeon-card.forest::before { background: linear-gradient(135deg, rgba(52,211,153,0.15), transparent); }
+.dungeon-card.cave::before   { background: linear-gradient(135deg, rgba(124,58,237,0.2), transparent); }
+.dungeon-card.volcano::before{ background: linear-gradient(135deg, rgba(239,68,68,0.2), transparent); }
+.dungeon-card:hover::before, .dungeon-card:active::before { opacity: 1; }
+.dungeon-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.25); }
+.dungeon-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+}
+.forest .dungeon-icon { background: rgba(52,211,153,0.2); }
+.cave .dungeon-icon   { background: rgba(124,58,237,0.2); }
+.volcano .dungeon-icon{ background: rgba(239,68,68,0.2); }
+.dungeon-info { flex: 1; }
+.dungeon-name { font-size: 16px; font-weight: 700; color: #f1f0ff; margin-bottom: 4px; }
+.dungeon-desc { font-size: 12px; color: rgba(241,240,255,0.5); margin-bottom: 8px; }
+.dungeon-tags { display: flex; gap: 6px; }
+.tag {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+}
+.tag-level { background: rgba(167,139,250,0.2); color: #a78bfa; }
+.tag-cost  { background: rgba(245,158,11,0.2); color: #fbbf24; }
+.dungeon-arrow { color: rgba(241,240,255,0.3); font-size: 18px; }
+
+/* =============================================
+   EXPLORE MAP PAGE
+   ============================================= */
+#page-map {
+  width: 100%; height: 100%;
+  position: absolute; inset: 0;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* 地图画布 */
+#map-canvas {
+  width: 100%; flex: 1;
+  display: block; position: relative;
+  cursor: none;
+}
+/* 地图 HUD */
+.map-hud {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 54px 20px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  pointer-events: none; z-index: 10;
+}
+.map-hud-left { display: flex; flex-direction: column; gap: 4px; }
+.dungeon-title-hud {
+  font-family: var(--ff-title);
+  font-size: 18px; color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.monster-count-hud {
+  font-size: 12px; color: rgba(255,255,255,0.7);
+  font-weight: 600;
+  background: rgba(0,0,0,0.4); border-radius: 10px; padding: 2px 10px; width: fit-content;
+}
+.back-btn {
+  pointer-events: all; cursor: pointer;
+  background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px; padding: 6px 14px;
+  color: #fff; font-size: 13px; font-weight: 600;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.back-btn:hover { background: rgba(0,0,0,0.7); }
+
+/* 底部操作面板 */
+.map-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 160px; pointer-events: none; z-index: 10;
+  display: flex; align-items: flex-end; justify-content: flex-end;
+  padding: 0 24px 32px;
+}
+/* 虚拟方向键（移动端） */
+.dpad {
+  pointer-events: all;
+  display: grid; grid-template-columns: 44px 44px 44px;
+  grid-template-rows: 44px 44px 44px; gap: 2px;
+  opacity: 0.85;
+}
+.dpad-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: rgba(255,255,255,0.8);
+  cursor: pointer; user-select: none;
+  transition: background 0.1s;
+  -webkit-tap-highlight-color: transparent;
+}
+.dpad-btn:active { background: rgba(255,255,255,0.28); }
+.dpad-center { background: rgba(255,255,255,0.06); border-color: transparent; cursor: default; }
+
+/* =============================================
+   ENCOUNTER TRANSITION OVERLAY
+   ============================================= */
+#overlay-black {
+  position: absolute; inset: 0; background: #000;
+  z-index: 100; opacity: 0; pointer-events: none;
+  transition: opacity 0.1s linear;
+}
+#overlay-flash {
+  position: absolute; inset: 0; background: #fff;
+  z-index: 101; opacity: 0; pointer-events: none;
+}
+
+/* =============================================
+   BATTLE TRANSITION PAGE
+   ============================================= */
+#page-battle-preview {
+  position: absolute; inset: 0;
+  background: #1a1035;
+  display: none; flex-direction: column;
+  z-index: 50;
+}
+
+/* =============================================
+   BATTLE PAGE (宝可梦式对角线布局 预览)
+   ============================================= */
+.battle-arena {
+  flex: 1; position: relative;
+  overflow: hidden;
+}
+.battle-bg-gradient {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #0d1b3e 0%, #1a2f5a 40%, #2d4a2e 40%, #3a5e38 100%);
+}
+/* 战斗平台：宝可梦式半圆形底座 */
+.battle-platform {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.15);
+}
+.platform-enemy {
+  width: 140px; height: 40px;
+  top: 100px; right: 30px;
+  background: rgba(255,100,100,0.12);
+  border-color: rgba(255,100,100,0.25);
+}
+.platform-player {
+  width: 120px; height: 34px;
+  bottom: 200px; left: 20px;
+  background: rgba(100,180,255,0.12);
+  border-color: rgba(100,180,255,0.25);
+}
+/* 怪物（右上，较大） */
+.battle-monster {
+  position: absolute;
+  right: 40px; top: 20px;
+  width: 110px; height: 110px;
+  display: flex; align-items: center; justify-content: center;
+}
+.monster-sprite {
+  width: 88px; height: 88px; border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+  animation: monsterFloat 3s ease-in-out infinite;
+}
+@keyframes monsterFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+/* 怪物信息框（左上） */
+.battle-info-enemy {
+  position: absolute; left: 16px; top: 28px;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px; padding: 10px 14px; min-width: 160px;
+}
+.battle-info-name {
+  font-size: 13px; font-weight: 700; color: #f1f0ff; margin-bottom: 6px;
+}
+.hp-bar-wrap { display: flex; align-items: center; gap: 6px; }
+.hp-label { font-size: 10px; color: #ef4444; font-weight: 700; width: 16px; }
+.hp-track {
+  flex: 1; height: 8px; background: rgba(255,255,255,0.1);
+  border-radius: 4px; overflow: hidden;
+}
+.hp-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+.hp-fill.enemy  { background: linear-gradient(90deg, #f87171, #ef4444); width: 78%; }
+.hp-fill.player { background: linear-gradient(90deg, #4ade80, #22c55e); width: 92%; }
+
+/* 宠物（左下，较小） */
+.battle-pet {
+  position: absolute; left: 20px; bottom: 155px;
+  width: 90px; height: 90px;
+  display: flex; align-items: center; justify-content: center;
+}
+.pet-sprite {
+  width: 72px; height: 72px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  animation: petBob 2.5s ease-in-out infinite;
+}
+@keyframes petBob {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+}
+/* 玩家信息框（右下） */
+.battle-info-player {
+  position: absolute; right: 16px; bottom: 168px;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px; padding: 10px 14px; min-width: 140px;
+}
+
+/* 答题面板 */
+.battle-answer-panel {
+  background: rgba(15,10,30,0.95);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding: 16px;
+}
+.battle-word-display {
+  text-align: center; margin-bottom: 14px;
+}
+.battle-word-cn {
+  font-size: 13px; color: rgba(241,240,255,0.6); margin-bottom: 4px;
+}
+.battle-word-en {
+  font-family: var(--ff-title);
+  font-size: 26px; color: #f1f0ff;
+  letter-spacing: 1px;
+}
+.battle-options {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.battle-option {
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 14px; padding: 10px 8px;
+  text-align: center; font-size: 13px; color: #f1f0ff;
+  font-weight: 600; cursor: pointer;
+  transition: all 0.15s ease;
+}
+.battle-option:hover { background: rgba(124,58,237,0.3); border-color: #7c3aed; transform: scale(1.02); }
+.battle-option.correct { background: rgba(52,211,153,0.25); border-color: #34d399; color: #34d399; }
+.battle-option.wrong   { background: rgba(239,68,68,0.2); border-color: #ef4444; color: #ef4444; animation: shake 0.3s; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  60% { transform: translateX(5px); }
+}
+
+/* =============================================
+   THEME SELECTOR (顶部 tab 切换)
+   ============================================= */
+.theme-tabs {
+  display: flex; gap: 0;
+  background: rgba(0,0,0,0.3);
+  border-radius: 12px; padding: 3px;
+  margin: 0 20px 12px;
+}
+.theme-tab {
+  flex: 1; padding: 8px 4px; border-radius: 9px;
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);
+  text-align: center; cursor: pointer; transition: all 0.2s;
+}
+.theme-tab.active {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+/* =============================================
+   ENCOUNTER POPUP (遭遇提示)
+   ============================================= */
+#encounter-popup {
+  position: absolute; inset: 0; z-index: 90;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+}
+.encounter-card {
+  background: rgba(15,10,30,0.95);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 24px; padding: 28px 32px;
+  text-align: center; max-width: 260px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popIn {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.encounter-emoji { font-size: 52px; margin-bottom: 12px; display: block; }
+.encounter-title {
+  font-family: var(--ff-title);
+  font-size: 22px; color: #f1f0ff; margin-bottom: 6px;
+}
+.encounter-sub  { font-size: 13px; color: rgba(241,240,255,0.6); margin-bottom: 20px; }
+.encounter-btns { display: flex; gap: 10px; }
+.btn-primary {
+  flex: 1; padding: 11px; border-radius: 12px;
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color: #fff; font-size: 14px; font-weight: 700;
+  cursor: pointer; border: none; transition: all 0.2s;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(124,58,237,0.5); }
+.btn-ghost {
+  flex: 1; padding: 11px; border-radius: 12px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.08); }
+
+/* =============================================
+   FLOATING DAMAGE NUMBER
+   ============================================= */
+.damage-float {
+  position: absolute;
+  font-family: var(--ff-title);
+  font-size: 28px; font-weight: 900;
+  color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  pointer-events: none; z-index: 200;
+  animation: floatUp 0.8s ease-out forwards;
+}
+.damage-float.crit { color: #fbbf24; font-size: 36px; }
+.damage-float.heal { color: #4ade80; }
+@keyframes floatUp {
+  0%   { transform: translateY(0) scale(1); opacity: 1; }
+  50%  { transform: translateY(-40px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(-80px) scale(0.8); opacity: 0; }
+}
+
+</style>
+</head>
+<body>
+<div id="shell">
+
+  <!-- =======================================
+       PAGE 1: 副本选择
+       ======================================= -->
+  <div id="page-dungeon">
+    <div class="top-bar">
+      <div style="font-size:22px">🗺️</div>
+      <h1>选择副本</h1>
+      <div class="stamina-badge">⚡ 90/100</div>
+    </div>
+
+    <div class="theme-tabs">
+      <div class="theme-tab active" onclick="selectTheme('forest',this)">🌲 森林</div>
+      <div class="theme-tab" onclick="selectTheme('cave',this)">⛰️ 洞穴</div>
+      <div class="theme-tab" onclick="selectTheme('volcano',this)">🌋 火山</div>
+    </div>
+
+    <div class="dungeon-list">
+      <div class="dungeon-card forest" onclick="enterDungeon('forest')">
+        <div class="dungeon-icon">🌲</div>
+        <div class="dungeon-info">
+          <div class="dungeon-name">森林冒险</div>
+          <div class="dungeon-desc">绿意盎然的新手乐园，史莱姆在树间游荡</div>
+          <div class="dungeon-tags">
+            <span class="tag tag-level">Lv.1~10</span>
+            <span class="tag tag-cost">⚡ ×10</span>
+          </div>
+        </div>
+        <div class="dungeon-arrow">›</div>
+      </div>
+
+      <div class="dungeon-card cave" onclick="enterDungeon('cave')">
+        <div class="dungeon-icon">⛰️</div>
+        <div class="dungeon-info">
+          <div class="dungeon-name">洞穴探险</div>
+          <div class="dungeon-desc">幽暗石窟中，哥布林和蝙蝠在黑暗中埋伏</div>
+          <div class="dungeon-tags">
+            <span class="tag tag-level">Lv.5~20</span>
+            <span class="tag tag-cost">⚡ ×10</span>
+          </div>
+        </div>
+        <div class="dungeon-arrow">›</div>
+      </div>
+
+      <div class="dungeon-card volcano" onclick="enterDungeon('volcano')">
+        <div class="dungeon-icon">🌋</div>
+        <div class="dungeon-info">
+          <div class="dungeon-name">火山试炼</div>
+          <div class="dungeon-desc">熔岩涌动的极限考验，只有强者才能生存</div>
+          <div class="dungeon-tags">
+            <span class="tag tag-level">Lv.15+</span>
+            <span class="tag tag-cost">⚡ ×10</span>
+          </div>
+        </div>
+        <div class="dungeon-arrow">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================
+       PAGE 2: 探索地图
+       ======================================= -->
+  <div id="page-map">
+    <!-- 地图 Canvas -->
+    <canvas id="map-canvas" width="390" height="684"></canvas>
+
+    <!-- HUD -->
+    <div class="map-hud">
+      <div class="map-hud-left">
+        <div class="dungeon-title-hud" id="hud-dungeon-name">森林冒险</div>
+        <div class="monster-count-hud" id="hud-monster-count">怪物 6/6</div>
+      </div>
+      <button class="back-btn" onclick="exitMap()">← 返回</button>
+    </div>
+
+    <!-- 底部方向键 -->
+    <div class="map-bottom">
+      <div class="dpad" id="dpad">
+        <div></div>
+        <div class="dpad-btn" id="btn-up" data-dir="up">▲</div>
+        <div></div>
+        <div class="dpad-btn" id="btn-left" data-dir="left">◀</div>
+        <div class="dpad-btn dpad-center"></div>
+        <div class="dpad-btn" id="btn-right" data-dir="right">▶</div>
+        <div></div>
+        <div class="dpad-btn" id="btn-down" data-dir="down">▼</div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- 遭遇弹窗 -->
+    <div id="encounter-popup">
+      <div class="encounter-card">
+        <span class="encounter-emoji" id="enc-emoji">🟢</span>
+        <div class="encounter-title" id="enc-name">野生绿色史莱姆</div>
+        <div class="encounter-sub">出现了！</div>
+        <div class="encounter-btns">
+          <button class="btn-primary" onclick="startBattle()">⚔️ 战斗</button>
+          <button class="btn-ghost" onclick="hideEncounterPopup()">→ 逃跑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================
+       PAGE 3: 战斗预览（宝可梦式）
+       ======================================= -->
+  <div id="page-battle-preview">
+    <!-- 战斗舞台 -->
+    <div class="battle-arena">
+      <div class="battle-bg-gradient"></div>
+
+      <!-- 怪物平台 -->
+      <div class="battle-platform platform-enemy"></div>
+      <!-- 玩家平台 -->
+      <div class="battle-platform platform-player"></div>
+
+      <!-- 怪物（右上大） -->
+      <div class="battle-monster">
+        <div class="monster-sprite" id="battle-monster-sprite">🟢</div>
+      </div>
+
+      <!-- 怪物信息框（左上） -->
+      <div class="battle-info-enemy">
+        <div class="battle-info-name" id="battle-enemy-name">绿色史莱姆  Lv.3</div>
+        <div class="hp-bar-wrap">
+          <span class="hp-label">HP</span>
+          <div class="hp-track"><div class="hp-fill enemy" id="enemy-hp-fill"></div></div>
+          <span style="font-size:10px;color:rgba(255,255,255,0.5);margin-left:4px" id="enemy-hp-text">117/150</span>
+        </div>
+      </div>
+
+      <!-- 玩家宠物（左下小） -->
+      <div class="battle-pet">
+        <div class="pet-sprite" id="battle-pet-sprite">⚡</div>
+      </div>
+
+      <!-- 玩家信息框（右下） -->
+      <div class="battle-info-player">
+        <div class="battle-info-name">闪电狐  Lv.5</div>
+        <div class="hp-bar-wrap">
+          <span class="hp-label" style="color:#22c55e">HP</span>
+          <div class="hp-track"><div class="hp-fill player" id="player-hp-fill"></div></div>
+          <span style="font-size:10px;color:rgba(255,255,255,0.5);margin-left:4px" id="player-hp-text">92/100</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 答题面板 -->
+    <div class="battle-answer-panel">
+      <div class="battle-word-display">
+        <div class="battle-word-cn" id="battle-cn">这个单词的意思是：</div>
+        <div class="battle-word-en" id="battle-en">adventure</div>
+      </div>
+      <div class="battle-options" id="battle-options"></div>
+    </div>
+  </div>
+
+  <!-- 遮罩层 -->
+  <div id="overlay-black"></div>
+  <div id="overlay-flash"></div>
+</div>
+
+<script>
+// =============================================
+//  配置数据
+// =============================================
+const THEMES = {
+  forest: {
+    bgColor: '#c8e6c9', groundColors: ['#81c784','#a5d6a7','#66bb6a','#4caf50'],
+    wallColor: '#2e7d32', decorColor: '#1b5e20',
+    monsters: [
+      { id:'slime_green', name:'绿色史莱姆', emoji:'🟢', color:'#52c41a', hp:150, maxHp:150, r:16, roamR:80, speed:0.4 },
+      { id:'slime_blue',  name:'蓝色史莱姆', emoji:'🔵', color:'#1677ff', hp:130, maxHp:130, r:16, roamR:70, speed:0.35 },
+      { id:'mushroom',    name:'小蘑菇怪',   emoji:'🍄', color:'#d4380d', hp:160, maxHp:160, r:18, roamR:55, speed:0.3 },
+      { id:'slime_green', name:'绿色史莱姆', emoji:'🟢', color:'#52c41a', hp:150, maxHp:150, r:16, roamR:75, speed:0.38 },
+      { id:'slime_blue',  name:'蓝色史莱姆', emoji:'🔵', color:'#1677ff', hp:130, maxHp:130, r:16, roamR:65, speed:0.32 },
+      { id:'mushroom',    name:'小蘑菇怪',   emoji:'🍄', color:'#d4380d', hp:160, maxHp:160, r:18, roamR:60, speed:0.28 },
+    ],
+    title: '🌲 森林冒险',
+    decorations: [
+      {x:60, y:120, type:'tree'},{x:320, y:80, type:'tree'},{x:180, y:50, type:'tree'},
+      {x:40, y:380, type:'rock'},{x:340, y:350, type:'tree'},{x:200, y:600, type:'rock'},
+      {x:80, y:550, type:'tree'},{x:310, y:520, type:'tree'},{x:150, y:680, type:'rock'},
+    ]
+  },
+  cave: {
+    bgColor: '#263238', groundColors: ['#37474f','#455a64','#2e3f47','#3c5060'],
+    wallColor: '#1a232a', decorColor: '#546e7a',
+    monsters: [
+      { id:'goblin',      name:'岩石哥布林', emoji:'👺', color:'#722ed1', hp:180, maxHp:180, r:18, roamR:90, speed:0.5 },
+      { id:'bat',         name:'洞穴蝙蝠',   emoji:'🦇', color:'#8c8c8c', hp:140, maxHp:140, r:14, roamR:120, speed:0.65 },
+      { id:'golem_small', name:'小石傀儡',   emoji:'🪨', color:'#7c3aed', hp:200, maxHp:200, r:22, roamR:45, speed:0.22 },
+      { id:'goblin',      name:'岩石哥布林', emoji:'👺', color:'#722ed1', hp:180, maxHp:180, r:18, roamR:85, speed:0.48 },
+      { id:'bat',         name:'洞穴蝙蝠',   emoji:'🦇', color:'#8c8c8c', hp:140, maxHp:140, r:14, roamR:110, speed:0.6 },
+      { id:'golem_small', name:'小石傀儡',   emoji:'🪨', color:'#7c3aed', hp:200, maxHp:200, r:22, roamR:50, speed:0.2 },
+    ],
+    title: '⛰️ 洞穴探险',
+    decorations: [
+      {x:50, y:100, type:'rock'},{x:300, y:90, type:'stalactite'},{x:180, y:60, type:'rock'},
+      {x:35, y:400, type:'rock'},{x:350, y:340, type:'rock'},{x:210, y:580, type:'stalactite'},
+      {x:90, y:560, type:'rock'},{x:330, y:510, type:'rock'},{x:155, y:670, type:'rock'},
+    ]
+  },
+  volcano: {
+    bgColor: '#3e1c00', groundColors: ['#bf360c','#d84315','#a42b00','#c63f0e'],
+    wallColor: '#1a0900', decorColor: '#e64a19',
+    monsters: [
+      { id:'lava_lizard', name:'熔岩蜥蜴', emoji:'🦎', color:'#f5222d', hp:200, maxHp:200, r:20, roamR:95, speed:0.58 },
+      { id:'fire_imp',    name:'火焰小鬼', emoji:'😈', color:'#fa8c16', hp:170, maxHp:170, r:16, roamR:130, speed:0.72 },
+      { id:'magma_golem', name:'岩浆傀儡', emoji:'🌋', color:'#a8071a', hp:250, maxHp:250, r:24, roamR:55, speed:0.2 },
+      { id:'lava_lizard', name:'熔岩蜥蜴', emoji:'🦎', color:'#f5222d', hp:200, maxHp:200, r:20, roamR:88, speed:0.55 },
+      { id:'fire_imp',    name:'火焰小鬼', emoji:'😈', color:'#fa8c16', hp:170, maxHp:170, r:16, roamR:120, speed:0.68 },
+      { id:'magma_golem', name:'岩浆傀儡', emoji:'🌋', color:'#a8071a', hp:250, maxHp:250, r:24, roamR:48, speed:0.18 },
+    ],
+    title: '🌋 火山试炼',
+    decorations: [
+      {x:55, y:115, type:'lava'},{x:310, y:85, type:'rock'},{x:185, y:55, type:'lava'},
+      {x:38, y:385, type:'rock'},{x:345, y:345, type:'lava'},{x:205, y:585, type:'rock'},
+      {x:85, y:555, type:'lava'},{x:325, y:515, type:'rock'},{x:158, y:672, type:'lava'},
+    ]
+  }
+};
+
+const WORD_POOL = [
+  { en: 'adventure', cn: '冒险', options: ['冒险', '危险', '挑战', '旅行'] },
+  { en: 'ancient',   cn: '古老的', options: ['古老的', '巨大的', '神秘的', '遥远的'] },
+  { en: 'courage',   cn: '勇气', options: ['勇气', '力量', '智慧', '速度'] },
+  { en: 'crystal',   cn: '水晶', options: ['水晶', '宝石', '金属', '矿石'] },
+  { en: 'shadow',    cn: '阴影', options: ['阴影', '光线', '色彩', '边界'] },
+  { en: 'thunder',   cn: '雷电', options: ['雷电', '暴风', '洪水', '地震'] },
+  { en: 'fierce',    cn: '凶猛的', options: ['凶猛的', '温柔的', '迅速的', '强壮的'] },
+  { en: 'emerge',    cn: '出现', options: ['出现', '消失', '移动', '转变'] },
+];
+
+// =============================================
+//  全局状态
+// =============================================
+let currentDungeon = 'forest';
+let mapRunning = false;
+let gameLoop = null;
+
+// 玩家状态
+const player = { x: 195, y: 342, r: 12, speed: 2.5 };
+const keys = {};
+
+// 怪物状态（运行时生成）
+let monsters = [];
+
+// 战斗状态
+let currentMonster = null;
+let battleActive = false;
+let playerHp = 100, playerMaxHp = 100;
+let enemyHp = 0, enemyMaxHp = 0;
+let currentWord = null;
+let comboCount = 0;
+
+// =============================================
+//  地图渲染引擎
+// =============================================
+const canvas = document.getElementById('map-canvas');
+const ctx = canvas.getContext('2d');
+
+function initMonsters(dungeonId) {
+  const theme = THEMES[dungeonId];
+  const w = canvas.width, h = canvas.height;
+  const spawnPoints = [
+    {x:80,  y:180}, {x:300, y:150}, {x:160, y:380},
+    {x:310, y:420}, {x:60,  y:500}, {x:230, y:560},
+  ];
+  monsters = theme.monsters.map((cfg, i) => ({
+    ...cfg,
+    x: spawnPoints[i].x,
+    y: spawnPoints[i].y,
+    ox: spawnPoints[i].x,  // 巡逻原点
+    oy: spawnPoints[i].y,
+    tx: spawnPoints[i].x,  // 目标点
+    ty: spawnPoints[i].y,
+    moving: false,
+    waitTimer: Math.random() * 2,
+    defeated: false,
+    exclamation: 0,  // 感叹号动画进度
+    triggerR: 36,
+  }));
+}
+
+function pickNewTarget(m) {
+  const angle = Math.random() * Math.PI * 2;
+  const dist = Math.random() * m.roamR;
+  m.tx = Math.max(20, Math.min(canvas.width - 20, m.ox + Math.cos(angle) * dist));
+  m.ty = Math.max(60, Math.min(canvas.height - 20, m.oy + Math.sin(angle) * dist));
+  m.moving = true;
+}
+
+function updateMonsters(dt) {
+  for (const m of monsters) {
+    if (m.defeated) continue;
+    if (m.exclamation > 0) { m.exclamation -= dt * 2; continue; } // 感叹号播放中暂停移动
+
+    if (m.moving) {
+      const dx = m.tx - m.x, dy = m.ty - m.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const step = m.speed * dt * 60;
+      if (dist < step + 1) {
+        m.x = m.tx; m.y = m.ty;
+        m.moving = false;
+        m.waitTimer = 0.5 + Math.random() * 1.8;
+      } else {
+        m.x += (dx/dist) * step;
+        m.y += (dy/dist) * step;
+      }
+    } else {
+      m.waitTimer -= dt;
+      if (m.waitTimer <= 0) pickNewTarget(m);
+    }
+
+    // 碰撞检测
+    const pdx = player.x - m.x, pdy = player.y - m.y;
+    const pdist = Math.sqrt(pdx*pdx + pdy*pdy);
+    if (pdist < m.triggerR + player.r) {
+      triggerEncounter(m);
+    }
+  }
+}
+
+function drawMap(dungeonId) {
+  const theme = THEMES[dungeonId];
+  const w = canvas.width, h = canvas.height;
+
+  // 背景底色
+  ctx.fillStyle = theme.bgColor;
+  ctx.fillRect(0, 0, w, h);
+
+  // 瓦片感地面（随机色块）
+  const tileW = 48, tileH = 48;
+  for (let ty = 0; ty < Math.ceil(h/tileH)+1; ty++) {
+    for (let tx = 0; tx < Math.ceil(w/tileW)+1; tx++) {
+      const seed = (tx * 17 + ty * 31) % theme.groundColors.length;
+      ctx.fillStyle = theme.groundColors[seed];
+      ctx.fillRect(tx*tileW, ty*tileH, tileW-1, tileH-1);
+    }
+  }
+
+  // 装饰物（扁平几何）
+  drawDecorations(theme, dungeonId);
+}
+
+function drawDecorations(theme, dungeonId) {
+  const decors = THEMES[dungeonId].decorations;
+  for (const d of decors) {
+    ctx.save();
+    ctx.translate(d.x, d.y);
+    if (d.type === 'tree') {
+      // 简约扁平树：圆形树冠 + 矩形树干
+      ctx.fillStyle = theme.decorColor;
+      ctx.fillRect(-5, 0, 10, 16);
+      ctx.fillStyle = theme.wallColor;
+      ctx.beginPath(); ctx.arc(0, -12, 18, 0, Math.PI*2); ctx.fill();
+      // 高光点
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.beginPath(); ctx.arc(-5, -16, 6, 0, Math.PI*2); ctx.fill();
+    } else if (d.type === 'rock' || d.type === 'stalactite') {
+      // 简约岩石：多边形
+      ctx.fillStyle = theme.wallColor;
+      ctx.beginPath();
+      ctx.moveTo(0, -18); ctx.lineTo(16, -4); ctx.lineTo(12, 12);
+      ctx.lineTo(-10, 12); ctx.lineTo(-16, -2); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      ctx.beginPath(); ctx.moveTo(0,-18); ctx.lineTo(16,-4); ctx.lineTo(5,-10); ctx.closePath(); ctx.fill();
+    } else if (d.type === 'lava') {
+      // 熔岩池：椭圆形
+      ctx.fillStyle = 'rgba(255,100,0,0.5)';
+      ctx.beginPath(); ctx.ellipse(0, 0, 22, 14, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = 'rgba(255,200,0,0.4)';
+      ctx.beginPath(); ctx.ellipse(-4, -2, 10, 6, -0.3, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+function drawMonsters() {
+  const now = Date.now() / 1000;
+  for (const m of monsters) {
+    if (m.defeated) continue;
+    ctx.save();
+    ctx.translate(m.x, m.y);
+
+    // 阴影
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.beginPath(); ctx.ellipse(0, m.r+2, m.r*0.9, 5, 0, 0, Math.PI*2); ctx.fill();
+
+    // 怪物圆形本体（扁平2D风格）
+    const bounce = Math.sin(now * 2.5 + m.x) * 2;
+    ctx.translate(0, bounce);
+
+    // 外发光
+    const grd = ctx.createRadialGradient(0, 0, m.r*0.3, 0, 0, m.r*1.4);
+    grd.addColorStop(0, m.color + 'cc');
+    grd.addColorStop(1, m.color + '00');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(0, 0, m.r*1.4, 0, Math.PI*2); ctx.fill();
+
+    // 主体
+    ctx.fillStyle = m.color;
+    ctx.beginPath(); ctx.arc(0, 0, m.r, 0, Math.PI*2); ctx.fill();
+
+    // 高光
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.beginPath(); ctx.arc(-m.r*0.3, -m.r*0.3, m.r*0.38, 0, Math.PI*2); ctx.fill();
+
+    // emoji（小图标）
+    ctx.font = `${m.r * 1.1}px serif`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(m.emoji, 0, 0);
+
+    // 感叹号
+    if (m.exclamation > 0) {
+      const scale = Math.min(1, (1 - m.exclamation) * 4);
+      ctx.font = `bold ${18 * scale}px sans-serif`;
+      ctx.fillStyle = '#fbbf24';
+      ctx.textAlign = 'center';
+      ctx.fillText('!', 0, -m.r - 18 * scale);
+    }
+
+    ctx.restore();
+
+    // 名字标签
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    roundRect(ctx, m.x - 30, m.y + m.r + 6, 60, 16, 5);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = '9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(m.name, m.x, m.y + m.r + 16);
+  }
+}
+
+function drawPlayer() {
+  const now = Date.now() / 1000;
+  const { x, y, r } = player;
+  ctx.save();
+  ctx.translate(x, y);
+
+  // 阴影
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.beginPath(); ctx.ellipse(0, r+2, r*0.85, 4, 0, 0, Math.PI*2); ctx.fill();
+
+  // 移动时小幅上下抖动
+  const isMoving = keys['ArrowLeft']||keys['ArrowRight']||keys['ArrowUp']||keys['ArrowDown']
+                  ||keys['a']||keys['d']||keys['w']||keys['s'];
+  const bob = isMoving ? Math.sin(now * 12) * 1.5 : 0;
+  ctx.translate(0, bob);
+
+  // 外发光（玩家标识）
+  const grd = ctx.createRadialGradient(0, 0, r*0.2, 0, 0, r*1.6);
+  grd.addColorStop(0, 'rgba(124,58,237,0.6)');
+  grd.addColorStop(1, 'rgba(124,58,237,0)');
+  ctx.fillStyle = grd;
+  ctx.beginPath(); ctx.arc(0, 0, r*1.6, 0, Math.PI*2); ctx.fill();
+
+  // 宠物圆形本体
+  ctx.fillStyle = '#7c3aed';
+  ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#a78bfa';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.stroke();
+
+  // 高光
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.beginPath(); ctx.arc(-r*0.28, -r*0.28, r*0.35, 0, Math.PI*2); ctx.fill();
+
+  // 宠物 emoji
+  ctx.font = `${r * 1.1}px serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('⚡', 0, 0);
+
+  ctx.restore();
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+
+// =============================================
+//  游戏循环
+// =============================================
+let lastTime = 0;
+function gameFrame(ts) {
+  const dt = Math.min((ts - lastTime) / 1000, 0.05);
+  lastTime = ts;
+
+  if (!mapRunning) return;
+
+  // 玩家移动
+  let dx = 0, dy = 0;
+  if (keys['ArrowLeft']  || keys['a']) dx -= 1;
+  if (keys['ArrowRight'] || keys['d']) dx += 1;
+  if (keys['ArrowUp']    || keys['w']) dy -= 1;
+  if (keys['ArrowDown']  || keys['s']) dy += 1;
+
+  if (dx !== 0 && dy !== 0) { dx *= 0.707; dy *= 0.707; }
+
+  player.x = Math.max(player.r+10, Math.min(canvas.width - player.r-10,  player.x + dx * player.speed * dt * 60));
+  player.y = Math.max(player.r+60, Math.min(canvas.height - player.r-20, player.y + dy * player.speed * dt * 60));
+
+  updateMonsters(dt);
+
+  // 绘制
+  drawMap(currentDungeon);
+  drawDecorations(THEMES[currentDungeon], currentDungeon);
+  drawMonsters();
+  drawPlayer();
+
+  // 更新怪物数量 HUD
+  const alive = monsters.filter(m => !m.defeated).length;
+  document.getElementById('hud-monster-count').textContent = `怪物 ${alive}/${monsters.length}`;
+
+  gameLoop = requestAnimationFrame(gameFrame);
+}
+
+// =============================================
+//  遭遇系统
+// =============================================
+let encounterLock = false;
+function triggerEncounter(monster) {
+  if (encounterLock) return;
+  encounterLock = true;
+  mapRunning = false; // 暂停移动
+
+  monster.exclamation = 1;
+
+  // 短暂延迟后弹窗
+  setTimeout(() => {
+    currentMonster = monster;
+    document.getElementById('enc-emoji').textContent = monster.emoji;
+    document.getElementById('enc-name').textContent = `野生${monster.name}`;
+    document.getElementById('encounter-popup').style.display = 'flex';
+  }, 400);
+}
+
+function hideEncounterPopup() {
+  document.getElementById('encounter-popup').style.display = 'none';
+  if (currentMonster) {
+    // 逃跑：怪物回原点
+    currentMonster.x = currentMonster.ox + 40;
+    currentMonster.y = currentMonster.oy + 40;
+    currentMonster = null;
+  }
+  encounterLock = false;
+  mapRunning = true;
+  gameLoop = requestAnimationFrame(gameFrame);
+}
+
+function startBattle() {
+  document.getElementById('encounter-popup').style.display = 'none';
+
+  // 遭遇转场：黑幕 → 白闪 → 战斗场景
+  const black = document.getElementById('overlay-black');
+  const flash = document.getElementById('overlay-flash');
+
+  // 1. 黑幕淡入
+  black.style.transition = 'opacity 0.12s linear';
+  black.style.opacity = '1';
+  setTimeout(() => {
+    // 2. 白色闪光
+    flash.style.transition = 'none';
+    flash.style.opacity = '1';
+    setTimeout(() => {
+      flash.style.transition = 'opacity 0.15s linear';
+      flash.style.opacity = '0';
+    }, 50);
+
+    // 3. 切换到战斗页
+    setTimeout(() => {
+      showBattle();
+      black.style.transition = 'opacity 0.2s linear';
+      black.style.opacity = '0';
+    }, 120);
+  }, 150);
+}
+
+// =============================================
+//  战斗系统（预览版）
+// =============================================
+function showBattle() {
+  document.getElementById('page-map').style.display = 'none';
+  document.getElementById('page-battle-preview').style.display = 'flex';
+
+  battleActive = true;
+  playerHp = 100; playerMaxHp = 100;
+  enemyHp = currentMonster?.hp ?? 150;
+  enemyMaxHp = currentMonster?.maxHp ?? 150;
+  comboCount = 0;
+
+  // 设置战斗界面怪物信息
+  document.getElementById('battle-monster-sprite').textContent = currentMonster?.emoji ?? '🟢';
+  document.getElementById('battle-enemy-name').textContent = `${currentMonster?.name ?? '怪物'}  Lv.${currentMonster?.level ?? 1}`;
+
+  updateBattleHpBars();
+  nextBattleQuestion();
+}
+
+function updateBattleHpBars() {
+  const ep = Math.max(0, enemyHp / enemyMaxHp * 100);
+  const pp = Math.max(0, playerHp / playerMaxHp * 100);
+  document.getElementById('enemy-hp-fill').style.width = ep + '%';
+  document.getElementById('player-hp-fill').style.width = pp + '%';
+  document.getElementById('enemy-hp-text').textContent  = `${Math.max(0,enemyHp)}/${enemyMaxHp}`;
+  document.getElementById('player-hp-text').textContent = `${Math.max(0,playerHp)}/${playerMaxHp}`;
+}
+
+function nextBattleQuestion() {
+  currentWord = WORD_POOL[Math.floor(Math.random() * WORD_POOL.length)];
+  document.getElementById('battle-cn').textContent = '这个单词的意思是：';
+  document.getElementById('battle-en').textContent = currentWord.en;
+
+  // 随机打乱选项
+  const opts = [...currentWord.options].sort(() => Math.random() - 0.5);
+  const container = document.getElementById('battle-options');
+  container.innerHTML = '';
+  opts.forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'battle-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerBattle(btn, opt === currentWord.cn);
+    container.appendChild(btn);
+  });
+}
+
+function answerBattle(btn, correct) {
+  if (!battleActive) return;
+  const allBtns = document.querySelectorAll('.battle-option');
+  allBtns.forEach(b => b.onclick = null);
+
+  if (correct) {
+    btn.classList.add('correct');
+    comboCount++;
+    const dmg = Math.round(12 * (1 + comboCount * 0.15));
+    enemyHp -= dmg;
+
+    // 浮字
+    spawnDamageFloat(dmg, 260, 90, false);
+
+    // 怪物受击抖动
+    const sprite = document.getElementById('battle-monster-sprite');
+    sprite.style.animation = 'none';
+    sprite.style.transform = 'translateX(12px)';
+    setTimeout(() => {
+      sprite.style.transform = 'translateX(-8px)';
+      setTimeout(() => {
+        sprite.style.transform = '';
+        sprite.style.animation = 'monsterFloat 3s ease-in-out infinite';
+      }, 80);
+    }, 60);
+
+  } else {
+    btn.classList.add('wrong');
+    comboCount = 0;
+    playerHp -= 15;
+    spawnDamageFloat(15, 100, 220, true);
+
+    // 宠物受击
+    const pet = document.getElementById('battle-pet-sprite');
+    pet.style.transform = 'translateX(-10px)';
+    setTimeout(() => { pet.style.transform = ''; }, 200);
+  }
+
+  updateBattleHpBars();
+
+  if (enemyHp <= 0) {
+    setTimeout(() => endBattle(true), 600);
+    return;
+  }
+  if (playerHp <= 0) {
+    setTimeout(() => endBattle(false), 600);
+    return;
+  }
+
+  setTimeout(nextBattleQuestion, 800);
+}
+
+function spawnDamageFloat(val, x, y, isPlayer) {
+  const el = document.createElement('div');
+  el.className = 'damage-float' + (isPlayer ? '' : (val > 18 ? ' crit' : ''));
+  el.textContent = isPlayer ? `-${val}` : `-${val}`;
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  document.getElementById('page-battle-preview').appendChild(el);
+  setTimeout(() => el.remove(), 900);
+}
+
+function endBattle(win) {
+  battleActive = false;
+  if (win && currentMonster) {
+    currentMonster.defeated = true;
+  }
+
+  // 简单结算弹窗
+  const msg = win
+    ? `🎉 战胜了 ${currentMonster?.name}！\n+25 EXP  +12 金币`
+    : '😢 战斗失败，下次加油！';
+
+  setTimeout(() => {
+    alert(msg);
+    returnToMap();
+  }, 300);
+}
+
+function returnToMap() {
+  document.getElementById('page-battle-preview').style.display = 'none';
+  document.getElementById('page-map').style.display = 'flex';
+
+  encounterLock = false;
+  currentMonster = null;
+  mapRunning = true;
+
+  // 淡入
+  const black = document.getElementById('overlay-black');
+  black.style.transition = 'opacity 0.3s linear';
+  black.style.opacity = '0';
+
+  lastTime = performance.now();
+  gameLoop = requestAnimationFrame(gameFrame);
+}
+
+// =============================================
+//  页面导航
+// =============================================
+function selectTheme(id, tab) {
+  document.querySelectorAll('.theme-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+function enterDungeon(dungeonId) {
+  currentDungeon = dungeonId;
+  const theme = THEMES[dungeonId];
+
+  // 重置玩家
+  player.x = 195; player.y = 342;
+
+  initMonsters(dungeonId);
+  document.getElementById('hud-dungeon-name').textContent = theme.title;
+
+  document.getElementById('page-dungeon').style.display = 'none';
+  const mapPage = document.getElementById('page-map');
+  mapPage.style.display = 'flex';
+
+  mapRunning = true;
+  encounterLock = false;
+  lastTime = performance.now();
+  gameLoop = requestAnimationFrame(gameFrame);
+}
+
+function exitMap() {
+  mapRunning = false;
+  if (gameLoop) { cancelAnimationFrame(gameLoop); gameLoop = null; }
+  document.getElementById('page-map').style.display = 'none';
+  document.getElementById('page-dungeon').style.display = 'flex';
+}
+
+// =============================================
+//  键盘输入
+// =============================================
+document.addEventListener('keydown', e => { keys[e.key] = true; });
+document.addEventListener('keyup', e => { delete keys[e.key]; });
+
+// 虚拟方向键
+document.querySelectorAll('.dpad-btn[data-dir]').forEach(btn => {
+  const dir = btn.dataset.dir;
+  const keyMap = { up:'ArrowUp', down:'ArrowDown', left:'ArrowLeft', right:'ArrowRight' };
+
+  btn.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    keys[keyMap[dir]] = true;
+    btn.style.background = 'rgba(255,255,255,0.3)';
+  });
+  const release = () => {
+    delete keys[keyMap[dir]];
+    btn.style.background = '';
+  };
+  btn.addEventListener('pointerup', release);
+  btn.addEventListener('pointerleave', release);
+});
+
+// =============================================
+//  初始化
+// =============================================
+// 默认显示副本选择页
+document.getElementById('page-dungeon').style.display = 'flex';
+</script>
+</body>
+</html>

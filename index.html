@@ -1,0 +1,2134 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WordPet · 英语对战宠物</title>
+<meta name="description" content="背单词·养宠物·打副本 — 用战斗的方式学英语">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WordPet">
+<meta property="og:title" content="WordPet · 英语对战宠物">
+<meta property="og:description" content="背单词·养宠物·打副本 — 用战斗的方式学英语">
+<meta property="og:type" content="game">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ff-title:'Fredoka One','Noto Sans SC',cursive;
+  --ff-body:'Noto Sans SC',-apple-system,sans-serif;
+  --c-primary:#7c3aed;
+  --c-primary-light:#a78bfa;
+  --c-primary-dark:#5b21b6;
+  --c-accent:#f59e0b;
+  --c-accent2:#10b981;
+  --c-danger:#ef4444;
+  --c-fever:#f97316;
+  --c-gold:#fbbf24;
+  --c-bg:#0f0a1e;
+  --c-text:#f1f0ff;
+  --c-text2:rgba(241,240,255,0.55);
+  --r-card:20px;
+  --r-btn:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:var(--ff-body);
+  background:var(--c-bg);
+  display:flex;justify-content:center;
+  min-height:100vh;
+}
+#app{
+  width:100%;max-width:420px;height:100vh;
+  position:relative;overflow:hidden;
+  background:var(--c-bg);
+}
+#particles-canvas{
+  position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:420px;height:100vh;
+  pointer-events:none;z-index:0;
+}
+.page{display:none;flex-direction:column;height:100vh;position:relative;z-index:1;overflow:hidden}
+.page.active{display:flex}
+.scroll-area{flex:1;overflow-y:auto;padding-bottom:24px;-webkit-overflow-scrolling:touch}
+.scroll-area::-webkit-scrollbar{display:none}
+.glass{
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:var(--r-card);
+}
+.btn{
+  border:none;cursor:pointer;
+  border-radius:var(--r-btn);
+  font-family:var(--ff-body);
+  font-size:16px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s ease;
+  -webkit-user-select:none;user-select:none;
+  position:relative;overflow:hidden;
+}
+.btn:active{transform:scale(0.96)}
+.btn-primary{
+  background:linear-gradient(135deg,#7c3aed,#9d4edd);
+  color:#fff;padding:15px 24px;width:100%;
+  box-shadow:0 4px 20px rgba(124,58,237,0.45),inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none}
+.btn-gold{
+  background:linear-gradient(135deg,#f59e0b,#ef8c0a);
+  color:#1a0a00;padding:15px 24px;width:100%;
+  box-shadow:0 4px 20px rgba(245,158,11,0.45),inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn-danger{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:#fff;padding:15px 24px;width:100%;
+  box-shadow:0 4px 14px rgba(239,68,68,0.4);
+}
+.tab-bar{
+  display:flex;
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(15,10,30,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,0.1);
+  padding:10px 0 max(10px,env(safe-area-inset-bottom));
+  z-index:50;
+}
+.tab-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  font-size:11px;color:rgba(241,240,255,0.45);cursor:pointer;padding:4px 0;
+  transition:all .2s;
+}
+.tab-item.active{color:var(--c-primary-light)}
+.tab-icon{
+  width:28px;height:28px;margin-bottom:3px;
+  transition:transform .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.tab-icon svg{width:24px;height:24px;transition:all .2s}
+.tab-item .tab-icon svg{stroke:rgba(241,240,255,0.45);fill:none}
+.tab-item.active .tab-icon svg{stroke:var(--c-primary-light)}
+.tab-item.active .tab-icon{transform:scale(1.2) translateY(-2px)}
+/* 激活tab高亮点 */
+.tab-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:var(--c-primary-light);
+  margin-top:2px;
+  opacity:0;transition:opacity .2s;
+}
+.tab-item.active .tab-dot{opacity:1}
+.tab-placeholder{height:72px;flex-shrink:0}
+.bar-wrap{margin:6px 0}
+.bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--c-text2);margin-bottom:4px}
+.bar-bg{height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:5px;transition:width .4s cubic-bezier(.4,0,.2,1);position:relative}
+.bar-fill::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:rgba(255,255,255,0.25);border-radius:5px 5px 0 0;
+}
+.bar-hp{background:linear-gradient(90deg,#10b981,#34d399)}
+.bar-hp.danger{background:linear-gradient(90deg,#ef4444,#f97316)}
+.bar-hp.warning{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.bar-exp{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.bar-stamina{background:linear-gradient(90deg,#0ea5e9,#38bdf8)}
+.top-bar{
+  padding:14px 16px 12px;
+  background:linear-gradient(180deg,rgba(30,15,60,0.98) 0%,rgba(15,10,30,0) 100%);
+  position:sticky;top:0;z-index:20;flex-shrink:0;
+}
+.top-row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.top-level{
+  font-family:var(--ff-title);
+  font-size:16px;color:var(--c-gold);
+  background:rgba(251,191,36,0.12);
+  border:1px solid rgba(251,191,36,0.25);
+  border-radius:20px;padding:3px 12px;
+}
+.top-coins{font-size:14px;font-weight:700;color:var(--c-gold);display:flex;align-items:center;gap:4px}
+.top-vocab{font-size:12px;color:var(--c-text2)}
+.dmg-float{
+  position:fixed;font-family:var(--ff-title);
+  font-size:34px;color:#fbbf24;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
+  pointer-events:none;z-index:300;
+  animation:dmgUp .85s ease forwards;
+}
+.dmg-float.heal{color:#4ade80;font-size:22px}
+@keyframes dmgUp{
+  0%{transform:translateY(0) scale(1);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(-70px) scale(1.4);opacity:0}
+}
+.levelup-toast{
+  position:fixed;top:18%;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,rgba(124,58,237,0.97),rgba(157,78,237,0.97));
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px;padding:14px 30px;
+  font-family:var(--ff-title);font-size:22px;color:#fff;
+  text-align:center;
+  box-shadow:0 8px 30px rgba(124,58,237,0.5);
+  z-index:400;
+  animation:toastIn .4s ease,toastOut .4s 1.8s ease forwards;
+  white-space:nowrap;
+}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+@keyframes toastOut{to{transform:translateX(-50%) translateY(-20px);opacity:0}}
+.modal-mask{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(5px);
+  z-index:500;
+  align-items:center;justify-content:center;
+}
+.modal-mask.on{display:flex}
+.modal-box{
+  background:rgba(25,16,50,0.98);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:24px;padding:28px 24px;
+  max-width:300px;width:88%;text-align:center;
+  animation:modalIn .22s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes modalIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-ico{font-size:54px;margin-bottom:12px}
+.modal-title{font-family:var(--ff-title);font-size:20px;color:var(--c-text);margin-bottom:8px}
+.modal-desc{font-size:14px;color:var(--c-text2);margin-bottom:22px;line-height:1.6}
+.modal-ok{
+  background:linear-gradient(135deg,#7c3aed,#9d4edd);
+  color:#fff;border:none;border-radius:14px;
+  padding:13px 32px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:var(--ff-body);
+  box-shadow:0 4px 16px rgba(124,58,237,0.4);
+}
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+<div id="app">
+<style>
+/* ══ SELECT PAGE ══ */
+#select-page{
+  background:radial-gradient(ellipse at 50% 0%,#2d1b69 0%,#0f0a1e 70%);
+  overflow-y:auto;overflow-x:hidden;
+}
+.sel-bg{
+  position:absolute;top:0;left:0;right:0;height:280px;
+  background:radial-gradient(ellipse at 50% -10%,rgba(124,58,237,0.5) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+.sel-header{text-align:center;padding:44px 20px 24px;position:relative;z-index:1}
+.sel-logo{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:40px;line-height:1.1;margin-bottom:8px;
+  background:linear-gradient(135deg,#c4b5fd 0%,#f9a8d4 50%,#fbbf24 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 24px rgba(196,181,253,0.5));
+}
+.sel-tagline{font-size:14px;color:rgba(241,240,255,0.55);letter-spacing:.5px}
+.sel-prompt{
+  text-align:center;font-size:13px;font-weight:700;
+  color:#a78bfa;margin:4px 0 20px;
+  letter-spacing:1px;text-transform:uppercase;
+}
+.pet-cards{padding:0 16px;position:relative;z-index:1}
+.pet-card{
+  margin-bottom:14px;cursor:pointer;
+  border-radius:24px;
+  border:2px solid rgba(255,255,255,0.1);
+  background:linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));
+  backdrop-filter:blur(10px);
+  overflow:hidden;
+  transition:all .25s ease;
+  position:relative;
+}
+.pet-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);
+  opacity:0;transition:opacity .25s;border-radius:24px;
+}
+.pet-card:active{transform:scale(0.97)}
+.pet-card.selected{
+  border-color:#a78bfa;
+  box-shadow:0 0 0 1px #7c3aed,0 8px 32px rgba(124,58,237,0.45);
+}
+.pet-card.selected::before{opacity:1}
+.pet-card-inner{display:flex;align-items:stretch}
+.pet-card-art{
+  width:108px;min-height:120px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.pet-art-bg-fire{background:radial-gradient(circle,rgba(239,68,68,0.2),transparent 70%)}
+.pet-art-bg-shield{background:radial-gradient(circle,rgba(16,185,129,0.2),transparent 70%)}
+.pet-art-bg-thunder{background:radial-gradient(circle,rgba(245,158,11,0.2),transparent 70%)}
+.pet-card-svg{width:80px;height:80px}
+.pet-card-info{flex:1;padding:16px 14px 16px 4px}
+.pet-card-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px;color:#f1f0ff;margin-bottom:5px;
+}
+.pet-type-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;font-weight:700;padding:3px 10px;
+  border-radius:20px;margin-bottom:8px;
+}
+.type-atk{background:rgba(239,68,68,0.18);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)}
+.type-def{background:rgba(16,185,129,0.18);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)}
+.type-spd{background:rgba(245,158,11,0.18);color:#fcd34d;border:1px solid rgba(245,158,11,0.3)}
+.pet-card-desc{font-size:12px;color:rgba(241,240,255,0.55);line-height:1.5;margin-bottom:10px}
+.pet-mini-stats{display:flex;gap:14px}
+.pms-item{text-align:center}
+.pms-val{font-family:'Fredoka One','Noto Sans SC',cursive;font-size:15px;color:#f1f0ff}
+.pms-key{font-size:10px;color:rgba(241,240,255,0.45)}
+.sel-bottom{padding:14px 16px 36px;position:relative;z-index:1}
+.sel-chosen{
+  text-align:center;font-size:13px;color:#a78bfa;
+  margin-bottom:10px;min-height:18px;
+}
+</style>
+
+<!-- ══════ SELECT PAGE ══════ -->
+<div id="select-page" class="page active">
+  <div class="sel-bg"></div>
+  <div class="sel-header">
+    <div class="sel-logo">🐾 WordPet</div>
+    <div class="sel-tagline">背单词 · 养宠物 · 打副本</div>
+  </div>
+  <div class="sel-prompt">✨ 选择你的冒险伙伴</div>
+  <div class="pet-cards" id="pet-list"></div>
+  <div class="sel-bottom">
+    <div class="sel-chosen" id="sel-chosen"></div>
+    <button class="btn btn-primary" id="start-btn" onclick="startAdventure()" disabled>
+      🚀 开始冒险
+    </button>
+  </div>
+</div>
+<style>
+/* ══ HOME PAGE ══ */
+#home-page{
+  background:radial-gradient(ellipse at 50% -5%,#1e1042 0%,#0f0a1e 60%);
+}
+.home-bg{
+  position:absolute;top:0;left:0;right:0;height:55%;
+  background:
+    radial-gradient(ellipse at 30% 40%,rgba(124,58,237,0.14) 0%,transparent 60%),
+    radial-gradient(ellipse at 70% 25%,rgba(16,185,129,0.09) 0%,transparent 50%);
+  pointer-events:none;
+}
+.pet-stage{
+  display:flex;flex-direction:column;align-items:center;
+  padding:16px 16px 10px;position:relative;
+  flex-shrink:0;
+}
+.pet-aura{
+  position:absolute;top:20px;
+  width:150px;height:150px;border-radius:50%;
+  filter:blur(40px);opacity:0.4;
+  animation:auraPulse 3s ease-in-out infinite;
+}
+.pet-aura-fire{background:radial-gradient(circle,#ef4444,transparent 70%)}
+.pet-aura-shield{background:radial-gradient(circle,#10b981,transparent 70%)}
+.pet-aura-thunder{background:radial-gradient(circle,#f59e0b,transparent 70%)}
+@keyframes auraPulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.18);opacity:.55}}
+.pet-main-wrap{
+  position:relative;z-index:2;cursor:pointer;
+  animation:petFloat 2.5s ease-in-out infinite;
+  transition:filter .15s;
+}
+.pet-main-wrap:active{transform:scale(1.15) translateY(-4px)!important;animation-play-state:paused}
+@keyframes petFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.pet-main-svg{width:118px;height:118px}
+.pet-stage-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:24px;color:#f1f0ff;margin-top:10px;
+  text-shadow:0 0 24px rgba(196,181,253,0.5);
+}
+.pet-stage-sub{font-size:13px;color:rgba(241,240,255,0.5);margin-top:2px}
+.interact-hint{
+  font-size:12px;color:#a78bfa;margin-top:8px;
+  animation:blinkHint 2s ease-in-out infinite;
+}
+@keyframes blinkHint{0%,100%{opacity:1}50%{opacity:.35}}
+.home-stats-card{
+  margin:0 16px 10px;
+  padding:14px 16px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:18px;
+  flex-shrink:0;
+}
+.task-section{padding:0 16px;margin-bottom:10px;flex-shrink:0}
+.task-toggle{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;cursor:pointer;border-radius:16px;
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.task-toggle-title{
+  font-size:15px;font-weight:700;color:#f1f0ff;
+  display:flex;align-items:center;gap:6px;
+}
+.task-arrow{transition:transform .2s;color:rgba(241,240,255,0.45);font-size:14px}
+.task-arrow.open{transform:rotate(180deg)}
+.task-body{
+  display:none;
+  border:1px solid rgba(255,255,255,0.1);
+  border-top:none;
+  border-radius:0 0 16px 16px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.04);
+}
+.task-body.open{display:block}
+.task-row{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.task-row:last-child{border-bottom:none}
+.task-icon-bg{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  background:rgba(124,58,237,0.2);
+}
+.task-info{flex:1;min-width:0}
+.task-name{font-size:13px;font-weight:600;color:#f1f0ff}
+.task-desc{font-size:11px;color:rgba(241,240,255,0.5);margin-top:2px}
+.task-done-badge{
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;font-size:11px;font-weight:700;
+  padding:3px 9px;border-radius:10px;flex-shrink:0;
+}
+.task-prog{font-size:12px;font-weight:700;color:#a78bfa;flex-shrink:0}
+</style>
+
+<!-- ══════ HOME PAGE ══════ -->
+<div id="home-page" class="page">
+  <div class="home-bg"></div>
+  <!-- 顶部状态栏 -->
+  <div class="top-bar" style="flex-shrink:0">
+    <div class="top-row1">
+      <span class="top-level" id="h-level">Lv.1</span>
+      <span class="top-vocab" id="h-vocab">词汇量 0</span>
+      <span class="top-coins" id="h-coins">🪙 <span id="h-coins-num">0</span></span>
+    </div>
+    <div class="bar-wrap" style="margin:0">
+      <div class="bar-label"><span>⚡ 体力</span><span id="h-stamina">100/100</span></div>
+      <div class="bar-bg"><div class="bar-fill bar-stamina" id="h-stamina-bar" style="width:100%"></div></div>
+    </div>
+  </div>
+  <!-- 可滚动内容 -->
+  <div class="scroll-area">
+    <div class="pet-stage">
+      <div class="pet-aura pet-aura-fire" id="pet-aura"></div>
+      <div class="pet-main-wrap" id="pet-main-wrap" onclick="interact()">
+        <svg class="pet-main-svg" id="pet-main-svg" viewBox="0 0 100 100"></svg>
+      </div>
+      <div class="pet-stage-name" id="h-pet-name">宠物名</div>
+      <div class="pet-stage-sub" id="h-pet-type">类型</div>
+      <div class="interact-hint">👆 点击宠物互动 +5体力</div>
+    </div>
+    <div class="home-stats-card">
+      <div class="bar-wrap" style="margin-top:0">
+        <div class="bar-label"><span>❤️ HP</span><span id="h-hp-text">100/100</span></div>
+        <div class="bar-bg"><div class="bar-fill bar-hp" id="h-hp-bar" style="width:100%"></div></div>
+      </div>
+      <div class="bar-wrap" style="margin-bottom:0">
+        <div class="bar-label"><span>⭐ EXP</span><span id="h-exp-text">0/50</span></div>
+        <div class="bar-bg"><div class="bar-fill bar-exp" id="h-exp-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="task-section">
+      <div class="task-toggle" onclick="toggleTasks()">
+        <span class="task-toggle-title">📋 每日任务</span>
+        <span class="task-arrow" id="task-arrow">▼</span>
+      </div>
+      <div class="task-body" id="task-body"></div>
+    </div>
+    <div class="tab-placeholder"></div>
+  </div>
+  <!-- Tab -->
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="tab('home')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <span>宠物</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dungeon')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5C14.5 2.5 16 6 12 8c-4-2-2.5-5.5-2.5-5.5"/><path d="M12 8v3M9.5 13.5l-2-2A9 9 0 0012 21a9 9 0 004.5-9.5l-2 2"/><circle cx="12" cy="14" r="2"/></svg></div>
+      <span>副本</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('mine')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>我的</span><div class="tab-dot"></div>
+    </div>
+  </div>
+</div>
+<style>
+/* ══ DUNGEON PAGE ══ */
+#dungeon-page{
+  background:radial-gradient(ellipse at 50% 0%,#0d2340 0%,#0f0a1e 60%);
+}
+.dg-top{
+  padding:22px 16px 14px;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(13,35,64,0.98) 0%,transparent 100%);
+}
+.dg-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:30px;
+  background:linear-gradient(90deg,#60a5fa,#93c5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:4px;
+}
+.dg-sub{font-size:13px;color:rgba(147,197,253,0.65)}
+.dg-cards{padding:8px 16px}
+.dg-card{
+  margin-bottom:16px;cursor:pointer;
+  border-radius:22px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+  transition:all .2s ease;
+  position:relative;background:rgba(255,255,255,0.04);
+}
+.dg-card:active{transform:scale(0.97)}
+.dg-banner{
+  height:130px;position:relative;
+  display:flex;align-items:flex-end;overflow:hidden;
+}
+.dg-banner-grad{
+  position:absolute;inset:0;
+}
+.dg-banner-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(15,10,30,0.92) 0%,rgba(15,10,30,0.15) 100%);
+}
+.dg-banner-emoji{
+  position:absolute;right:18px;top:50%;transform:translateY(-50%);
+  font-size:58px;
+  filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+}
+.dg-banner-title{
+  position:relative;z-index:1;
+  padding:10px 16px;
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px;color:#fff;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
+}
+.dg-body{
+  padding:8px 14px 14px;
+  background:rgba(255,255,255,0.03);
+}
+.dg-desc{font-size:12px;color:rgba(241,240,255,0.5);margin-bottom:8px}
+.dg-tags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dg-tag{
+  font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;
+}
+.dt-blue{background:rgba(96,165,250,0.14);color:#93c5fd;border:1px solid rgba(96,165,250,0.24)}
+.dt-orange{background:rgba(249,115,22,0.14);color:#fdba74;border:1px solid rgba(249,115,22,0.24)}
+.dt-green{background:rgba(16,185,129,0.14);color:#6ee7b7;border:1px solid rgba(16,185,129,0.24)}
+.dt-red{background:rgba(239,68,68,0.14);color:#fca5a5;border:1px solid rgba(239,68,68,0.24)}
+.dg-enter{
+  margin-left:auto;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:#fff;font-size:13px;font-weight:700;
+  padding:7px 16px;border-radius:20px;border:none;cursor:pointer;
+  box-shadow:0 4px 12px rgba(59,130,246,0.4);
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+}
+</style>
+
+<!-- ══════ DUNGEON PAGE ══════ -->
+<div id="dungeon-page" class="page">
+  <div class="dg-top">
+    <div class="dg-title">⚔️ 副本站</div>
+    <div class="dg-sub">选择副本，消耗体力，出发冒险</div>
+  </div>
+  <div class="scroll-area">
+    <div class="dg-cards" id="dungeon-list"></div>
+    <div class="tab-placeholder"></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="tab('home')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <span>宠物</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item active" onclick="tab('dungeon')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5C14.5 2.5 16 6 12 8c-4-2-2.5-5.5-2.5-5.5"/><path d="M12 8v3M9.5 13.5l-2-2A9 9 0 0012 21a9 9 0 004.5-9.5l-2 2"/><circle cx="12" cy="14" r="2"/></svg></div>
+      <span>副本</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('mine')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>我的</span><div class="tab-dot"></div>
+    </div>
+  </div>
+</div>
+<style>
+/* ══ BATTLE PAGE ══ */
+#battle-page{height:100vh;overflow:hidden}
+.battle-wrap{
+  height:100vh;display:flex;flex-direction:column;
+  padding:14px 14px 18px;
+  background:
+    radial-gradient(ellipse at 50% 15%,rgba(20,40,90,0.7) 0%,transparent 65%),
+    linear-gradient(180deg,#080d1a 0%,#0d1827 40%,#100512 100%);
+  position:relative;overflow:hidden;
+}
+.battle-stars{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(1px 1px at 12% 8%,rgba(255,255,255,0.85),transparent),
+    radial-gradient(1px 1px at 78% 20%,rgba(255,255,255,0.65),transparent),
+    radial-gradient(1.5px 1.5px at 45% 45%,rgba(255,255,255,0.4),transparent),
+    radial-gradient(1px 1px at 62% 6%,rgba(255,255,255,0.75),transparent),
+    radial-gradient(1px 1px at 8% 68%,rgba(255,255,255,0.35),transparent),
+    radial-gradient(1px 1px at 88% 55%,rgba(255,255,255,0.5),transparent),
+    radial-gradient(1px 1px at 35% 80%,rgba(255,255,255,0.3),transparent),
+    radial-gradient(1.5px 1.5px at 92% 15%,rgba(255,255,255,0.6),transparent);
+}
+.battle-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;position:relative;z-index:2;flex-shrink:0;
+}
+.battle-back{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;border-radius:12px;padding:8px 14px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+  transition:all .15s;
+}
+.battle-back:active{transform:scale(0.95)}
+.combo-badge{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:18px;color:#f97316;min-height:28px;
+  text-shadow:0 0 12px rgba(249,115,22,0.8);
+}
+/* 怪物区 */
+.monster-area{
+  position:relative;z-index:2;flex-shrink:0;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:14px 16px;
+  margin-bottom:10px;
+  display:flex;gap:14px;align-items:center;
+}
+.monster-art{
+  flex-shrink:0;
+  animation:mFloat 3s ease-in-out infinite;
+}
+@keyframes mFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.monster-art svg{width:72px;height:72px}
+.monster-info{flex:1}
+.monster-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:17px;color:#cce4ff;margin-bottom:6px;
+}
+.monster-hp-bg{
+  height:12px;background:rgba(255,255,255,0.1);
+  border-radius:6px;overflow:hidden;margin-bottom:4px;
+  position:relative;
+}
+.monster-hp-bg::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:rgba(255,255,255,0.2);border-radius:6px 6px 0 0;
+}
+.monster-hp-fill{
+  height:100%;border-radius:6px;
+  background:linear-gradient(90deg,#ef4444,#f97316);
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+.monster-hp-txt{font-size:11px;color:rgba(255,255,255,0.45)}
+/* 倒计时 */
+.timer-row{
+  position:relative;z-index:2;flex-shrink:0;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.timer-num{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:32px;color:#fff;min-width:46px;text-align:center;
+  text-shadow:0 0 16px rgba(255,220,50,0.7);
+}
+.timer-num.urgent{
+  color:#f97316;
+  animation:timerUrge .5s ease-in-out infinite;
+  text-shadow:0 0 16px rgba(249,115,22,0.9);
+}
+@keyframes timerUrge{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+.timer-track{
+  flex:1;height:8px;
+  background:rgba(255,255,255,0.12);
+  border-radius:4px;overflow:hidden;position:relative;
+}
+.timer-track::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:rgba(255,255,255,0.2);border-radius:4px 4px 0 0;
+}
+.timer-fill{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,#4ade80,#22d3ee);
+  transition:width 1s linear;
+}
+.timer-fill.urgent{background:linear-gradient(90deg,#f97316,#ef4444)}
+/* 答题区 */
+#normal-panel{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;min-height:0}
+.q-card{
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:18px;
+  padding:18px 16px;margin-bottom:10px;
+  text-align:center;flex-shrink:0;
+}
+.q-cn{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:38px;color:#fff;
+  text-shadow:0 0 24px rgba(167,139,250,0.6);
+  line-height:1.2;
+}
+.q-sub{font-size:12px;color:rgba(255,255,255,0.35);margin-top:6px}
+.opts-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;flex:1;
+}
+.opt-btn{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(8px);
+  border:1.5px solid rgba(255,255,255,0.14);
+  border-radius:16px;padding:14px 8px;
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+  font-size:16px;font-weight:700;color:#fff;cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  min-height:60px;
+  position:relative;overflow:hidden;
+}
+.opt-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.06),transparent);
+}
+.opt-btn:active{transform:scale(0.95)}
+.opt-btn:disabled{cursor:not-allowed}
+.opt-btn.correct{
+  background:rgba(16,185,129,0.25);border-color:#10b981;color:#6ee7b7;
+  animation:optCorrect .3s ease;
+  box-shadow:0 0 18px rgba(16,185,129,0.35);
+}
+@keyframes optCorrect{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+.opt-btn.wrong{
+  background:rgba(239,68,68,0.25);border-color:#ef4444;color:#fca5a5;
+  animation:optWrong .4s ease;
+}
+@keyframes optWrong{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-7px)}40%{transform:translateX(7px)}
+  60%{transform:translateX(-4px)}80%{transform:translateX(4px)}
+}
+
+/* ── 答对闪光蒙层 ── */
+#hit-flash{
+  position:absolute;inset:0;pointer-events:none;z-index:5;
+  border-radius:0;opacity:0;
+}
+#hit-flash.correct-flash{
+  background:radial-gradient(ellipse at 50% 50%,rgba(52,211,153,0.22) 0%,transparent 65%);
+  animation:hitFlash .3s ease forwards;
+}
+#hit-flash.wrong-flash{
+  background:radial-gradient(ellipse at 50% 50%,rgba(239,68,68,0.22) 0%,transparent 65%);
+  animation:hitFlash .35s ease forwards;
+}
+@keyframes hitFlash{
+  0%{opacity:0}20%{opacity:1}100%{opacity:0}
+}
+
+/* ── 怪物受击震动 ── */
+@keyframes monsterHit{
+  0%,100%{transform:translateX(0) translateY(0)}
+  20%{transform:translateX(-8px) translateY(-3px) rotate(-3deg)}
+  40%{transform:translateX(6px) translateY(2px) rotate(2deg)}
+  60%{transform:translateX(-4px) rotate(-1deg)}
+  80%{transform:translateX(3px)}
+}
+.monster-art.hit{animation:monsterHit .35s ease!important}
+
+/* ── 答对连击数字爆字 ── */
+.combo-burst{
+  position:absolute;
+  left:50%;transform:translateX(-50%);
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:26px;font-weight:900;
+  color:#fbbf24;pointer-events:none;z-index:8;
+  text-shadow:0 0 12px rgba(251,191,36,0.8);
+  animation:comboBurst .5s cubic-bezier(.175,.885,.32,1.275) forwards;
+  white-space:nowrap;
+}
+@keyframes comboBurst{
+  0%{transform:translateX(-50%) translateY(0) scale(.6);opacity:0}
+  40%{transform:translateX(-50%) translateY(-16px) scale(1.15);opacity:1}
+  100%{transform:translateX(-50%) translateY(-36px) scale(1);opacity:0}
+}
+
+/* ── 答对粒子环 ── */
+.opt-spark{
+  position:fixed;pointer-events:none;z-index:200;
+  width:8px;height:8px;border-radius:50%;
+  animation:sparkFly .55s ease forwards;
+}
+@keyframes sparkFly{
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(.3)}
+}
+/* FEVER */
+#fever-panel{position:relative;z-index:2;flex:1;display:none;flex-direction:column;min-height:0}
+#fever-panel.on{display:flex}
+.fever-banner{
+  text-align:center;margin-bottom:10px;flex-shrink:0;
+  padding:10px;
+  background:rgba(249,115,22,0.1);
+  border:1px solid rgba(249,115,22,0.2);
+  border-radius:14px;
+}
+.fever-title-txt{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px;
+  background:linear-gradient(90deg,#fbbf24,#f97316,#ef4444);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:feverShine 1s ease-in-out infinite;
+}
+@keyframes feverShine{0%,100%{filter:brightness(1)}50%{filter:brightness(1.45)}}
+.fever-sub-txt{font-size:12px;color:rgba(249,115,22,0.75);margin-top:2px}
+.fever-pairs{display:flex;gap:10px;flex:1;min-height:0}
+.fever-col{flex:1;display:flex;flex-direction:column;gap:8px}
+.fever-col-hd{text-align:center;font-size:11px;font-weight:700;color:rgba(241,240,255,0.5);margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+.fever-item{
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.14);
+  border-radius:13px;padding:10px 6px;
+  text-align:center;font-size:14px;font-weight:700;color:#fff;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  flex:1;min-height:0;
+}
+.fever-item:active{transform:scale(0.95)}
+.fever-item.sel{background:rgba(249,115,22,0.25);border-color:#f97316;color:#fdba74;box-shadow:0 0 12px rgba(249,115,22,0.3)}
+.fever-item.matched{background:rgba(16,185,129,0.25);border-color:#10b981;color:#6ee7b7;animation:optCorrect .15s ease}
+.fever-item.err{animation:optWrong .4s ease}
+.fever-item.gone{opacity:0;pointer-events:none;transition:opacity .2s}
+
+/* ── FEVER 全屏光晕特效 ── */
+#fever-overlay{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  opacity:0;transition:opacity .4s;
+  background:radial-gradient(ellipse at 50% 50%,rgba(249,115,22,0.18) 0%,rgba(239,68,68,0.08) 50%,transparent 75%);
+}
+#fever-overlay.on{opacity:1}
+/* 左右边缘热焰 */
+#fever-overlay::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(249,115,22,0.25) 0%,transparent 18%),
+    linear-gradient(270deg,rgba(239,68,68,0.22) 0%,transparent 18%);
+  animation:feverEdge 1.2s ease-in-out infinite alternate;
+}
+@keyframes feverEdge{
+  0%{opacity:.6}100%{opacity:1}
+}
+/* 屏幕顶部火焰条 */
+#fever-overlay::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#ef4444,#f97316,#fbbf24,#f97316,#ef4444);
+  background-size:200% 100%;
+  animation:feverTopBar 1s linear infinite;
+  box-shadow:0 0 12px rgba(249,115,22,0.8);
+}
+@keyframes feverTopBar{0%{background-position:0 0}100%{background-position:200% 0}}
+
+/* 战斗背景 FEVER 态 */
+.battle-wrap.fever-mode{
+  background:
+    radial-gradient(ellipse at 50% 15%,rgba(80,30,10,0.85) 0%,transparent 60%),
+    linear-gradient(180deg,#12070a 0%,#1a0a10 40%,#100512 100%) !important;
+  transition:background .6s ease;
+}
+/* FEVER 模式怪物区高亮 */
+.battle-wrap.fever-mode .monster-area{
+  border-color:rgba(249,115,22,0.35);
+  box-shadow:0 0 20px rgba(249,115,22,0.15) inset;
+}
+/* FEVER 模式计时器 */
+.timer-fill.fever{background:linear-gradient(90deg,#f97316,#ef4444,#fbbf24) !important;background-size:200% 100% !important;animation:feverTimerFlow 1s linear infinite !important}
+@keyframes feverTimerFlow{0%{background-position:0 0}100%{background-position:200% 0}}
+/* FEVER COMBO 爆字 */
+.fever-combo-pop{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:48px;font-weight:900;
+  background:linear-gradient(135deg,#fbbf24,#f97316,#ef4444);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  pointer-events:none;z-index:10;
+  animation:feverComboPop .5s cubic-bezier(.175,.885,.32,1.275) forwards;
+  text-shadow:none;filter:drop-shadow(0 0 20px rgba(249,115,22,0.8));
+  white-space:nowrap;
+}
+@keyframes feverComboPop{
+  0%{transform:translate(-50%,-50%) scale(.4);opacity:0}
+  50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
+  100%{transform:translate(-50%,-58%) scale(1);opacity:0}
+}
+/* 己方 */
+.player-bar{
+  position:relative;z-index:2;flex-shrink:0;
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px;padding:10px 14px;
+  margin-top:10px;
+}
+.player-mini-svg{width:46px;height:46px;flex-shrink:0}
+.player-info{flex:1}
+.player-name-txt{font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);margin-bottom:4px}
+.player-hp-track{height:10px;background:rgba(255,255,255,0.12);border-radius:5px;overflow:hidden;position:relative}
+.player-hp-track::after{content:'';position:absolute;top:0;left:0;right:0;height:40%;background:rgba(255,255,255,0.18);border-radius:5px 5px 0 0}
+.player-hp-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#10b981,#34d399);transition:width .4s ease}
+.player-hp-fill.danger{background:linear-gradient(90deg,#ef4444,#f97316)}
+.player-hp-num{font-size:11px;color:rgba(255,255,255,0.45);margin-top:3px}
+/* Loading */
+#battle-loading{
+  position:relative;z-index:2;flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+}
+.spin{
+  width:44px;height:44px;
+  border:3px solid rgba(255,255,255,0.1);
+  border-top-color:#a78bfa;border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:14px;color:rgba(241,240,255,0.5)}
+/* 震屏 */
+@keyframes battleShake{
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-6px) rotate(-.5deg)}
+  30%{transform:translateX(6px) rotate(.5deg)}
+  45%{transform:translateX(-4px)}
+  60%{transform:translateX(4px)}
+  75%{transform:translateX(-2px)}
+}
+</style>
+
+<!-- ══════ BATTLE PAGE ══════ -->
+<div id="battle-page" class="page">
+  <div class="battle-wrap" id="battle-wrap">
+    <div class="battle-stars"></div>
+    <div id="fever-overlay"></div>
+    <div id="hit-flash"></div>
+    <!-- 头部 -->
+    <div class="battle-header">
+      <button class="battle-back" onclick="exitBattle()">← 撤退</button>
+      <div class="combo-badge" id="combo-badge"></div>
+      <div style="width:60px"></div>
+    </div>
+    <!-- 怪物 -->
+    <div class="monster-area">
+      <div class="monster-art" id="monster-art">
+        <svg id="monster-svg" viewBox="0 0 100 100" width="72" height="72"></svg>
+      </div>
+      <div class="monster-info">
+        <div class="monster-name" id="monster-name">野生怪物</div>
+        <div class="monster-hp-bg">
+          <div class="monster-hp-fill" id="monster-hp-bar" style="width:100%"></div>
+        </div>
+        <div class="monster-hp-txt" id="monster-hp-txt">150/150</div>
+      </div>
+    </div>
+    <!-- 倒计时 -->
+    <div class="timer-row">
+      <div class="timer-num" id="timer-num">15</div>
+      <div class="timer-track">
+        <div class="timer-fill" id="timer-fill" style="width:100%"></div>
+      </div>
+    </div>
+    <!-- Loading -->
+    <div id="battle-loading">
+      <div class="spin"></div>
+      <div class="load-txt">加载词库中…</div>
+    </div>
+    <!-- 普通答题 -->
+    <div id="normal-panel" style="display:none">
+      <div class="q-card">
+        <div class="q-cn" id="q-cn">火</div>
+        <div class="q-sub">选择正确的英文翻译</div>
+      </div>
+      <div class="opts-grid" id="opts-grid">
+        <button class="opt-btn" id="opt0" onclick="selectOption(0)"></button>
+        <button class="opt-btn" id="opt1" onclick="selectOption(1)"></button>
+        <button class="opt-btn" id="opt2" onclick="selectOption(2)"></button>
+        <button class="opt-btn" id="opt3" onclick="selectOption(3)"></button>
+      </div>
+    </div>
+    <!-- FEVER -->
+    <div id="fever-panel">
+      <div class="fever-banner">
+        <div class="fever-title-txt" id="fever-title-txt">⚡ FEVER! 快速配对消除!</div>
+        <div class="fever-sub-txt">中英文配对，连续消除！</div>
+      </div>
+      <div class="fever-pairs">
+        <div class="fever-col">
+          <div class="fever-col-hd">中文</div>
+          <div class="fever-item" id="fl0" onclick="selectFeverLeft(0)"></div>
+          <div class="fever-item" id="fl1" onclick="selectFeverLeft(1)"></div>
+          <div class="fever-item" id="fl2" onclick="selectFeverLeft(2)"></div>
+          <div class="fever-item" id="fl3" onclick="selectFeverLeft(3)"></div>
+        </div>
+        <div class="fever-col">
+          <div class="fever-col-hd">英文</div>
+          <div class="fever-item" id="fr0" onclick="selectFeverRight(0)"></div>
+          <div class="fever-item" id="fr1" onclick="selectFeverRight(1)"></div>
+          <div class="fever-item" id="fr2" onclick="selectFeverRight(2)"></div>
+          <div class="fever-item" id="fr3" onclick="selectFeverRight(3)"></div>
+        </div>
+      </div>
+    </div>
+    <!-- 己方宠物 -->
+    <div class="player-bar">
+      <svg class="player-mini-svg" id="player-mini-svg" viewBox="0 0 100 100"></svg>
+      <div class="player-info">
+        <div class="player-name-txt" id="player-name-txt">宠物名</div>
+        <div class="player-hp-track">
+          <div class="player-hp-fill" id="player-hp-fill" style="width:100%"></div>
+        </div>
+        <div class="player-hp-num" id="player-hp-num">HP 100/100</div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+/* ══ RESULT PAGE ══ */
+#result-page{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:100vh;
+  background:radial-gradient(ellipse at 50% 30%,#1e0a3c 0%,#0f0a1e 70%);
+  padding:32px 20px;overflow-y:auto;
+}
+.res-burst{
+  font-size:92px;margin-bottom:16px;
+  animation:resIn .5s cubic-bezier(.175,.885,.32,1.275) both;
+  filter:drop-shadow(0 0 32px rgba(251,191,36,0.5));
+}
+@keyframes resIn{0%{transform:scale(0.2) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+.res-heading{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:46px;margin-bottom:6px;
+  animation:resIn .6s .1s both;
+}
+.res-heading.win{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.res-heading.lose{color:#ef4444}
+.res-sub{font-size:15px;color:rgba(241,240,255,0.55);margin-bottom:24px;animation:resIn .6s .15s both}
+.res-card{
+  width:100%;
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:22px;padding:20px 22px;
+  margin-bottom:22px;
+  animation:resIn .6s .2s both;
+}
+.res-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.res-row:last-child{border-bottom:none}
+.res-lbl{font-size:14px;color:rgba(241,240,255,0.55)}
+.res-val{font-family:'Fredoka One','Noto Sans SC',cursive;font-size:20px;color:#f1f0ff}
+.res-val.gold{color:#fbbf24}
+.res-val.exp{color:#a78bfa}
+.res-btn-wrap{width:100%;animation:resIn .6s .3s both}
+
+/* ══ MINE PAGE ══ */
+#mine-page{
+  background:radial-gradient(ellipse at 50% 0%,#1e0a3c 0%,#0f0a1e 60%);
+}
+.mine-hero{
+  padding:30px 16px 18px;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(25,10,55,0.98) 0%,transparent 100%);
+  text-align:center;position:relative;
+}
+.mine-hero-glow{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,0.28),transparent 70%);
+  pointer-events:none;
+}
+.mine-avatar-wrap{position:relative;display:inline-block;margin-bottom:10px}
+.mine-avatar-ring{
+  position:absolute;inset:-5px;border-radius:50%;
+  background:conic-gradient(#7c3aed,#a78bfa,#fbbf24,#7c3aed);
+  border-radius:50%;
+  z-index:-1;
+  animation:ringRotate 3s linear infinite;
+}
+@keyframes ringRotate{to{transform:rotate(360deg)}}
+.mine-avatar-inner{
+  position:relative;z-index:1;
+  background:rgba(15,10,30,1);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  width:84px;height:84px;
+}
+.mine-avatar-svg{width:70px;height:70px}
+.mine-hero-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:24px;color:#f1f0ff;
+  text-shadow:0 0 16px rgba(167,139,250,0.4);
+}
+.mine-hero-lv{font-size:13px;color:#a78bfa;margin-top:4px}
+.mine-stats-row{display:flex;justify-content:center;margin-top:16px}
+.mine-stat-item{
+  flex:1;text-align:center;padding:0 8px;
+  border-right:1px solid rgba(255,255,255,0.1);
+}
+.mine-stat-item:last-child{border-right:none}
+.mine-stat-val{font-family:'Fredoka One','Noto Sans SC',cursive;font-size:22px;color:#f1f0ff}
+.mine-stat-lbl{font-size:11px;color:rgba(241,240,255,0.5);margin-top:2px}
+.mine-section{padding:0 16px;margin-bottom:6px}
+.mine-sec-title{
+  font-size:12px;font-weight:700;color:rgba(241,240,255,0.45);
+  padding:12px 0 8px;display:flex;align-items:center;gap:6px;
+  text-transform:uppercase;letter-spacing:.8px;
+}
+.achieve-card{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;margin-bottom:8px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+}
+.achieve-locked{opacity:0.3}
+.achieve-ico{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  background:rgba(124,58,237,0.2);
+}
+.achieve-name{font-size:13px;font-weight:700;color:#f1f0ff}
+.achieve-desc{font-size:11px;color:rgba(241,240,255,0.5);margin-top:2px}
+.achieve-status{font-size:18px;margin-left:auto;flex-shrink:0}
+.setting-card{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;margin-bottom:8px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  cursor:pointer;
+}
+.setting-lbl{font-size:14px;font-weight:600;color:#f1f0ff}
+.setting-val{font-size:13px;color:rgba(241,240,255,0.5)}
+.vip-card{
+  padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(251,191,36,0.13),rgba(245,158,11,0.07));
+  border:1px solid rgba(251,191,36,0.2);text-align:center;margin-bottom:8px;
+}
+.vip-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;font-size:18px;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.vip-desc{font-size:13px;color:rgba(251,191,36,0.65);margin-top:4px}
+.reset-btn{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:12px;width:100%;
+  font-size:13px;color:rgba(255,255,255,0.25);
+  cursor:pointer;font-family:'Noto Sans SC',-apple-system,sans-serif;
+  margin-top:8px;transition:all .15s;
+}
+</style>
+
+<!-- ══════ RESULT PAGE ══════ -->
+<div id="result-page" class="page">
+  <div class="res-burst" id="res-burst">🏆</div>
+  <div class="res-heading" id="res-heading">胜利!</div>
+  <div class="res-sub" id="res-sub">太棒了！继续加油！</div>
+  <div class="res-card">
+    <div class="res-row">
+      <span class="res-lbl">✅ 答对题数</span>
+      <span class="res-val" id="res-correct">0 题</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl">⭐ 获得经验</span>
+      <span class="res-val exp" id="res-exp">+0 EXP</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl">🪙 获得金币</span>
+      <span class="res-val gold" id="res-coins">+0</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl">📖 词汇量增加</span>
+      <span class="res-val" id="res-vocab">+0</span>
+    </div>
+  </div>
+  <div class="res-btn-wrap">
+    <button class="btn btn-gold" onclick="backToHome()">🏠 返回主页</button>
+  </div>
+</div>
+
+<!-- ══════ MINE PAGE ══════ -->
+<div id="mine-page" class="page">
+  <div class="mine-hero">
+    <div class="mine-hero-glow"></div>
+    <div class="mine-avatar-wrap">
+      <div class="mine-avatar-ring"></div>
+      <div class="mine-avatar-inner">
+        <svg class="mine-avatar-svg" id="mine-avatar-svg" viewBox="0 0 100 100"></svg>
+      </div>
+    </div>
+    <div class="mine-hero-name" id="mine-hero-name">冒险者</div>
+    <div class="mine-hero-lv" id="mine-hero-lv">Lv.1 · 攻击型</div>
+    <div class="mine-stats-row">
+      <div class="mine-stat-item"><div class="mine-stat-val" id="m-coins">0</div><div class="mine-stat-lbl">金币</div></div>
+      <div class="mine-stat-item"><div class="mine-stat-val" id="m-vocab">0</div><div class="mine-stat-lbl">词汇量</div></div>
+      <div class="mine-stat-item"><div class="mine-stat-val" id="m-stamina">100</div><div class="mine-stat-lbl">体力</div></div>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <div class="mine-section">
+      <div class="mine-sec-title">🏆 成就</div>
+      <div id="achieve-list"></div>
+    </div>
+    <div class="mine-section">
+      <div class="mine-sec-title">💎 会员与权益</div>
+      <div class="vip-card">
+        <div class="vip-title">👑 高级会员</div>
+        <div class="vip-desc">解锁专属宠物皮肤 · 即将上线</div>
+      </div>
+    </div>
+    <div class="mine-section">
+      <div class="mine-sec-title">⚙️ 设置</div>
+      <div class="setting-card" onclick="toggleSound()">
+        <span class="setting-lbl">🔊 游戏音效</span>
+        <span class="setting-val" id="sound-val">开启</span>
+      </div>
+      <div class="setting-card">
+        <span class="setting-lbl">🌐 语言</span>
+        <span class="setting-val">中文</span>
+      </div>
+      <div class="setting-card" onclick="showAbout()">
+        <span class="setting-lbl">ℹ️ 关于 WordPet</span>
+        <span class="setting-val">v1.0</span>
+      </div>
+      <button class="reset-btn" onclick="confirmReset()">🗑️ 重置存档</button>
+    </div>
+    <div class="tab-placeholder"></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="tab('home')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <span>宠物</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dungeon')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5C14.5 2.5 16 6 12 8c-4-2-2.5-5.5-2.5-5.5"/><path d="M12 8v3M9.5 13.5l-2-2A9 9 0 0012 21a9 9 0 004.5-9.5l-2 2"/><circle cx="12" cy="14" r="2"/></svg></div>
+      <span>副本</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item active" onclick="tab('mine')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>我的</span><div class="tab-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL ══════ -->
+<div class="modal-mask" id="modal">
+  <div class="modal-box">
+    <div class="modal-ico" id="modal-ico">⚠️</div>
+    <div class="modal-title" id="modal-title">提示</div>
+    <div class="modal-desc" id="modal-desc">内容</div>
+    <button class="modal-ok" onclick="closeModal()">确定</button>
+  </div>
+</div>
+<script>
+/* ══════════════════════════════════════════════════
+   SVG 宠物 / 怪物 插画库
+══════════════════════════════════════════════════ */
+const SVG_PETS = {
+  fire: `
+    <defs>
+      <radialGradient id="fg0" cx="50%" cy="60%" r="50%"><stop offset="0%" stop-color="#fbbf24"/><stop offset="60%" stop-color="#ef4444"/><stop offset="100%" stop-color="#7f1d1d"/></radialGradient>
+      <radialGradient id="fg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fef08a"/><stop offset="100%" stop-color="#f97316"/></radialGradient>
+    </defs>
+    <ellipse cx="50" cy="72" rx="22" ry="6" fill="rgba(0,0,0,0.25)"/>
+    <path d="M50 85 C30 85 18 70 18 54 C18 38 30 22 50 15 C70 22 82 38 82 54 C82 70 70 85 50 85Z" fill="url(#fg0)"/>
+    <path d="M50 75 C38 75 32 65 32 55 C32 45 38 35 50 28 C62 35 68 45 68 55 C68 65 62 75 50 75Z" fill="url(#fg1)" opacity=".85"/>
+    <ellipse cx="40" cy="52" rx="5" ry="6" fill="#1c1917"/>
+    <ellipse cx="60" cy="52" rx="5" ry="6" fill="#1c1917"/>
+    <ellipse cx="41" cy="51" rx="2" ry="2.5" fill="#fff" opacity=".9"/>
+    <ellipse cx="61" cy="51" rx="2" ry="2.5" fill="#fff" opacity=".9"/>
+    <path d="M44 63 Q50 68 56 63" stroke="#7f1d1d" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M38 25 C36 18 40 12 44 16 C42 10 48 6 50 12 C52 6 58 10 56 16 C60 12 64 18 62 25" fill="#f97316" opacity=".7"/>
+    <path d="M42 22 C41 17 44 13 46 17 C47 13 50 11 51 15 C52 11 55 13 54 17 C56 13 59 17 58 22" fill="#fbbf24" opacity=".85"/>`,
+
+  shield: `
+    <defs>
+      <radialGradient id="sg0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#6ee7b7"/><stop offset="70%" stop-color="#10b981"/><stop offset="100%" stop-color="#064e3b"/></radialGradient>
+      <linearGradient id="sg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+    </defs>
+    <ellipse cx="50" cy="76" rx="26" ry="7" fill="rgba(0,0,0,0.25)"/>
+    <path d="M50 82 C26 82 16 66 16 50 C16 34 26 18 50 16 C74 18 84 34 84 50 C84 66 74 82 50 82Z" fill="url(#sg0)"/>
+    <path d="M36 34 L30 50 L36 66 L50 72 L64 66 L70 50 L64 34 L50 28Z" fill="url(#sg1)" opacity=".6"/>
+    <ellipse cx="40" cy="50" rx="6" ry="7" fill="#064e3b"/>
+    <ellipse cx="60" cy="50" rx="6" ry="7" fill="#064e3b"/>
+    <ellipse cx="41" cy="49" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <ellipse cx="61" cy="49" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <path d="M44 62 Q50 67 56 62" stroke="#064e3b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M28 42 L22 52 L28 62" stroke="#34d399" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+    <path d="M72 42 L78 52 L72 62" stroke="#34d399" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`,
+
+  thunder: `
+    <defs>
+      <radialGradient id="tg0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#fde68a"/><stop offset="60%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></radialGradient>
+      <linearGradient id="tg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/></linearGradient>
+    </defs>
+    <ellipse cx="50" cy="76" rx="22" ry="6" fill="rgba(0,0,0,0.25)"/>
+    <ellipse cx="50" cy="50" rx="30" ry="32" fill="url(#tg0)"/>
+    <path d="M55 18 L42 42 L52 42 L38 72 L65 40 L54 40 Z" fill="#fff" opacity=".9"/>
+    <path d="M55 18 L42 42 L52 42 L38 72 L65 40 L54 40 Z" fill="#fbbf24"/>
+    <ellipse cx="42" cy="52" rx="5" ry="6" fill="#78350f"/>
+    <ellipse cx="60" cy="52" rx="5" ry="6" fill="#78350f"/>
+    <ellipse cx="43" cy="51" rx="2" ry="2.5" fill="#fff" opacity=".9"/>
+    <ellipse cx="61" cy="51" rx="2" ry="2.5" fill="#fff" opacity=".9"/>
+    <path d="M44 64 Q50 69 56 64" stroke="#78350f" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M34 34 Q28 30 26 36" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>
+    <path d="M66 34 Q72 30 74 36" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>`
+};
+
+const SVG_MONSTERS = {
+  slime: `
+    <defs><radialGradient id="slg" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#86efac"/><stop offset="100%" stop-color="#16a34a"/></radialGradient></defs>
+    <ellipse cx="50" cy="74" rx="28" ry="8" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 78 C22 78 15 60 15 50 C15 36 28 22 50 20 C72 22 85 36 85 50 C85 60 78 78 50 78Z" fill="url(#slg)"/>
+    <ellipse cx="38" cy="48" rx="7" ry="8" fill="#14532d"/>
+    <ellipse cx="62" cy="48" rx="7" ry="8" fill="#14532d"/>
+    <ellipse cx="39.5" cy="47" rx="3" ry="3.5" fill="#fff" opacity=".9"/>
+    <ellipse cx="63.5" cy="47" rx="3" ry="3.5" fill="#fff" opacity=".9"/>
+    <path d="M42 62 Q50 70 58 62" stroke="#14532d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M38 22 Q32 14 26 20" fill="#4ade80" stroke="none"/><path d="M50 18 Q50 10 54 14" fill="#4ade80"/><path d="M62 22 Q68 14 74 20" fill="#4ade80"/>`,
+
+  goblin: `
+    <defs><radialGradient id="gg" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#a8a29e"/><stop offset="100%" stop-color="#44403c"/></radialGradient></defs>
+    <ellipse cx="50" cy="78" rx="22" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <rect x="34" y="45" width="32" height="30" rx="6" fill="#57534e"/>
+    <ellipse cx="50" cy="42" rx="20" ry="22" fill="url(#gg)"/>
+    <polygon points="32,28 26,14 38,24" fill="#78716c"/>
+    <polygon points="68,28 74,14 62,24" fill="#78716c"/>
+    <ellipse cx="41" cy="40" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="59" cy="40" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="42" cy="39" rx="2.5" ry="3" fill="#ef4444" opacity=".9"/>
+    <ellipse cx="60" cy="39" rx="2.5" ry="3" fill="#ef4444" opacity=".9"/>
+    <path d="M44 55 Q50 60 56 55" stroke="#1c1917" stroke-width="2" fill="none"/>
+    <rect x="22" y="48" width="10" height="4" rx="2" fill="#a8a29e"/>
+    <rect x="68" y="48" width="10" height="4" rx="2" fill="#a8a29e"/>`,
+
+  dragon: `
+    <defs><radialGradient id="dg" cx="50%" cy="35%" r="60%"><stop offset="0%" stop-color="#fca5a5"/><stop offset="60%" stop-color="#ef4444"/><stop offset="100%" stop-color="#7f1d1d"/></radialGradient></defs>
+    <ellipse cx="50" cy="78" rx="24" ry="7" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 80 C28 80 16 64 16 50 C16 34 28 16 50 12 C72 16 84 34 84 50 C84 64 72 80 50 80Z" fill="url(#dg)"/>
+    <path d="M28 28 L18 10 L36 24Z" fill="#fca5a5" opacity=".8"/>
+    <path d="M72 28 L82 10 L64 24Z" fill="#fca5a5" opacity=".8"/>
+    <path d="M28 35 L14 18 L32 30Z" fill="#fca5a5" opacity=".6"/>
+    <path d="M72 35 L86 18 L68 30Z" fill="#fca5a5" opacity=".6"/>
+    <ellipse cx="38" cy="48" rx="8" ry="9" fill="#7f1d1d"/>
+    <ellipse cx="62" cy="48" rx="8" ry="9" fill="#7f1d1d"/>
+    <ellipse cx="39.5" cy="47" rx="3.5" ry="4" fill="#fbbf24"/>
+    <ellipse cx="63.5" cy="47" rx="3.5" ry="4" fill="#fbbf24"/>
+    <path d="M43 64 Q50 72 57 64" stroke="#7f1d1d" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M43 64 L40 70 M53 68 L52 74 M57 64 L60 70" stroke="#7f1d1d" stroke-width="2" fill="none"/>`
+};
+
+/* ══════════════════════════════════════════════════
+   宠物 & 副本配置
+══════════════════════════════════════════════════ */
+const PET_CONFIGS = [
+  {
+    key:'fire', name:'小火球', type:'攻击型', typeClass:'type-atk',
+    desc:'焰心之子，高爆发输出。连击加成翻倍，适合速战速决。',
+    maxHp:80, atk:15, def:5,
+    auraClass:'pet-aura-fire', artBgClass:'pet-art-bg-fire'
+  },
+  {
+    key:'shield', name:'护盾龟', type:'防御型', typeClass:'type-def',
+    desc:'铁壁守护者，超高容错率。HP上限最高，适合稳扎稳打。',
+    maxHp:130, atk:8, def:15,
+    auraClass:'pet-aura-shield', artBgClass:'pet-art-bg-shield'
+  },
+  {
+    key:'thunder', name:'闪电狐', type:'速度型', typeClass:'type-spd',
+    desc:'雷鸣九天，极速斩击。FEVER触发更快，爆发力十足。',
+    maxHp:100, atk:12, def:8,
+    auraClass:'pet-aura-thunder', artBgClass:'pet-art-bg-thunder'
+  }
+];
+
+const MONSTER_CONFIGS = [
+  { key:'slime',  name:'野生史莱姆', hp:150 },
+  { key:'goblin', name:'岩石哥布林', hp:180 },
+  { key:'dragon', name:'熔岩巨龙',   hp:220 }
+];
+
+const DUNGEON_CONFIGS = [
+  {
+    id:'forest', name:'森林冒险', desc:'新手友好关卡，Lv.1~10',
+    grad:'linear-gradient(135deg,#14532d,#166534,#16a34a)',
+    emoji:'🌲', tags:['新手', '⚡×10', 'Lv.1~10'], tagClasses:['dt-green','dt-orange','dt-blue'],
+    staminaCost:10, monster:0
+  },
+  {
+    id:'cave', name:'洞穴探险', desc:'中等难度地下迷宫，Lv.5~20',
+    grad:'linear-gradient(135deg,#1c1917,#292524,#44403c)',
+    emoji:'⛰️', tags:['中等', '⚡×10', 'Lv.5~20'], tagClasses:['dt-blue','dt-orange','dt-blue'],
+    staminaCost:10, monster:1
+  },
+  {
+    id:'volcano', name:'火山试炼', desc:'极限高难度挑战，Lv.15+',
+    grad:'linear-gradient(135deg,#7f1d1d,#991b1b,#b91c1c)',
+    emoji:'🌋', tags:['高难', '⚡×10', 'Lv.15+'], tagClasses:['dt-red','dt-orange','dt-red'],
+    staminaCost:10, monster:2
+  }
+];
+
+const DAILY_TASKS = [
+  { id:'battle',   icon:'⚔️', name:'击败怪物',  desc:'击败 3 只怪物',    reward:'🪙×30', target:3 },
+  { id:'correct',  icon:'✅', name:'答对题目',  desc:'答对 10 道英语题',  reward:'⭐×20', target:10 },
+  { id:'interact', icon:'🤝', name:'宠物互动',  desc:'与宠物互动 3 次',   reward:'⚡×15', target:3 },
+  { id:'levelup',  icon:'⬆️', name:'宠物升级',  desc:'宠物升一级',        reward:'🪙×50', target:1 }
+];
+
+const ACHIEVE_LIST = [
+  { icon:'🥇', name:'初次出发',  desc:'领养了第一只宠物',    unlock: p => p.petIndex >= 0 },
+  { icon:'⚔️', name:'初战告捷',  desc:'首次战斗胜利',        unlock: p => p.coins > 0 },
+  { icon:'📖', name:'词汇入门',  desc:'累计词汇量达 10',     unlock: p => p.vocab >= 10 },
+  { icon:'🔥', name:'连击狂人',  desc:'触发 FEVER 模式',     unlock: p => p.feverTriggered },
+  { icon:'🏆', name:'词汇大师',  desc:'累计词汇量达 100',    unlock: p => p.vocab >= 100 }
+];
+
+/* ══════════════════════════════════════════════════
+   词库
+══════════════════════════════════════════════════ */
+const WORDBANK = {
+  "1":{ words:[
+    {cn:"火",en:"Fire"},{cn:"水",en:"Water"},{cn:"草",en:"Grass"},{cn:"电",en:"Electric"},
+    {cn:"冰",en:"Ice"},{cn:"风",en:"Wind"},{cn:"土",en:"Earth"},{cn:"石",en:"Stone"},
+    {cn:"攻击",en:"Attack"},{cn:"防御",en:"Defend"},{cn:"治疗",en:"Heal"},{cn:"跑",en:"Run"},
+    {cn:"跳",en:"Jump"},{cn:"走",en:"Walk"},{cn:"吃",en:"Eat"},{cn:"喝",en:"Drink"},
+    {cn:"睡",en:"Sleep"},{cn:"看",en:"Look"},{cn:"大",en:"Big"},{cn:"小",en:"Small"},
+    {cn:"快",en:"Fast"},{cn:"慢",en:"Slow"},{cn:"好",en:"Good"},{cn:"坏",en:"Bad"},
+    {cn:"热",en:"Hot"},{cn:"冷",en:"Cold"},{cn:"红",en:"Red"},{cn:"蓝",en:"Blue"},
+    {cn:"绿",en:"Green"},{cn:"黄",en:"Yellow"},{cn:"狗",en:"Dog"},{cn:"猫",en:"Cat"},
+    {cn:"鸟",en:"Bird"},{cn:"鱼",en:"Fish"},{cn:"苹果",en:"Apple"},{cn:"香蕉",en:"Banana"},
+    {cn:"爸爸",en:"Father"},{cn:"妈妈",en:"Mother"},{cn:"哥哥",en:"Brother"},{cn:"姐姐",en:"Sister"}
+  ]},
+  "2":{ words:[
+    {cn:"力量",en:"Power"},{cn:"速度",en:"Speed"},{cn:"雷电",en:"Thunder"},{cn:"火焰",en:"Flame"},
+    {cn:"急冻",en:"Freeze"},{cn:"风暴",en:"Storm"},{cn:"治愈",en:"Cure"},{cn:"保护",en:"Protect"},
+    {cn:"猛击",en:"Smash"},{cn:"冲撞",en:"Crash"},{cn:"学习",en:"Learn"},{cn:"学校",en:"School"},
+    {cn:"朋友",en:"Friend"},{cn:"家庭",en:"Family"},{cn:"城市",en:"City"},{cn:"医生",en:"Doctor"},
+    {cn:"老师",en:"Teacher"},{cn:"学生",en:"Student"},{cn:"时间",en:"Time"},{cn:"今天",en:"Today"},
+    {cn:"明天",en:"Tomorrow"},{cn:"昨天",en:"Yesterday"},{cn:"非常",en:"Very"},{cn:"真的",en:"Really"},
+    {cn:"也许",en:"Maybe"},{cn:"必须",en:"Must"},{cn:"希望",en:"Hope"},{cn:"帮助",en:"Help"},
+    {cn:"太阳",en:"Sun"},{cn:"月亮",en:"Moon"},{cn:"星星",en:"Star"},{cn:"森林",en:"Forest"},
+    {cn:"沙漠",en:"Desert"},{cn:"天空",en:"Sky"},{cn:"海",en:"Sea"},{cn:"山",en:"Mountain"}
+  ]},
+  "3":{ words:[
+    {cn:"爆炸",en:"Explosion"},{cn:"毁灭",en:"Destruction"},{cn:"冲刺",en:"Sprint"},
+    {cn:"屏障",en:"Barrier"},{cn:"幻影",en:"Phantom"},{cn:"地震",en:"Earthquake"},
+    {cn:"火山",en:"Volcano"},{cn:"极光",en:"Aurora"},{cn:"流星",en:"Meteor"},
+    {cn:"决定",en:"Decide"},{cn:"理解",en:"Understand"},{cn:"记得",en:"Remember"},
+    {cn:"发现",en:"Discover"},{cn:"创造",en:"Create"},{cn:"改变",en:"Change"},
+    {cn:"成功",en:"Success"},{cn:"努力",en:"Effort"},{cn:"目标",en:"Goal"},
+    {cn:"选择",en:"Choice"},{cn:"勇气",en:"Courage"},{cn:"智慧",en:"Wisdom"},
+    {cn:"知识",en:"Knowledge"},{cn:"技能",en:"Skill"},{cn:"能力",en:"Ability"}
+  ]},
+  "4":{ words:[
+    {cn:"系统",en:"System"},{cn:"过程",en:"Process"},{cn:"方法",en:"Method"},
+    {cn:"原则",en:"Principle"},{cn:"分析",en:"Analysis"},{cn:"研究",en:"Research"},
+    {cn:"影响",en:"Influence"},{cn:"效果",en:"Effect"},{cn:"证据",en:"Evidence"},
+    {cn:"观点",en:"Perspective"},{cn:"技术",en:"Technology"},{cn:"信息",en:"Information"},
+    {cn:"网络",en:"Network"},{cn:"合作",en:"Cooperation"},{cn:"竞争",en:"Competition"},
+    {cn:"战略",en:"Strategy"},{cn:"质量",en:"Quality"},{cn:"效率",en:"Efficiency"},
+    {cn:"安全",en:"Security"},{cn:"挑战",en:"Challenge"},{cn:"机会",en:"Opportunity"}
+  ]}
+};
+
+/* ══════════════════════════════════════════════════
+   全局状态
+══════════════════════════════════════════════════ */
+const DEFAULT = {
+  petIndex:-1, petKey:'fire', petName:'', petType:'',
+  level:1, exp:0, vocab:0, hp:100, maxHp:100,
+  coins:0, stamina:100, maxStamina:100,
+  feverTriggered:false,
+  settings:{ sound:true }
+};
+let gd = JSON.parse(JSON.stringify(DEFAULT));
+let tasks = [];
+
+function saveGame(){ try{ localStorage.setItem('wg2_save', JSON.stringify({gd,tasks,lastSave:Date.now()})); }catch(e){} }
+function loadGame(){
+  try{
+    const r = localStorage.getItem('wg2_save');
+    if(r){
+      const d=JSON.parse(r);
+      if(d.gd)Object.assign(gd,d.gd);
+      if(d.tasks)tasks=d.tasks;
+      // 体力离线自动恢复：每5分钟恢复1点，最多恢复到满
+      if(d.lastSave && gd.stamina < gd.maxStamina){
+        const minsAway = Math.floor((Date.now()-d.lastSave)/60000);
+        const recovered = Math.min(Math.floor(minsAway/5), gd.maxStamina-gd.stamina);
+        if(recovered>0) gd.stamina=Math.min(gd.stamina+recovered, gd.maxStamina);
+      }
+    }
+  }catch(e){}
+}
+function initTasks(){
+  if(!tasks.length) tasks = DAILY_TASKS.map(t=>({...t,progress:0,done:false}));
+}
+function taskProgress(id, delta){
+  const t = tasks.find(x=>x.id===id);
+  if(t&&!t.done){ t.progress=Math.min(t.progress+delta,t.target); if(t.progress>=t.target)t.done=true; }
+}
+
+/* ══════════════════════════════════════════════════
+   粒子特效
+══════════════════════════════════════════════════ */
+(function initParticles(){
+  const cvs = document.getElementById('particles-canvas');
+  const ctx = cvs.getContext('2d');
+  let W,H,particles=[];
+  function resize(){
+    const app = document.getElementById('app');
+    W = cvs.width = app.offsetWidth;
+    H = cvs.height = window.innerHeight;
+  }
+  function mkParticle(){
+    return { x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*1.5+.5, vx:(Math.random()-.5)*.3, vy:-Math.random()*.4-.1,
+      alpha:Math.random()*.5+.1, hue:Math.random()*60+250 };
+  }
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    while(particles.length<60) particles.push(mkParticle());
+    particles.forEach((p,i)=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.y<-5){ particles[i]=mkParticle(); particles[i].y=H+5; return; }
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${p.hue},80%,75%,${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+  resize(); window.addEventListener('resize',resize); tick();
+})();
+
+/* ══════════════════════════════════════════════════
+   导航
+══════════════════════════════════════════════════ */
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function tab(name){
+  const map={home:'home-page',dungeon:'dungeon-page',mine:'mine-page'};
+  go(map[name]);
+  document.querySelectorAll('.tab-bar').forEach(bar=>{
+    bar.querySelectorAll('.tab-item').forEach((item,i)=>{
+      item.classList.toggle('active',['home','dungeon','mine'][i]===name);
+    });
+  });
+  if(name==='home') updateHomeUI();
+  if(name==='dungeon') buildDungeonList();
+  if(name==='mine') updateMineUI();
+}
+
+/* ══════════════════════════════════════════════════
+   SVG 助手
+══════════════════════════════════════════════════ */
+function setPetSvg(el, key){
+  if(!el) return;
+  el.innerHTML = SVG_PETS[key] || SVG_PETS.fire;
+}
+function setMonsterSvg(el, key){
+  if(!el) return;
+  el.innerHTML = SVG_MONSTERS[key] || SVG_MONSTERS.slime;
+}
+
+/* ══════════════════════════════════════════════════
+   领养页
+══════════════════════════════════════════════════ */
+let selectedPet = -1;
+function buildSelectPage(){
+  const list = document.getElementById('pet-list');
+  list.innerHTML = PET_CONFIGS.map((p,i)=>`
+    <div class="pet-card" id="pc${i}" onclick="selectPet(${i})">
+      <div class="pet-card-inner">
+        <div class="pet-card-art ${p.artBgClass}">
+          <svg class="pet-card-svg" viewBox="0 0 100 100">${SVG_PETS[p.key]}</svg>
+        </div>
+        <div class="pet-card-info">
+          <div class="pet-card-name">${p.name}</div>
+          <span class="pet-type-badge ${p.typeClass}">${p.type}</span>
+          <div class="pet-card-desc">${p.desc}</div>
+          <div class="pet-mini-stats">
+            <div class="pms-item"><div class="pms-val">❤️${p.maxHp}</div><div class="pms-key">HP</div></div>
+            <div class="pms-item"><div class="pms-val">⚔️${p.atk}</div><div class="pms-key">攻击</div></div>
+            <div class="pms-item"><div class="pms-val">🛡️${p.def}</div><div class="pms-key">防御</div></div>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function selectPet(idx){
+  selectedPet=idx;
+  document.querySelectorAll('.pet-card').forEach((c,i)=>c.classList.toggle('selected',i===idx));
+  document.getElementById('start-btn').disabled=false;
+  const p=PET_CONFIGS[idx];
+  document.getElementById('sel-chosen').textContent=`✨ 已选择：${p.name}`;
+}
+function startAdventure(){
+  if(selectedPet<0) return;
+  const cfg=PET_CONFIGS[selectedPet];
+  gd.petIndex=selectedPet; gd.petKey=cfg.key;
+  gd.petName=cfg.name; gd.petType=cfg.type;
+  gd.maxHp=cfg.maxHp; gd.hp=cfg.maxHp;
+  saveGame(); updateHomeUI(); tab('home');
+}
+
+/* ══════════════════════════════════════════════════
+   主页
+══════════════════════════════════════════════════ */
+function updateHomeUI(){
+  const p=gd;
+  document.getElementById('h-level').textContent=`Lv.${p.level}`;
+  document.getElementById('h-vocab').textContent=`词汇量 ${p.vocab}`;
+  document.getElementById('h-coins-num').textContent=p.coins;
+  document.getElementById('h-stamina').textContent=`${p.stamina}/${p.maxStamina}`;
+  setBar('h-stamina-bar', p.stamina, p.maxStamina, 'bar-stamina');
+  setPetSvg(document.getElementById('pet-main-svg'), p.petKey||'fire');
+  document.getElementById('h-pet-name').textContent=`${p.petName||'??'} · Lv.${p.level}`;
+  document.getElementById('h-pet-type').textContent=p.petType||'';
+  const hpPct = p.maxHp>0 ? p.hp/p.maxHp*100 : 0;
+  setBar('h-hp-bar', p.hp, p.maxHp, hpPct<30?'bar-hp danger':hpPct<60?'bar-hp warning':'bar-hp');
+  document.getElementById('h-hp-text').textContent=`${p.hp}/${p.maxHp}`;
+  setBar('h-exp-bar', p.exp, 50, 'bar-exp');
+  document.getElementById('h-exp-text').textContent=`${p.exp}/50`;
+  // 宠物光晕
+  const aura=document.getElementById('pet-aura');
+  if(aura){ aura.className='pet-aura '+(PET_CONFIGS[p.petIndex]?.auraClass||'pet-aura-fire'); }
+  buildTaskList();
+}
+function setBar(id, cur, max, cls){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.style.width=(max>0?Math.max(0,cur/max*100):0)+'%';
+  if(cls) el.className='bar-fill '+cls;
+}
+
+let taskOpen=false;
+function toggleTasks(){
+  taskOpen=!taskOpen;
+  document.getElementById('task-body').classList.toggle('open',taskOpen);
+  document.getElementById('task-arrow').classList.toggle('open',taskOpen);
+}
+function buildTaskList(){
+  const el=document.getElementById('task-body');
+  el.innerHTML=tasks.map(t=>`
+    <div class="task-row">
+      <div class="task-icon-bg">${t.icon}</div>
+      <div class="task-info">
+        <div class="task-name">${t.name}</div>
+        <div class="task-desc">${t.desc} · 奖励 ${t.reward}</div>
+      </div>
+      ${t.done
+        ? '<span class="task-done-badge">✓ 完成</span>'
+        : `<span class="task-prog">${t.progress}/${t.target}</span>`
+      }
+    </div>`).join('');
+}
+function interact(){
+  gd.stamina=Math.min(gd.stamina+5,gd.maxStamina);
+  taskProgress('interact',1);
+  saveGame(); updateHomeUI();
+  const wrap=document.getElementById('pet-main-wrap');
+  wrap.style.animationPlayState='paused';
+  wrap.style.transform='scale(1.2) translateY(-8px)';
+  setTimeout(()=>{ wrap.style.transform=''; wrap.style.animationPlayState=''; },220);
+  showDmg('+5⚡', document.getElementById('pet-main-wrap'), 'heal');
+}
+
+/* ══════════════════════════════════════════════════
+   副本站
+══════════════════════════════════════════════════ */
+function buildDungeonList(){
+  const el=document.getElementById('dungeon-list');
+  el.innerHTML=DUNGEON_CONFIGS.map(d=>`
+    <div class="dg-card" onclick="enterDungeon('${d.id}')">
+      <div class="dg-banner">
+        <div class="dg-banner-grad" style="background:${d.grad}"></div>
+        <div class="dg-banner-overlay"></div>
+        <div class="dg-banner-emoji">${d.emoji}</div>
+        <div class="dg-banner-title">${d.name}</div>
+      </div>
+      <div class="dg-body">
+        <div class="dg-desc">${d.desc}</div>
+        <div class="dg-tags">
+          ${d.tags.map((t,i)=>`<span class="dg-tag ${d.tagClasses[i]}">${t}</span>`).join('')}
+          <button class="dg-enter">出发 →</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function enterDungeon(id){
+  const d=DUNGEON_CONFIGS.find(x=>x.id===id);
+  if(!d) return;
+  if(gd.stamina<d.staminaCost){
+    showModal('⚡','体力不足',`进入副本需要 ${d.staminaCost} 点体力，当前体力 ${gd.stamina}。`);
+    return;
+  }
+  gd.stamina-=d.staminaCost; saveGame();
+  startBattle(id);
+}
+
+/* ══════════════════════════════════════════════════
+   战斗系统
+══════════════════════════════════════════════════ */
+const BC={ NORMAL_DMG:12, COMBO_BONUS:0.15, WRONG_PEN:15,
+  FEVER_TRIG:3, FEVER_DUR:12, FEVER_DMG:15, FEVER_MULT:1.2,
+  NORMAL_TIME:15, FEVER_PAIRS:4 };
+
+let bs={};
+let btimer=null;
+let wLevel=1;
+let curQ=null, curOpts=[], answering=false;
+
+function getWLevel(){ return Math.min(4, Math.floor(gd.level/10)+1); }
+function getWords(lv, cnt){
+  const pool=(WORDBANK[String(lv)]||WORDBANK['1']).words;
+  return [...pool].sort(()=>Math.random()-.5).slice(0,cnt);
+}
+function genQ(lv){
+  const pool=(WORDBANK[String(lv)]||WORDBANK['1']).words;
+  const correct=pool[Math.floor(Math.random()*pool.length)];
+  const dis=pool.filter(w=>w.en!==correct.en).sort(()=>Math.random()-.5).slice(0,3);
+  return { correct, opts:[...dis,correct].sort(()=>Math.random()-.5) };
+}
+
+function startBattle(dungId){
+  const dc=DUNGEON_CONFIGS.find(d=>d.id===dungId)||DUNGEON_CONFIGS[0];
+  const mc=MONSTER_CONFIGS[dc.monster]||MONSTER_CONFIGS[0];
+  wLevel=getWLevel();
+  bs={
+    phase:'normal', dungId, monsterKey:mc.key, monsterName:mc.name,
+    monsterHp:mc.hp, monsterMaxHp:mc.hp,
+    playerHp:gd.hp, playerMaxHp:gd.maxHp,
+    combo:0, correctCount:0,
+    timeLeft:BC.NORMAL_TIME, feverTimeLeft:BC.FEVER_DUR,
+    feverTotalMatched:0,
+    feverPairs:[], feverRight:[],
+    fL:new Array(BC.FEVER_PAIRS).fill(false), fR:new Array(BC.FEVER_PAIRS).fill(false),
+    selLeft:-1, isOver:false, win:false
+  };
+  setMonsterSvg(document.getElementById('monster-svg'), mc.key);
+  document.getElementById('monster-name').textContent=mc.name;
+  setPetSvg(document.getElementById('player-mini-svg'), gd.petKey||'fire');
+  document.getElementById('player-name-txt').textContent=`${gd.petName} Lv.${gd.level}`;
+  document.getElementById('battle-loading').style.display='flex';
+  document.getElementById('normal-panel').style.display='none';
+  document.getElementById('fever-panel').className='';
+  document.getElementById('combo-badge').textContent='';
+  updateBattleUI();
+  go('battle-page');
+  setTimeout(()=>{
+    document.getElementById('battle-loading').style.display='none';
+    nextQ(); startBTimer();
+  }, 700);
+}
+function updateBattleUI(){
+  const mPct=bs.monsterMaxHp>0?bs.monsterHp/bs.monsterMaxHp*100:0;
+  document.getElementById('monster-hp-bar').style.width=mPct+'%';
+  document.getElementById('monster-hp-txt').textContent=`${bs.monsterHp}/${bs.monsterMaxHp}`;
+  const pPct=bs.playerMaxHp>0?bs.playerHp/bs.playerMaxHp*100:0;
+  const pFill=document.getElementById('player-hp-fill');
+  pFill.style.width=pPct+'%';
+  pFill.className='player-hp-fill'+(pPct<30?' danger':'');
+  document.getElementById('player-hp-num').textContent=`HP ${bs.playerHp}/${bs.playerMaxHp}`;
+  document.getElementById('combo-badge').textContent=bs.combo>1?`🔥 ${bs.combo} 连击!`:'';
+}
+function nextQ(){
+  if(bs.isOver||bs.phase!=='normal') return;
+  document.getElementById('normal-panel').style.display='flex';
+  document.getElementById('fever-panel').className='';
+  const q=genQ(wLevel);
+  curQ=q.correct; curOpts=q.opts; answering=false;
+  document.getElementById('q-cn').textContent=q.correct.cn;
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('opt'+i);
+    b.textContent=q.opts[i]?.en||''; b.disabled=false; b.className='opt-btn';
+  }
+  bs.timeLeft=BC.NORMAL_TIME; updateTimerUI();
+}
+function selectOption(idx){
+  if(answering||bs.isOver||bs.phase!=='normal') return;
+  answering=true;
+  const chosen=curOpts[idx];
+  const ok=chosen.en===curQ.en;
+  for(let i=0;i<4;i++) document.getElementById('opt'+i).disabled=true;
+  if(ok){
+    document.getElementById('opt'+idx).classList.add('correct');
+    bs.combo++; bs.correctCount++;
+    const dmg=Math.floor(BC.NORMAL_DMG*(1+BC.COMBO_BONUS*bs.combo));
+    bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
+    // 答对打击感
+    flashHit('correct');
+    monsterHitAnim();
+    spawnSparks(document.getElementById('opt'+idx));
+    if(bs.combo>1) showComboBurst(bs.combo);
+    showDmg('-'+dmg, document.getElementById('monster-art'));
+    taskProgress('correct',1);
+    // Web Audio 答对音效
+    playBeep(660, 0.08, 'square');
+    if(bs.combo>=3) setTimeout(()=>playBeep(880,0.06,'sine'),80);
+  } else {
+    document.getElementById('opt'+idx).classList.add('wrong');
+    for(let i=0;i<4;i++) if(curOpts[i].en===curQ.en) document.getElementById('opt'+i).classList.add('correct');
+    bs.combo=0;
+    bs.playerHp=Math.max(0,bs.playerHp-BC.WRONG_PEN);
+    flashHit('wrong');
+    showDmg('-'+BC.WRONG_PEN, document.getElementById('player-bar'));
+    playBeep(150, 0.12, 'sawtooth');
+  }
+  updateBattleUI();
+  if(bs.monsterHp<=0){ setTimeout(()=>endBattle(true),600); return; }
+  if(bs.playerHp<=0){ setTimeout(()=>endBattle(false),600); return; }
+  if(bs.combo>=BC.FEVER_TRIG){ bs.combo=0; setTimeout(()=>enterFever(),500); }
+  else setTimeout(()=>nextQ(),500);
+}
+
+function startBTimer(){
+  if(btimer) clearInterval(btimer);
+  btimer=setInterval(()=>{
+    if(bs.isOver){ clearInterval(btimer); return; }
+    if(bs.phase==='normal'){
+      bs.timeLeft--;
+      updateTimerUI();
+      if(bs.timeLeft<=0&&!answering){
+        answering=true; bs.combo=0;
+        bs.playerHp=Math.max(0,bs.playerHp-BC.WRONG_PEN);
+        updateBattleUI();
+        if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
+        setTimeout(()=>nextQ(),300);
+      }
+    } else if(bs.phase==='fever'){
+      bs.feverTimeLeft--;
+      updateTimerUI();
+      if(bs.feverTimeLeft<=0){
+        bs.phase='normal';
+        // 退出 FEVER 恢复背景
+        document.getElementById('fever-overlay').classList.remove('on');
+        document.getElementById('battle-wrap').classList.remove('fever-mode');
+        document.getElementById('timer-fill').classList.remove('fever');
+        setTimeout(()=>nextQ(),300);
+      }
+    }
+  },1000);
+}
+function updateTimerUI(){
+  const isN=bs.phase==='normal';
+  const max=isN?BC.NORMAL_TIME:BC.FEVER_DUR;
+  const cur=isN?bs.timeLeft:bs.feverTimeLeft;
+  const pct=max>0?cur/max*100:0;
+  const urg=cur<=5;
+  const n=document.getElementById('timer-num');
+  const f=document.getElementById('timer-fill');
+  n.textContent=Math.max(0,cur);
+  n.className='timer-num'+(urg?' urgent':'');
+  f.style.width=pct+'%';
+  f.className='timer-fill'+(urg?' urgent':'');
+}
+
+function enterFever(){
+  if(bs.isOver) return;
+  bs.phase='fever'; bs.feverTimeLeft=BC.FEVER_DUR;
+  gd.feverTriggered=true;
+  document.getElementById('normal-panel').style.display='none';
+  document.getElementById('fever-panel').className='on';
+  // 全屏氛围效果
+  document.getElementById('fever-overlay').classList.add('on');
+  document.getElementById('battle-wrap').classList.add('fever-mode');
+  document.getElementById('timer-fill').classList.add('fever');
+  // FEVER 入场爆字
+  const pop=document.createElement('div');
+  pop.className='fever-combo-pop'; pop.textContent='🔥 FEVER!';
+  document.getElementById('battle-wrap').appendChild(pop);
+  setTimeout(()=>pop.remove(),520);
+  // 震屏动画
+  const wrap=document.getElementById('battle-wrap');
+  wrap.style.animation='battleShake .35s ease';
+  setTimeout(()=>{ wrap.style.animation=''; },360);
+  loadFeverPairs();
+}
+function loadFeverPairs(){
+  bs.feverPairs=getWords(wLevel,BC.FEVER_PAIRS);
+  bs.feverRight=[...bs.feverPairs].sort(()=>Math.random()-.5);
+  bs.fL=new Array(BC.FEVER_PAIRS).fill(false);
+  bs.fR=new Array(BC.FEVER_PAIRS).fill(false);
+  bs.selLeft=-1;
+  for(let i=0;i<BC.FEVER_PAIRS;i++){
+    const l=document.getElementById('fl'+i), r=document.getElementById('fr'+i);
+    l.textContent=bs.feverPairs[i]?.cn||''; l.className='fever-item'; l.style.opacity='';
+    r.textContent=bs.feverRight[i]?.en||''; r.className='fever-item'; r.style.opacity='';
+  }
+  document.getElementById('fever-title-txt').textContent='⚡ FEVER! 快速配对消除!';
+}
+function selectFeverLeft(idx){
+  if(bs.phase!=='fever'||bs.fL[idx]) return;
+  bs.selLeft=idx;
+  for(let i=0;i<BC.FEVER_PAIRS;i++){
+    if(!bs.fL[i]) document.getElementById('fl'+i).className='fever-item'+(i===idx?' sel':'');
+  }
+}
+function selectFeverRight(idx){
+  if(bs.phase!=='fever'||bs.fR[idx]) return;
+  if(bs.selLeft<0){
+    const e=document.getElementById('fr'+idx); e.classList.add('err');
+    setTimeout(()=>e.classList.remove('err'),400); return;
+  }
+  const lw=bs.feverPairs[bs.selLeft], rw=bs.feverRight[idx];
+  const ok=lw&&rw&&lw.en===rw.en;
+  if(ok){
+    const li=bs.selLeft, ri=idx;
+    document.getElementById('fl'+li).classList.add('matched');
+    document.getElementById('fr'+ri).classList.add('matched');
+    bs.selLeft=-1;
+    bs.feverTotalMatched++;
+    const dmg=Math.floor(BC.FEVER_DMG*Math.pow(BC.FEVER_MULT,bs.feverTotalMatched));
+    bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
+    document.getElementById('fever-title-txt').textContent=`⚡ FEVER! -${dmg}💥 已消除 ${bs.feverTotalMatched} 对`;
+    showDmg('-'+dmg, document.getElementById('monster-art'));
+    updateBattleUI();
+    setTimeout(()=>{
+      document.getElementById('fl'+li).className='fever-item gone';
+      document.getElementById('fr'+ri).className='fever-item gone';
+      bs.fL[li]=true; bs.fR[ri]=true;
+      if(bs.monsterHp<=0){ endBattle(true); return; }
+      if(bs.fL.every(v=>v)) setTimeout(()=>loadFeverPairs(),200);
+    },350);
+  } else {
+    document.getElementById('fr'+idx).classList.add('err');
+    setTimeout(()=>document.getElementById('fr'+idx).classList.remove('err'),400);
+    bs.selLeft=-1;
+    for(let i=0;i<BC.FEVER_PAIRS;i++) if(!bs.fL[i]) document.getElementById('fl'+i).className='fever-item';
+  }
+}
+function exitBattle(){
+  if(btimer) clearInterval(btimer);
+  bs.isOver=true;
+  // 清理 FEVER 特效
+  document.getElementById('fever-overlay').classList.remove('on');
+  document.getElementById('battle-wrap').classList.remove('fever-mode');
+  document.getElementById('timer-fill').classList.remove('fever');
+  gd.hp=bs.playerHp||gd.hp;
+  saveGame(); updateHomeUI(); tab('dungeon');
+}
+
+/* ══════════════════════════════════════════════════
+   结算
+══════════════════════════════════════════════════ */
+function endBattle(win){
+  if(btimer) clearInterval(btimer);
+  bs.isOver=true; bs.win=win;
+  // 清理 FEVER 特效
+  document.getElementById('fever-overlay').classList.remove('on');
+  document.getElementById('battle-wrap').classList.remove('fever-mode');
+  document.getElementById('timer-fill').classList.remove('fever');
+  let exp=0, coins=0;
+  if(win){
+    exp=20+bs.correctCount*5; coins=15+bs.correctCount*3;
+    gd.exp+=exp; gd.coins+=coins; gd.vocab+=bs.correctCount;
+    taskProgress('battle',1);
+    let leveled=false;
+    while(gd.exp>=50){ gd.exp-=50; gd.level++; gd.maxHp+=10; gd.hp=gd.maxHp; taskProgress('levelup',1); leveled=true; }
+    if(leveled) showLevelUpToast();
+    gd.hp=Math.min(bs.playerHp + Math.floor(gd.maxHp*0.1), gd.maxHp); // 胜利后回复10% HP
+  } else { gd.hp=bs.playerHp; }
+  saveGame();
+  document.getElementById('res-burst').textContent=win?'🏆':'💔';
+  document.getElementById('res-heading').textContent=win?'胜利!':'失败…';
+  document.getElementById('res-heading').className='res-heading '+(win?'win':'lose');
+  document.getElementById('res-sub').textContent=win?'太棒了！继续加油！':'再努力一下，你可以的！';
+  document.getElementById('res-correct').textContent=bs.correctCount+' 题';
+  document.getElementById('res-exp').textContent=win?`+${exp} EXP`:'—';
+  document.getElementById('res-coins').textContent=win?`+${coins}`:'—';
+  document.getElementById('res-vocab').textContent=win?`+${bs.correctCount}`:'—';
+  setTimeout(()=>go('result-page'),500);
+}
+function backToHome(){ updateHomeUI(); tab('home'); }
+
+function showLevelUpToast(){
+  const t=document.createElement('div');
+  t.className='levelup-toast';
+  t.textContent=`🎉 升级！Lv.${gd.level}`;
+  document.getElementById('app').appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+/* ══════════════════════════════════════════════════
+   我的页面
+══════════════════════════════════════════════════ */
+function updateMineUI(){
+  setPetSvg(document.getElementById('mine-avatar-svg'), gd.petKey||'fire');
+  document.getElementById('mine-hero-name').textContent=gd.petName||'冒险者';
+  document.getElementById('mine-hero-lv').textContent=`Lv.${gd.level} · ${gd.petType||'未知'}`;
+  document.getElementById('m-coins').textContent=gd.coins;
+  document.getElementById('m-vocab').textContent=gd.vocab;
+  document.getElementById('m-stamina').textContent=gd.stamina;
+  document.getElementById('sound-val').textContent=gd.settings.sound?'开启':'关闭';
+  const el=document.getElementById('achieve-list');
+  el.innerHTML=ACHIEVE_LIST.map(a=>{
+    const ok=a.unlock(gd);
+    return `<div class="achieve-card ${ok?'':'achieve-locked'}">
+      <div class="achieve-ico">${a.icon}</div>
+      <div class="achieve-info">
+        <div class="achieve-name">${a.name}</div>
+        <div class="achieve-desc">${a.desc}</div>
+      </div>
+      <span class="achieve-status">${ok?'✅':'🔒'}</span>
+    </div>`;
+  }).join('');
+}
+function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
+function showAbout(){
+  showModal('🐾','WordPet v1.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n体力每5分钟自动恢复1点。\n\n© 2026 WordPet');
+}
+function confirmReset(){
+  if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
+}
+
+/* ══════════════════════════════════════════════════
+   弹窗
+══════════════════════════════════════════════════ */
+function showModal(ico,title,desc){
+  document.getElementById('modal-ico').textContent=ico;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-desc').textContent=desc;
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('on'); }
+
+/* ══════════════════════════════════════════════════
+   伤害飘字
+══════════════════════════════════════════════════ */
+function showDmg(txt, relEl, type){
+  const el=document.createElement('div');
+  el.className='dmg-float'+(type==='heal'?' heal':'');
+  el.textContent=txt;
+  if(relEl){
+    const r=relEl.getBoundingClientRect();
+    el.style.left=(r.left+r.width/2-24)+'px';
+    el.style.top=(r.top)+'px';
+  } else { el.style.left='50%'; el.style.top='40%'; }
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),950);
+}
+
+/* ══════════════════════════════════════════════════
+   打击感辅助函数
+══════════════════════════════════════════════════ */
+// 屏幕闪光
+function flashHit(type){
+  const el=document.getElementById('hit-flash');
+  el.className='';
+  void el.offsetWidth; // reflow
+  el.className=type==='correct'?'correct-flash':'wrong-flash';
+  setTimeout(()=>{ el.className=''; },350);
+}
+
+// 怪物受击抖动
+function monsterHitAnim(){
+  const art=document.getElementById('monster-art');
+  art.classList.remove('hit');
+  void art.offsetWidth;
+  art.classList.add('hit');
+  setTimeout(()=>art.classList.remove('hit'),360);
+}
+
+// 答对粒子爆发
+function spawnSparks(btn){
+  if(!btn) return;
+  const r=btn.getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  const colors=['#34d399','#6ee7b7','#fbbf24','#a78bfa','#38bdf8'];
+  const count=10;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='opt-spark';
+    const angle=(i/count)*Math.PI*2;
+    const dist=50+Math.random()*40;
+    const sx=Math.cos(angle)*dist+'px';
+    const sy=Math.sin(angle)*dist+'px';
+    el.style.cssText=`left:${cx-4}px;top:${cy-4}px;background:${colors[i%colors.length]};--sx:${sx};--sy:${sy}`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),580);
+  }
+}
+
+// 连击爆字（在怪物区上方）
+function showComboBurst(combo){
+  const wrap=document.getElementById('battle-wrap');
+  const el=document.createElement('div');
+  el.className='combo-burst';
+  const labels=['','','双击!','三连!','四杀!','五连击!','超神!'];
+  el.textContent=(labels[combo]||`${combo}连击!`);
+  el.style.top='170px';
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(),520);
+}
+
+// Web Audio 音效（无需外部文件）
+let _audioCtx=null;
+function getAudioCtx(){
+  if(!_audioCtx){ try{ _audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  return _audioCtx;
+}
+function playBeep(freq, dur, type){
+  try{
+    const ctx=getAudioCtx(); if(!ctx) return;
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.type=type||'sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.18,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime+dur);
+  }catch(e){}
+}
+
+/* ══════════════════════════════════════════════════
+   初始化
+══════════════════════════════════════════════════ */
+function init(){
+  loadGame(); initTasks(); buildSelectPage();
+  if(gd.petIndex>=0){ updateHomeUI(); tab('home'); }
+  else go('select-page');
+}
+init();
+</script>
+</div>
+</body>
+</html>
