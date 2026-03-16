@@ -2094,13 +2094,33 @@ function tab(name){
 /* ══════════════════════════════════════════════════
    SVG 助手
 ══════════════════════════════════════════════════ */
+let _svgUid = 0;
+// 将SVG字符串中所有 id="xxx" 和 url(#xxx) / href="#xxx" 替换为带uid的唯一版本，防止多SVG并存时gradient冲突
+function _uniquifySvg(svgStr, uid){
+  // 收集所有 id 值
+  const ids = [];
+  svgStr.replace(/\bid="([^"]+)"/g, (_,id)=>{ ids.push(id); });
+  let s = svgStr;
+  ids.forEach(id=>{
+    const newId = id + '_u' + uid;
+    // 替换 id="xxx"
+    s = s.replace(new RegExp(`\\bid="${id}"`, 'g'), `id="${newId}"`);
+    // 替换 url(#xxx)
+    s = s.replace(new RegExp(`url\\(#${id}\\)`, 'g'), `url(#${newId})`);
+    // 替换 href="#xxx"
+    s = s.replace(new RegExp(`href="#${id}"`, 'g'), `href="#${newId}"`);
+  });
+  return s;
+}
 function setPetSvg(el, key){
   if(!el) return;
-  el.innerHTML = SVG_PETS[key] || SVG_PETS.fire;
+  const raw = SVG_PETS[key] || SVG_PETS.fire;
+  el.innerHTML = _uniquifySvg(raw, ++_svgUid);
 }
 function setMonsterSvg(el, key){
   if(!el) return;
-  el.innerHTML = SVG_MONSTERS[key] || SVG_MONSTERS.slime;
+  const raw = SVG_MONSTERS[key] || SVG_MONSTERS.slime;
+  el.innerHTML = _uniquifySvg(raw, ++_svgUid);
 }
 
 /* ══════════════════════════════════════════════════
@@ -2115,7 +2135,7 @@ function buildSelectPage(){
     <div class="pet-card" id="pc${i}" onclick="selectPet(${i})">
       <div class="pet-card-inner">
         <div class="pet-card-art ${p.artBgClass}">
-          <svg class="pet-card-svg" viewBox="0 0 100 100">${SVG_PETS[eggKeyMap[p.key]]||SVG_PETS[p.key]}</svg>
+          <svg class="pet-card-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[eggKeyMap[p.key]]||SVG_PETS[p.key], ++_svgUid)}</svg>
         </div>
         <div class="pet-card-info">
           <div class="pet-card-name">${p.type}系宠物蛋</div>
@@ -2210,7 +2230,7 @@ function updateHomeUI(){
   // 当前进化阶段 SVG（未选宠物则显示神秘蛋）
   if(gd.petIndex < 0){
     const mainSvg = document.getElementById('pet-main-svg');
-    mainSvg.innerHTML = SVG_PETS['egg_mystery'] || '';
+    mainSvg.innerHTML = _uniquifySvg(SVG_PETS['egg_mystery'] || '', ++_svgUid);
     document.getElementById('h-pet-name').textContent = '神秘宠物蛋';
     document.getElementById('h-pet-type').textContent = '🥚 等待孵化…';
     const aura0 = document.getElementById('pet-aura');
@@ -2348,21 +2368,22 @@ function enterDungeon(id){
 // tile: 0=地面 1=树/墙（不可通行）
 const MAP_DATA = {
   forest:{
-    name:'🌲 森林冒险', cols:14, rows:11,
+    name:'🌲 森林冒险', cols:16, rows:12,
     tiles:[
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,1,0,0,0,1,1,0,1,0,1,0,1],
-      [1,0,1,0,1,0,0,0,0,0,0,0,0,1],
-      [1,0,0,0,1,1,0,1,1,0,1,0,0,1],
-      [1,0,1,0,0,0,0,0,0,0,0,0,1,1],
-      [1,0,1,1,1,0,1,0,1,1,0,0,0,1],
-      [1,0,0,0,0,0,1,0,0,0,0,1,0,1],
-      [1,1,0,1,0,1,0,0,1,0,0,0,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1,0,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     ],
-    playerStart:{x:1,y:1},
+    playerStart:{x:2,y:2},
     tileIcon:{ground:'', wall:'🌲'},
     monsterPool:['slime','slime','goblin'],
     monsterCount:5,
@@ -2370,21 +2391,22 @@ const MAP_DATA = {
     bgColor:'#091508',
   },
   cave:{
-    name:'⛰️ 洞穴探险', cols:14, rows:11,
+    name:'⛰️ 洞穴探险', cols:16, rows:12,
     tiles:[
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,1,0,0,0,1,0,0,0,0,0,1],
-      [1,0,1,1,0,1,0,0,0,1,1,0,1,1],
-      [1,0,0,0,0,1,0,1,0,0,0,0,0,1],
-      [1,1,0,1,0,0,0,0,0,1,0,1,0,1],
-      [1,0,0,1,1,0,1,0,1,0,0,0,0,1],
-      [1,0,1,0,0,0,1,0,0,0,1,1,0,1],
-      [1,0,0,0,1,0,0,0,1,0,0,0,0,1],
-      [1,1,0,0,0,1,0,1,1,0,1,0,0,1],
-      [1,0,0,1,0,0,0,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0],
+      [0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     ],
-    playerStart:{x:1,y:1},
+    playerStart:{x:2,y:2},
     tileIcon:{ground:'', wall:'🪨'},
     monsterPool:['goblin','goblin','dragon'],
     monsterCount:6,
@@ -2392,21 +2414,22 @@ const MAP_DATA = {
     bgColor:'#100808',
   },
   volcano:{
-    name:'🌋 火山试炼', cols:14, rows:11,
+    name:'🌋 火山试炼', cols:16, rows:12,
     tiles:[
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,0,1,0,0,0,1,0,0,0,1],
-      [1,1,0,1,0,0,0,1,0,0,0,1,0,1],
-      [1,0,0,1,1,0,1,0,1,0,1,0,0,1],
-      [1,0,1,0,0,0,0,0,0,0,0,0,1,1],
-      [1,0,0,0,1,0,1,1,0,1,0,0,0,1],
-      [1,1,0,1,0,0,0,0,0,0,1,0,1,1],
-      [1,0,0,0,0,1,0,1,0,0,0,0,0,1],
-      [1,0,1,1,0,0,0,0,0,1,0,1,0,1],
-      [1,0,0,0,0,0,1,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     ],
-    playerStart:{x:1,y:1},
+    playerStart:{x:2,y:2},
     tileIcon:{ground:'', wall:'🔥'},
     monsterPool:['dragon','dragon','goblin'],
     monsterCount:7,
@@ -2495,7 +2518,7 @@ function enterMap(dungId){
 
     // 启动怪物刷新
     if(ms.spawnTimer) clearInterval(ms.spawnTimer);
-    ms.spawnTimer = setInterval(()=>respawnMonstersPixel(), 30000);
+    ms.spawnTimer = setInterval(()=>respawnMonstersPixel(), 15000);
   });
 }
 
@@ -2777,7 +2800,16 @@ function bindJoystick(){
 function respawnMonstersPixel(){
   if(!document.getElementById('map-page').classList.contains('active')) return;
   const md = ms.mapData;
-  const before = ms.monsters.filter(m=>!m.defeated).length;
+  // 清理已消灭怪物记录
+  ms.monsters = ms.monsters.filter(m=>{
+    if(m.defeated){
+      if(m.el && m.el.parentNode) m.el.parentNode.removeChild(m.el);
+      return false;
+    }
+    return true;
+  });
+  const before = ms.monsters.length;
+  if(before >= md.monsterCount) return; // 已满，不刷新
   ms.monsters = spawnMonstersPixel(md, ms.monsters);
   const after = ms.monsters.filter(m=>!m.defeated).length;
   if(after > before){
@@ -2813,10 +2845,16 @@ function triggerEncounter(mon){
 /* ── 战斗结束回到地图 ── */
 function returnToMap(win, exp, coins, correctCount){
   const mon = ms.pendingBattle;
-  if(mon){ mon.defeated=true; ms.pendingBattle=null; }
+  if(mon){
+    mon.defeated = true;
+    if(mon.el && mon.el.parentNode) mon.el.parentNode.removeChild(mon.el);
+    ms.pendingBattle = null;
+  }
   ms.inBattle = false;
   document.getElementById('map-hp-txt').textContent = gd.hp;
   go('map-page');
+  // 立即补充被消灭的怪物（延迟5s，避免玩家刚回来就被触发）
+  setTimeout(()=>respawnMonstersPixel(), 5000);
 
   // 重启游戏循环
   if(ms.raf) cancelAnimationFrame(ms.raf);
@@ -3214,8 +3252,14 @@ function exitBattle(){
   gd.hp=bs.playerHp||gd.hp;
   saveGame();
   if(ms.dungId){
-    // 逃跑：取消本次遭遇，回到地图（怪物保留）
-    ms.pendingBattle = null;
+    // 逃跑：销毁触发遭遇的怪物，回到地图
+    if(ms.pendingBattle){
+      ms.pendingBattle.defeated = true;
+      // 移除其DOM元素
+      if(ms.pendingBattle.el && ms.pendingBattle.el.parentNode)
+        ms.pendingBattle.el.parentNode.removeChild(ms.pendingBattle.el);
+      ms.pendingBattle = null;
+    }
     ms.inBattle = false;
     document.getElementById('map-hp-txt').textContent = gd.hp;
     go('map-page');
@@ -3295,13 +3339,13 @@ function showEvoPanel(){
       <div class="evo-panel-sub">${curEvo.name} → ${nextEvo.name}</div>
       <div class="evo-compare">
         <div class="evo-pet-box">
-          <svg viewBox="0 0 100 100">${SVG_PETS[curEvo.key]||''}</svg>
+          <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[curEvo.key]||'', ++_svgUid)}</svg>
           <div class="evo-pet-lbl">当前</div>
           <div class="evo-pet-name">${curEvo.name}</div>
         </div>
         <div class="evo-arrow-txt">→</div>
         <div class="evo-pet-box">
-          <svg viewBox="0 0 100 100">${SVG_PETS[nextEvo.key]||''}</svg>
+          <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[nextEvo.key]||'', ++_svgUid)}</svg>
           <div class="evo-pet-lbl">进化后</div>
           <div class="evo-pet-name">${nextEvo.name}</div>
         </div>
@@ -3367,7 +3411,7 @@ function playEvoAnimation(nextEvo, onDone){
 
   // 0ms: 旧形态 + 发光
   const curEvo = PET_CONFIGS[gd.petIndex].evo[gd.evoStage||0];
-  document.getElementById('evo-svg').innerHTML = SVG_PETS[curEvo.key]||'';
+  document.getElementById('evo-svg').innerHTML = _uniquifySvg(SVG_PETS[curEvo.key]||'', ++_svgUid);
 
   // 1500ms: 白光爆闪
   setTimeout(()=>{
@@ -3378,7 +3422,7 @@ function playEvoAnimation(nextEvo, onDone){
 
   // 2000ms: 切换新形态，闪光消散
   setTimeout(()=>{
-    document.getElementById('evo-svg').innerHTML = SVG_PETS[nextEvo.key]||'';
+    document.getElementById('evo-svg').innerHTML = _uniquifySvg(SVG_PETS[nextEvo.key]||'', ++_svgUid);
     const f = document.getElementById('evo-anim-flash');
     if(f){ f.style.transition='opacity 0.6s'; f.style.opacity='0'; }
   }, 2000);
@@ -3436,7 +3480,7 @@ function buildDexPage(){
     return `
     <div class="dex-pet-card" id="dex-card-${ci}">
       <div class="dex-pet-head" onclick="toggleDexDetail(${ci})">
-        <svg viewBox="0 0 100 100">${SVG_PETS[headEvo.key]||''}</svg>
+        <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[headEvo.key]||'', ++_svgUid)}</svg>
         <div class="dex-pet-head-info">
           <div class="dex-pet-head-name">${headEvo.name}${myPet?'<span class="dex-new-badge">我的</span>':''}</div>
           <div class="dex-pet-head-type"><span class="pet-type-badge ${cfg.typeClass}">${cfg.type}</span></div>
@@ -3463,7 +3507,7 @@ function buildDexPage(){
               <div class="dex-evo-node ${locked?'locked':''}" id="dex-node-${ci}-${si}" onclick="selectDexStage(${ci},${si})">
                 <svg viewBox="0 0 100 100">${locked
                   ?'<rect width="100" height="100" fill="rgba(255,255,255,0.05)" rx="50"/><text x="50" y="58" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.18)">?</text>'
-                  :SVG_PETS[e.key]||''}</svg>
+                  :_uniquifySvg(SVG_PETS[e.key]||'', ++_svgUid)}</svg>
                 <div class="dex-evo-node-name">${locked?'???':e.name}</div>
                 <div class="dex-evo-node-cond">${si===0?'初始形态':`Lv.${e.condLv} 进化`}</div>
               </div>`;
@@ -3536,7 +3580,7 @@ function selectDexStage(ci, si){
       <div class="dex-stage-head">
         <svg viewBox="0 0 100 100">${locked
           ?'<rect width="100" height="100" fill="rgba(255,255,255,0.04)" rx="50"/><text x="50" y="60" text-anchor="middle" font-size="32" fill="rgba(255,255,255,0.15)">?</text>'
-          :SVG_PETS[e.key]||''}</svg>
+          :_uniquifySvg(SVG_PETS[e.key]||'', ++_svgUid)}</svg>
         <div class="dex-stage-head-info">
           <div class="dex-stage-name">${locked?'???':e.name}</div>
           <div class="dex-stage-cond">${si===0?'🐣 初始形态':'✨ Lv.'+e.condLv+' 进化'}</div>
