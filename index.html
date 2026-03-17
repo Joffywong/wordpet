@@ -724,6 +724,8 @@ body{
   position:absolute;
   right:8%;top:4%;
   animation:mFloat 3s ease-in-out infinite;
+  /* 为头顶蓄力条的绝对定位提供参照 */
+  overflow:visible;
 }
 .enemy-sprite svg{width:76px;height:76px}
 .enemy-sprite.hit{animation:monsterHit .35s ease!important}
@@ -791,26 +793,28 @@ body{
 .enemy-hud-txt,.player-hud-txt{
   font-size:10px;color:rgba(241,240,255,0.4);
 }
-/* 怪物蓄力攻击条 */
+/* 怪物蓄力攻击条（悬浮在怪物头顶） */
 .atk-charge-row{
-  position:relative;z-index:2;flex-shrink:0;
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:6px;padding:0 2px;
+  position:absolute;
+  bottom:calc(100% + 2px);   /* 怪物SVG顶部上方2px */
+  left:50%;transform:translateX(-50%);
+  width:80px;
+  display:flex;align-items:center;gap:4px;
+  z-index:5;pointer-events:none;
 }
 .atk-charge-icon{
-  font-size:18px;flex-shrink:0;
+  font-size:12px;flex-shrink:0;
   animation:none;transition:transform .1s;
 }
 .atk-charge-icon.shake{animation:atkShake .25s ease}
 @keyframes atkShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px) rotate(-8deg)}75%{transform:translateX(4px) rotate(8deg)}}
 .atk-charge-track{
-  flex:1;height:14px;position:relative;
-  background:rgba(255,255,255,0.1);
-  border-radius:7px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.1);
+  flex:1;height:6px;position:relative;
+  background:rgba(255,255,255,0.15);
+  border-radius:3px;overflow:hidden;
 }
 .atk-charge-fill{
-  height:100%;border-radius:7px;
+  height:100%;border-radius:3px;
   background:linear-gradient(90deg,#4ade80,#22d3ee);
   transition:width .1s linear;
 }
@@ -819,13 +823,11 @@ body{
 .atk-charge-fill.fever{background:linear-gradient(90deg,#f97316,#ef4444,#fbbf24);background-size:200% 100%;animation:feverTimerFlow 0.5s linear infinite}
 .atk-charge-fill.reset{transition:width 0.15s ease-out}
 .atk-charge-label{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);
-  white-space:nowrap;pointer-events:none;letter-spacing:.3px;
+  display:none; /* 小条不显示文字，靠颜色传达紧张感 */
 }
-/* 被攻击时，敌人蓄力条红色闪烁 */
+/* 被攻击时，蓄力条闪烁 */
 .atk-charge-row.hit-flash-bar{animation:chargeBarHit .3s ease}
-@keyframes chargeBarHit{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes chargeBarHit{0%,100%{opacity:1}50%{opacity:0.2}}
 
 /* 答题区 */
 #normal-panel{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;min-height:0}
@@ -1102,6 +1104,14 @@ body{
         <div class="enemy-hud-txt" id="monster-hp-txt">150/150</div>
       </div>
       <div class="enemy-sprite" id="enemy-sprite">
+        <!-- 怪物头顶蓄力条 -->
+        <div class="atk-charge-row" id="atk-charge-row">
+          <div class="atk-charge-icon" id="atk-charge-icon">⚔️</div>
+          <div class="atk-charge-track">
+            <div class="atk-charge-fill" id="atk-charge-fill" style="width:0%"></div>
+            <div class="atk-charge-label" id="atk-charge-label">蓄力中…</div>
+          </div>
+        </div>
         <svg id="monster-svg" viewBox="0 0 100 100"></svg>
       </div>
 
@@ -1116,15 +1126,6 @@ body{
           <div class="hud-hp-bg"><div class="hud-hp-fill player-fill" id="player-hp-fill" style="width:100%"></div></div>
         </div>
         <div class="player-hud-txt" id="player-hp-num">100/100</div>
-      </div>
-    </div>
-
-    <!-- ── 怪物蓄力攻击条 ── -->
-    <div class="atk-charge-row" id="atk-charge-row">
-      <div class="atk-charge-icon" id="atk-charge-icon">⚔️</div>
-      <div class="atk-charge-track">
-        <div class="atk-charge-fill" id="atk-charge-fill" style="width:0%"></div>
-        <div class="atk-charge-label" id="atk-charge-label">蓄力中…</div>
       </div>
     </div>
 
@@ -1969,7 +1970,7 @@ const PET_CONFIGS = [
     desc:'雷鸣九天，极速斩击。FEVER触发更快，爆发力十足。',
     maxHp:100, atk:12, def:8,
     auraClass:'pet-aura-thunder', artBgClass:'pet-art-bg-thunder',
-    trait:'⚡ 迅捷天赋：答题后怪物蓄力额外延迟 1 秒，争取更多出手时机',
+    trait:'⚡ 迅捷天赋：怪物攻击间隔额外延长 1 秒，让你有更充裕的时间作答',
     evo:[
       { stage:0, name:'闪电狐',   key:'thunder',  lv:1,  maxHp:100, atk:12, def:8,  condLv:0  },
       { stage:1, name:'雷霆九尾', key:'thunder2', lv:15, maxHp:145, atk:18, def:13, condLv:15 },
@@ -3131,9 +3132,8 @@ function exitMap(){
 const BC={ NORMAL_DMG:12, COMBO_BONUS:0.15, WRONG_PEN:15,
   FEVER_TRIG:3, FEVER_DUR:12, FEVER_DMG:15, FEVER_MULT:1.2,
   FEVER_PAIRS:4,
-  // DPS系统：怪物攻击间隔在MONSTER_CONFIGS.atkInterval中定义
-  // FEVER模式下攻击间隔减半
-  FEVER_ATK_MULT:2.0
+  // FEVER模式下怪物攻击间隔乘以此系数（>1 = 变慢，玩家喘息空间）
+  FEVER_ATK_SLOW:2.0
 };
 
 let bs={};
@@ -3167,13 +3167,12 @@ function startBattle(dungId, monsterKeyOverride){
     phase:'normal', dungId, monsterKey:mc.key, monsterName:mc.name,
     monsterHp:mc.hp, monsterMaxHp:mc.hp,
     monsterAtk:mc.atk, monsterDef:mc.def,
-    monsterAtkInterval:mc.atkInterval,  // 攻击间隔（秒）
+    monsterAtkInterval:mc.atkInterval + (isThunder ? 1.0 : 0), // 雷系天赋：攻击间隔直接+1s
     playerHp:gd.hp, playerMaxHp:gd.maxHp,
     combo:0, correctCount:0,
-    // DPS 系统：蓄力进度 0~1
-    atkProgress:0,      // 当前蓄力进度（0=刚重置，1=即将攻击）
-    atkPaused:true,     // 加载中或答题后短暂暂停
-    thunderBonus: isThunder ? 1.0 : 0, // 雷系：答题后额外延迟秒数
+    // DPS 系统：蓄力进度 0~1（全程连续，不被答题打断）
+    atkProgress:0,      // 当前蓄力进度（0=刚开始，1=即将攻击）
+    atkPaused:true,     // 仅在加载中暂停
     feverTimeLeft:BC.FEVER_DUR,
     feverTotalMatched:0,
     feverPairs:[], feverRight:[],
@@ -3218,21 +3217,14 @@ function nextQ(){
     const b=document.getElementById('opt'+i);
     b.textContent=q.opts[i]?.en||''; b.disabled=false; b.className='opt-btn';
   }
-  // 题目刷新时重置蓄力条（含雷系额外延迟：进度从负值开始）
-  const thunderDelay = bs.thunderBonus || 0;
-  bs.atkProgress = thunderDelay > 0
-    ? -(thunderDelay / (bs.monsterAtkInterval||3))  // 负进度 = 额外延迟
-    : 0;
+  // 蓄力条不重置，持续推进（去掉打断机制后进度连贯）
   bs.atkPaused=false;
   updateAtkChargeUI();
 }
 function selectOption(idx){
   if(answering||bs.isOver||bs.phase!=='normal') return;
   answering=true;
-  // 答题瞬间：暂停怪物蓄力，并重置
-  bs.atkPaused=true;
-  bs.atkProgress=0;
-  updateAtkChargeUI();
+  // 怪物蓄力不受答题打断，持续推进
 
   const chosen=curOpts[idx];
   const ok=chosen.en===curQ.en;
@@ -3285,7 +3277,7 @@ function startBTimer(){
     if(bs.isOver){ clearInterval(btimer); return; }
 
     if(bs.phase==='normal'){
-      if(!bs.atkPaused && !answering){
+      if(!bs.atkPaused){
         const interval = bs.monsterAtkInterval || 3;
         bs.atkProgress += TICK / (interval * 1000);
         if(bs.atkProgress >= 1){
@@ -3326,9 +3318,9 @@ function startBTimer(){
           setTimeout(()=>nextQ(),300);
         }
       }
-      // FEVER期间蓄力条也正常推进（双倍速）
-      if(!answering){
-        const interval = (bs.monsterAtkInterval||3) / BC.FEVER_ATK_MULT;
+      // FEVER期间蓄力条持续推进（降缓，不受答题打断）
+      {
+        const interval = (bs.monsterAtkInterval||3) * BC.FEVER_ATK_SLOW;
         bs.atkProgress += TICK / (interval * 1000);
         if(bs.atkProgress >= 1){
           bs.atkProgress = 0;
@@ -3350,7 +3342,6 @@ function startBTimer(){
 /* ── 更新怪物蓄力条 UI ── */
 function updateAtkChargeUI(){
   const fill  = document.getElementById('atk-charge-fill');
-  const label = document.getElementById('atk-charge-label');
   const icon  = document.getElementById('atk-charge-icon');
   if(!fill) return;
   const raw = bs.atkProgress || 0;
@@ -3359,21 +3350,12 @@ function updateAtkChargeUI(){
   // 颜色分三段
   fill.className = 'atk-charge-fill' +
     (bs.phase==='fever' ? ' fever' : pct >= 75 ? ' danger' : pct >= 40 ? ' mid' : '');
-  // 标签文字
-  if(label){
-    if(bs.atkPaused || answering){
-      label.textContent = '…';
-    } else if(bs.phase==='fever'){
-      label.textContent = `⚡ FEVER 攻击中`;
-    } else {
-      // 含负进度时：剩余 = (1 - raw) * interval；负进度使remaining更大，正确反映额外等待
-      const remaining = Math.max(0, (1 - raw) * (bs.monsterAtkInterval||3));
-      label.textContent = `${(bs.monsterName||'敌人')} 蓄力 ${remaining.toFixed(1)}s`;
-    }
-  }
-  // 图标随蓄力变化
-  if(icon && bs.phase!=='fever'){
-    icon.textContent = pct >= 75 ? '💢' : pct >= 40 ? '⚡' : '⚔️';
+  // 图标随蓄力危险度变化（文字label已隐藏，靠图标辅助提示）
+  if(icon){
+    if(bs.phase==='fever')      icon.textContent = '🔥';
+    else if(pct >= 75)          icon.textContent = '💢';
+    else if(pct >= 40)          icon.textContent = '⚡';
+    else                        icon.textContent = '⚔️';
   }
 }
 
