@@ -3950,7 +3950,7 @@ function updateMineUI(){
 }
 function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
 function showAbout(){
-  showModal('🐾','WordPet v1.1.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.1.0 新增：宠物进化系统、图鉴、四维战斗差异化\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败后缓慢恢复，回首页互动可加速。\n\n© 2026 WordPet');
+  showModal('🐾','WordPet v1.2.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.2.0 更新：\n• 战斗升级：怪物持续蓄力，不再被答题打断\n• Fever 模式：怪物攻击减缓，尽情爆发连击！\n• 蓄力条移至怪物头顶，界面更清爽\n• HP 与精力概念分离，互动可加速 HP 恢复\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败后缓慢恢复，回首页互动可加速。\n\n© 2026 WordPet');
 }
 function confirmReset(){
   if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
