@@ -355,6 +355,17 @@ body{
 }
 @keyframes blinkHint{0%,100%{opacity:1}50%{opacity:.35}}
 
+/* ── 精力内联显示（替代进度条） ── */
+.stamina-inline{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 0 2px;
+  font-size:13px;
+}
+.stamina-icon{ font-size:15px; }
+.stamina-label{ color:rgba(255,255,255,0.55);font-size:12px; }
+.stamina-val{ font-weight:700;color:#38bdf8;letter-spacing:0.5px; }
+.stamina-recover-tip{ font-size:11px;color:#f97316;opacity:0.85; }
+
 /* ── 宠物互动特效 ── */
 /* 弹跳 */
 @keyframes petBounce{
@@ -472,9 +483,11 @@ body{
       <span class="top-vocab" id="h-vocab">词汇量 0</span>
       <span class="top-coins" id="h-coins">🪙 <span id="h-coins-num">0</span></span>
     </div>
-    <div class="bar-wrap" style="margin:0">
-      <div class="bar-label"><span>⚡ 体力</span><span id="h-stamina">100/100</span></div>
-      <div class="bar-bg"><div class="bar-fill bar-stamina" id="h-stamina-bar" style="width:100%"></div></div>
+    <div class="stamina-inline" id="h-stamina-wrap">
+      <span class="stamina-icon">⚡</span>
+      <span class="stamina-label">精力</span>
+      <span class="stamina-val" id="h-stamina">100/100</span>
+      <span class="stamina-recover-tip" id="h-stamina-tip"></span>
     </div>
   </div>
   <!-- 可滚动内容 -->
@@ -486,7 +499,7 @@ body{
       </div>
       <div class="pet-stage-name" id="h-pet-name">宠物名</div>
       <div class="pet-stage-sub" id="h-pet-type">类型</div>
-      <div class="interact-hint">👆 点击宠物互动 +5体力</div>
+      <div class="interact-hint">👆 点击宠物互动 加速HP恢复</div>
     </div>
     <div class="home-stats-card">
       <div class="bar-wrap" style="margin-top:0">
@@ -603,7 +616,7 @@ body{
 <div id="dungeon-page" class="page">
   <div class="dg-top">
     <div class="dg-title">⚔️ 副本站</div>
-    <div class="dg-sub">选择副本，消耗体力，出发冒险</div>
+    <div class="dg-sub">选择副本，消耗精力，出发冒险</div>
   </div>
   <div class="scroll-area">
     <div class="dg-cards" id="dungeon-list"></div>
@@ -1775,7 +1788,7 @@ body{
     <div class="mine-stats-row">
       <div class="mine-stat-item"><div class="mine-stat-val" id="m-coins">0</div><div class="mine-stat-lbl">金币</div></div>
       <div class="mine-stat-item"><div class="mine-stat-val" id="m-vocab">0</div><div class="mine-stat-lbl">词汇量</div></div>
-      <div class="mine-stat-item"><div class="mine-stat-val" id="m-stamina">100</div><div class="mine-stat-lbl">体力</div></div>
+      <div class="mine-stat-item"><div class="mine-stat-val" id="m-stamina">100</div><div class="mine-stat-lbl">精力</div></div>
     </div>
   </div>
   <div class="scroll-area">
@@ -1995,7 +2008,7 @@ const DUNGEON_CONFIGS = [
 const DAILY_TASKS = [
   { id:'battle',   icon:'⚔️', name:'击败怪物',  desc:'击败 3 只怪物',    reward:'🪙×30', target:3 },
   { id:'correct',  icon:'✅', name:'答对题目',  desc:'答对 10 道英语题',  reward:'⭐×20', target:10 },
-  { id:'interact', icon:'🤝', name:'宠物互动',  desc:'与宠物互动 3 次',   reward:'⚡×15', target:3 },
+  { id:'interact', icon:'🤝', name:'宠物互动',  desc:'与宠物互动 3 次',   reward:'🪙×10', target:3 },
   { id:'levelup',  icon:'⬆️', name:'宠物升级',  desc:'宠物升一级',        reward:'🪙×50', target:1 }
 ];
 
@@ -2082,7 +2095,7 @@ function loadGame(){
       const d=JSON.parse(r);
       if(d.gd)Object.assign(gd,d.gd);
       if(d.tasks)tasks=d.tasks;
-      // 体力离线自动恢复：每5分钟恢复1点，最多恢复到满
+      // 精力离线自动恢复：每5分钟恢复1点，最多恢复到满
       if(d.lastSave && gd.stamina < gd.maxStamina){
         const minsAway = Math.floor((Date.now()-d.lastSave)/60000);
         const recovered = Math.min(Math.floor(minsAway/5), gd.maxStamina-gd.stamina);
@@ -2319,8 +2332,16 @@ function updateHomeUI(){
   document.getElementById('h-level').textContent=`Lv.${p.level}`;
   document.getElementById('h-vocab').textContent=`词汇量 ${p.vocab}`;
   document.getElementById('h-coins-num').textContent=p.coins;
+  // 精力：图标+数字显示，不用进度条
   document.getElementById('h-stamina').textContent=`${p.stamina}/${p.maxStamina}`;
-  setBar('h-stamina-bar', p.stamina, p.maxStamina, 'bar-stamina');
+  // 精力颜色：低于30%时变红提示
+  const staminaTxt = document.getElementById('h-stamina');
+  if(staminaTxt) staminaTxt.style.color = (p.stamina/p.maxStamina < 0.3) ? '#f97316' : '';
+  const staminaTip = document.getElementById('h-stamina-tip');
+  if(staminaTip){
+    if(p.stamina < p.maxStamina) staminaTip.textContent = '(恢复中)';
+    else staminaTip.textContent = '';
+  }
 
   // 当前进化阶段 SVG（未选宠物则显示神秘蛋）
   if(gd.petIndex < 0){
@@ -2363,9 +2384,10 @@ function updateHomeUI(){
   // interact-hint 文字随状态变化
   const hint = document.querySelector('.interact-hint');
   if(hint){
-    if(p.hp <= 0)         hint.textContent = '😴 宠物在恢复… 点击鼓励它！';
-    else if(hpPct < 30)   hint.textContent = '❤️ 宠物体力低，点击安慰它 +5⚡';
-    else                  hint.textContent = '👆 点击宠物互动 +5体力';
+    if(p.hp <= 0)         hint.textContent = '😴 宠物晕倒中… 点击鼓励加速恢复 HP！';
+    else if(hpPct < 30)   hint.textContent = '❤️‍🩹 HP 偏低，点击宠物互动 +10 HP';
+    else if(hpPct < 100)  hint.textContent = '💚 点击宠物互动加速 HP 恢复';
+    else                  hint.textContent = '✨ 宠物状态满格！点击互动撒个娇';
   }
 
   setBar('h-exp-bar', p.exp, 50, 'bar-exp');
@@ -2441,20 +2463,31 @@ function interact(){
   const wrap = document.getElementById('pet-main-wrap');
   if(!wrap) return;
 
-  // HP 为零时：宠物晕倒中，点击只做抖动+提示，不加体力
+  taskProgress('interact', 1);
+
+  // HP 为零时：宠物晕倒中，点击加速恢复（每次互动+10 HP）
   if(gd.hp <= 0){
+    // 即使HP=0也能通过互动直接给一点HP，让恢复更有体感
+    gd.hp = Math.min(10, gd.maxHp);
+    gd.hpRegenStart = Date.now(); // 重置恢复计时起点
     wrap.classList.remove('shake-anim');
-    void wrap.offsetWidth; // 强制重排，重新触发动画
+    void wrap.offsetWidth;
     wrap.classList.add('shake-anim');
     setTimeout(()=>wrap.classList.remove('shake-anim'), 420);
     spawnEmote(wrap, '😵');
-    showDmg('正在恢复…', wrap, 'heal');
+    showDmg('+10 HP', wrap, 'heal');
+    saveGame(); updateHomeUI();
     return;
   }
 
-  // HP 正常：加体力 + 弹跳 + 爱心粒子 + 表情
-  gd.stamina = Math.min(gd.stamina + 5, gd.maxStamina);
-  taskProgress('interact', 1);
+  // HP 未满时：互动加速HP恢复（+10 HP）
+  if(gd.hp < gd.maxHp){
+    const heal = Math.min(10, gd.maxHp - gd.hp);
+    gd.hp = Math.min(gd.hp + heal, gd.maxHp);
+    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
+    showDmg(`+${heal} HP`, wrap, 'heal');
+  }
+
   saveGame(); updateHomeUI();
 
   // 弹跳动画
@@ -2463,12 +2496,12 @@ function interact(){
   wrap.classList.add('bounce');
   setTimeout(()=>wrap.classList.remove('bounce'), 460);
 
-  // 表情气泡（根据体力/HP显示不同心情）
+  // 表情气泡（根据 HP 状态显示不同心情）
   const hpPct = gd.hp / gd.maxHp;
   let emote = '😊';
-  if(gd.stamina >= gd.maxStamina)       emote = '🤩';
-  else if(hpPct < 0.3)                   emote = '😰';
-  else if(gd.stamina > gd.maxStamina*0.7) emote = '😄';
+  if(hpPct >= 1)         emote = '🤩';
+  else if(hpPct < 0.3)   emote = '😰';
+  else if(hpPct > 0.7)   emote = '😄';
   spawnEmote(wrap, emote);
 
   // 爱心粒子（3~5颗，随机分散）
@@ -2492,8 +2525,6 @@ function interact(){
   // 音效
   playBeep(660, 0.06, 'sine');
   setTimeout(()=>playBeep(880, 0.04, 'sine'), 100);
-
-  showDmg('+5⚡', wrap, 'heal');
 }
 
 /* 生成宠物表情气泡 */
@@ -2534,11 +2565,11 @@ function enterDungeon(id){
   if(!d) return;
   if(gd.petIndex<0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋，再出发冒险！'); return; }
   if(gd.hp <= 0){
-    showModal('😴','宠物体力耗尽',`宠物正在恢复中（当前 HP: 0/${gd.maxHp}），回到主页与它互动可加速恢复！`);
+    showModal('😴','宠物HP耗尽',`宠物正在恢复中（当前 HP: 0/${gd.maxHp}），回到主页与它互动可加速恢复！`);
     return;
   }
   if(gd.stamina<d.staminaCost){
-    showModal('⚡','体力不足',`进入副本需要 ${d.staminaCost} 点体力，当前体力 ${gd.stamina}。`);
+    showModal('⚡','精力不足',`进入副本需要 ${d.staminaCost} 点精力，当前精力 ${gd.stamina}。`);
     return;
   }
   gd.stamina-=d.staminaCost; saveGame();
@@ -3072,7 +3103,7 @@ function returnToMap(win, exp, coins, correctCount){
   } else {
     emoji.textContent = '💔';
     title.textContent = '失败…'; title.className = 'map-rt-title lose';
-    stats.innerHTML = `HP 归零，宠物正在缓慢恢复体力…<br><span style="font-size:11px;opacity:0.7">回到主页与宠物互动可加速恢复！</span>`;
+    stats.innerHTML = `HP 归零，宠物正在缓慢恢复中…<br><span style="font-size:11px;opacity:0.7">回到主页与宠物互动可加速 HP 恢复！</span>`;
   }
   toast.classList.add('show');
 }
@@ -3937,7 +3968,7 @@ function updateMineUI(){
 }
 function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
 function showAbout(){
-  showModal('🐾','WordPet v1.1.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.1.0 新增：宠物进化系统、图鉴、四维战斗差异化\n\n体力每5分钟自动恢复1点。\n\n© 2026 WordPet');
+  showModal('🐾','WordPet v1.1.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.1.0 新增：宠物进化系统、图鉴、四维战斗差异化\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败后缓慢恢复，回首页互动可加速。\n\n© 2026 WordPet');
 }
 function confirmReset(){
   if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
