@@ -354,6 +354,62 @@ body{
   animation:blinkHint 2s ease-in-out infinite;
 }
 @keyframes blinkHint{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ── 宠物互动特效 ── */
+/* 弹跳 */
+@keyframes petBounce{
+  0%   {transform:scale(1) translateY(0)}
+  25%  {transform:scale(1.22,0.88) translateY(0)}
+  50%  {transform:scale(0.9,1.15) translateY(-18px)}
+  75%  {transform:scale(1.1,0.95) translateY(0)}
+  100% {transform:scale(1) translateY(0)}
+}
+.pet-main-wrap.bounce{ animation:petBounce .45s cubic-bezier(.36,.07,.19,.97) !important; }
+
+/* 受伤抖动（HP 为零时摇晃） */
+@keyframes petShake{
+  0%,100%{transform:translateX(0) rotate(0)}
+  20%    {transform:translateX(-9px) rotate(-6deg)}
+  40%    {transform:translateX(9px) rotate(6deg)}
+  60%    {transform:translateX(-6px) rotate(-3deg)}
+  80%    {transform:translateX(6px) rotate(3deg)}
+}
+.pet-main-wrap.shake-anim{ animation:petShake .4s ease !important; }
+
+/* 表情气泡 */
+.pet-emote{
+  position:absolute;left:50%;top:-18px;transform:translateX(-50%);
+  font-size:22px;pointer-events:none;z-index:10;
+  animation:emoteUp .7s ease forwards;
+}
+@keyframes emoteUp{
+  0%  {transform:translateX(-50%) translateY(0) scale(0.5);opacity:1}
+  60% {transform:translateX(-50%) translateY(-24px) scale(1.2);opacity:1}
+  100%{transform:translateX(-50%) translateY(-40px) scale(0.9);opacity:0}
+}
+
+/* 爱心粒子 */
+.heart-particle{
+  position:fixed;pointer-events:none;z-index:300;
+  font-size:20px;
+  animation:heartFloat 1s ease-out forwards;
+}
+@keyframes heartFloat{
+  0%  {transform:translateY(0) scale(1) rotate(0deg);opacity:1}
+  100%{transform:translateY(-80px) scale(0.5) rotate(20deg);opacity:0}
+}
+
+/* HP 为零时宠物变灰变暗 */
+.pet-main-wrap.fainted{ filter:grayscale(0.7) brightness(0.6); }
+/* HP 恢复中（低于30%）宠物轻微发光闪烁 */
+.pet-main-wrap.low-hp{
+  filter:drop-shadow(0 0 6px rgba(239,68,68,0.6));
+  animation:petFloat 2.5s ease-in-out infinite, lowHpPulse 1.2s ease-in-out infinite !important;
+}
+@keyframes lowHpPulse{0%,100%{filter:drop-shadow(0 0 4px rgba(239,68,68,0.4))}50%{filter:drop-shadow(0 0 10px rgba(239,68,68,0.9))}}
+
+/* HP 满血时宠物光晕更亮 */
+.pet-main-wrap.full-hp{ filter:drop-shadow(0 0 8px rgba(74,222,128,0.5)); }
 .home-stats-card{
   margin:0 16px 10px;
   padding:14px 16px;
@@ -2008,10 +2064,15 @@ const DEFAULT = {
   coins:0, stamina:100, maxStamina:100,
   evoStage:0,
   feverTriggered:false,
+  hpRegenStart:0,   // 失败后HP开始恢复的时间戳（0=不需要恢复）
   settings:{ sound:true }
 };
 let gd = JSON.parse(JSON.stringify(DEFAULT));
 let tasks = [];
+let _hpRegenTimer = null; // HP 实时恢复计时器句柄
+
+/* HP 恢复速率（每秒恢复多少点）：目前固定值，后续可关联宠物属性 */
+function getHpRegenRate(){ return 1; } // 每秒 1 HP
 
 function saveGame(){ try{ localStorage.setItem('wg2_save', JSON.stringify({gd,tasks,lastSave:Date.now()})); }catch(e){} }
 function loadGame(){
@@ -2027,8 +2088,41 @@ function loadGame(){
         const recovered = Math.min(Math.floor(minsAway/5), gd.maxStamina-gd.stamina);
         if(recovered>0) gd.stamina=Math.min(gd.stamina+recovered, gd.maxStamina);
       }
+      // HP 离线自动恢复：根据 hpRegenStart 计算离线期间恢复量
+      if(gd.hpRegenStart > 0 && gd.hp < gd.maxHp){
+        const secsAway = Math.floor((Date.now() - gd.hpRegenStart) / 1000);
+        const recovered = Math.min(Math.floor(secsAway * getHpRegenRate()), gd.maxHp - gd.hp);
+        if(recovered > 0){
+          gd.hp = Math.min(gd.hp + recovered, gd.maxHp);
+          gd.hpRegenStart = gd.hp >= gd.maxHp ? 0 : Date.now();
+        }
+      }
     }
   }catch(e){}
+}
+
+/* 启动 HP 实时恢复计时器（每 2 秒 tick 一次） */
+function startHpRegen(){
+  stopHpRegen();
+  if(gd.hp >= gd.maxHp) return;
+  _hpRegenTimer = setInterval(()=>{
+    if(gd.hp >= gd.maxHp){
+      gd.hp = gd.maxHp;
+      gd.hpRegenStart = 0;
+      stopHpRegen();
+      saveGame();
+      updateHomeUI();
+      return;
+    }
+    const rate = getHpRegenRate();
+    gd.hp = Math.min(gd.hp + rate * 2, gd.maxHp); // 每2s tick，恢复rate*2
+    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
+    saveGame();
+    updateHomeUI();
+  }, 2000);
+}
+function stopHpRegen(){
+  if(_hpRegenTimer){ clearInterval(_hpRegenTimer); _hpRegenTimer = null; }
 }
 function initTasks(){
   if(!tasks.length) tasks = DAILY_TASKS.map(t=>({...t,progress:0,done:false}));
@@ -2246,7 +2340,34 @@ function updateHomeUI(){
   }
   const hpPct = p.maxHp>0 ? p.hp/p.maxHp*100 : 0;
   setBar('h-hp-bar', p.hp, p.maxHp, hpPct<30?'bar-hp danger':hpPct<60?'bar-hp warning':'bar-hp');
-  document.getElementById('h-hp-text').textContent=`${p.hp}/${p.maxHp}`;
+
+  // HP 文字：为零时显示恢复中提示
+  const hpTxtEl = document.getElementById('h-hp-text');
+  if(p.hp <= 0){
+    hpTxtEl.textContent = '😴 恢复中…';
+    hpTxtEl.style.color = '#f97316';
+  } else {
+    hpTxtEl.textContent = `${p.hp}/${p.maxHp}`;
+    hpTxtEl.style.color = '';
+  }
+
+  // 宠物外观状态类
+  const wrap = document.getElementById('pet-main-wrap');
+  if(wrap){
+    wrap.classList.remove('fainted','low-hp','full-hp');
+    if(p.hp <= 0)               wrap.classList.add('fainted');
+    else if(hpPct < 30)         wrap.classList.add('low-hp');
+    else if(hpPct >= 100)       wrap.classList.add('full-hp');
+  }
+
+  // interact-hint 文字随状态变化
+  const hint = document.querySelector('.interact-hint');
+  if(hint){
+    if(p.hp <= 0)         hint.textContent = '😴 宠物在恢复… 点击鼓励它！';
+    else if(hpPct < 30)   hint.textContent = '❤️ 宠物体力低，点击安慰它 +5⚡';
+    else                  hint.textContent = '👆 点击宠物互动 +5体力';
+  }
+
   setBar('h-exp-bar', p.exp, 50, 'bar-exp');
   document.getElementById('h-exp-text').textContent=`${p.exp}/50`;
 
@@ -2317,14 +2438,73 @@ function buildTaskList(){
     </div>`).join('');
 }
 function interact(){
-  gd.stamina=Math.min(gd.stamina+5,gd.maxStamina);
-  taskProgress('interact',1);
+  const wrap = document.getElementById('pet-main-wrap');
+  if(!wrap) return;
+
+  // HP 为零时：宠物晕倒中，点击只做抖动+提示，不加体力
+  if(gd.hp <= 0){
+    wrap.classList.remove('shake-anim');
+    void wrap.offsetWidth; // 强制重排，重新触发动画
+    wrap.classList.add('shake-anim');
+    setTimeout(()=>wrap.classList.remove('shake-anim'), 420);
+    spawnEmote(wrap, '😵');
+    showDmg('正在恢复…', wrap, 'heal');
+    return;
+  }
+
+  // HP 正常：加体力 + 弹跳 + 爱心粒子 + 表情
+  gd.stamina = Math.min(gd.stamina + 5, gd.maxStamina);
+  taskProgress('interact', 1);
   saveGame(); updateHomeUI();
-  const wrap=document.getElementById('pet-main-wrap');
-  wrap.style.animationPlayState='paused';
-  wrap.style.transform='scale(1.2) translateY(-8px)';
-  setTimeout(()=>{ wrap.style.transform=''; wrap.style.animationPlayState=''; },220);
-  showDmg('+5⚡', document.getElementById('pet-main-wrap'), 'heal');
+
+  // 弹跳动画
+  wrap.classList.remove('bounce');
+  void wrap.offsetWidth;
+  wrap.classList.add('bounce');
+  setTimeout(()=>wrap.classList.remove('bounce'), 460);
+
+  // 表情气泡（根据体力/HP显示不同心情）
+  const hpPct = gd.hp / gd.maxHp;
+  let emote = '😊';
+  if(gd.stamina >= gd.maxStamina)       emote = '🤩';
+  else if(hpPct < 0.3)                   emote = '😰';
+  else if(gd.stamina > gd.maxStamina*0.7) emote = '😄';
+  spawnEmote(wrap, emote);
+
+  // 爱心粒子（3~5颗，随机分散）
+  const rect = wrap.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  const count = 3 + Math.floor(Math.random()*3);
+  for(let i=0; i<count; i++){
+    setTimeout(()=>{
+      const h = document.createElement('div');
+      h.className = 'heart-particle';
+      h.textContent = ['❤️','💖','💗','💕'][Math.floor(Math.random()*4)];
+      h.style.left = (cx + (Math.random()-0.5)*60) + 'px';
+      h.style.top  = (cy - 10 + (Math.random()-0.5)*30) + 'px';
+      h.style.fontSize = (14 + Math.random()*12) + 'px';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 1050);
+    }, i * 80);
+  }
+
+  // 音效
+  playBeep(660, 0.06, 'sine');
+  setTimeout(()=>playBeep(880, 0.04, 'sine'), 100);
+
+  showDmg('+5⚡', wrap, 'heal');
+}
+
+/* 生成宠物表情气泡 */
+function spawnEmote(wrap, emoji){
+  const old = wrap.querySelector('.pet-emote');
+  if(old) old.remove();
+  const e = document.createElement('div');
+  e.className = 'pet-emote';
+  e.textContent = emoji;
+  wrap.appendChild(e);
+  setTimeout(()=>e.remove(), 750);
 }
 
 /* ══════════════════════════════════════════════════
@@ -2353,6 +2533,10 @@ function enterDungeon(id){
   const d=DUNGEON_CONFIGS.find(x=>x.id===id);
   if(!d) return;
   if(gd.petIndex<0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋，再出发冒险！'); return; }
+  if(gd.hp <= 0){
+    showModal('😴','宠物体力耗尽',`宠物正在恢复中（当前 HP: 0/${gd.maxHp}），回到主页与它互动可加速恢复！`);
+    return;
+  }
   if(gd.stamina<d.staminaCost){
     showModal('⚡','体力不足',`进入副本需要 ${d.staminaCost} 点体力，当前体力 ${gd.stamina}。`);
     return;
@@ -2866,7 +3050,7 @@ function returnToMap(win, exp, coins, correctCount){
     ms.pendingBattle = null;
   }
   ms.inBattle = false;
-  document.getElementById('map-hp-txt').textContent = gd.hp;
+  document.getElementById('map-hp-txt').textContent = gd.hp > 0 ? gd.hp : '😴';
   go('map-page');
   // 立即补充被消灭的怪物（延迟5s，避免玩家刚回来就被触发）
   setTimeout(()=>respawnMonstersPixel(), 5000);
@@ -2888,7 +3072,7 @@ function returnToMap(win, exp, coins, correctCount){
   } else {
     emoji.textContent = '💔';
     title.textContent = '失败…'; title.className = 'map-rt-title lose';
-    stats.innerHTML = `没关系，继续加油！`;
+    stats.innerHTML = `HP 归零，宠物正在缓慢恢复体力…<br><span style="font-size:11px;opacity:0.7">回到主页与宠物互动可加速恢复！</span>`;
   }
   toast.classList.add('show');
 }
@@ -3392,8 +3576,15 @@ function endBattle(win){
     let leveled=false;
     while(gd.exp>=50){ gd.exp-=50; gd.level++; gd.maxHp+=10; gd.hp=gd.maxHp; taskProgress('levelup',1); leveled=true; }
     if(leveled) showLevelUpToast();
-    gd.hp=Math.min(bs.playerHp + Math.floor(gd.maxHp*0.1), gd.maxHp);
-  } else { gd.hp=bs.playerHp; }
+    // 胜利：无论战斗中受了多少伤，战后满血复活
+    gd.hp = gd.maxHp;
+    stopHpRegen(); // 确保恢复计时器不在运行
+  } else {
+    // 失败：HP 归零，开始缓慢恢复计时
+    gd.hp = 0;
+    gd.hpRegenStart = Date.now(); // 记录开始恢复的时间戳
+    startHpRegen();               // 启动实时恢复计时器
+  }
   saveGame();
   // 从地图进入战斗 → 返回地图，用小 toast 结算
   if(ms.dungId){
@@ -3856,7 +4047,11 @@ function playBeep(freq, dur, type){
 ══════════════════════════════════════════════════ */
 function init(){
   loadGame(); initTasks(); buildSelectPage();
-  if(gd.petIndex>=0){ updateHomeUI(); tab('home'); }
+  if(gd.petIndex>=0){
+    // 若HP未满（如上次战败），启动恢复计时器
+    if(gd.hp < gd.maxHp && gd.hpRegenStart > 0) startHpRegen();
+    updateHomeUI(); tab('home');
+  }
   else go('select-page');
 }
 init();
