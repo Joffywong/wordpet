@@ -723,9 +723,9 @@ body{
 .enemy-sprite{
   position:absolute;
   right:8%;top:4%;
+  width:76px;height:76px;   /* 与SVG一致，使头顶蓄力条定位有正确参照 */
   animation:mFloat 3s ease-in-out infinite;
-  /* 为头顶蓄力条的绝对定位提供参照 */
-  overflow:visible;
+  overflow:visible;          /* 蓄力条超出边界时可见 */
 }
 .enemy-sprite svg{width:76px;height:76px}
 .enemy-sprite.hit{animation:monsterHit .35s ease!important}
@@ -796,9 +796,8 @@ body{
 /* 怪物蓄力攻击条（悬浮在怪物头顶） */
 .atk-charge-row{
   position:absolute;
-  bottom:calc(100% + 2px);   /* 怪物SVG顶部上方2px */
-  left:50%;transform:translateX(-50%);
-  width:80px;
+  bottom:calc(100% + 4px);   /* 怪物顶部上方4px */
+  left:0;right:0;            /* 与怪物等宽 */
   display:flex;align-items:center;gap:4px;
   z-index:5;pointer-events:none;
 }
@@ -3950,7 +3949,7 @@ function updateMineUI(){
 }
 function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
 function showAbout(){
-  showModal('🐾','WordPet v1.2.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.2.0 更新：\n• 战斗升级：怪物持续蓄力，不再被答题打断\n• Fever 模式：怪物攻击减缓，尽情爆发连击！\n• 蓄力条移至怪物头顶，界面更清爽\n• HP 与精力概念分离，互动可加速 HP 恢复\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败后缓慢恢复，回首页互动可加速。\n\n© 2026 WordPet');
+  showModal('🐾','WordPet v1.2.1','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.2.1 修复：\n• 蓄力条定位修复，正确悬浮在怪物头顶\n\n✨ v1.2.0 更新：\n• 战斗升级：怪物持续蓄力，不再被答题打断\n• Fever 模式：怪物攻击减缓，尽情爆发连击！\n• 蓄力条移至怪物头顶，界面更清爽\n• HP 与精力概念分离，互动可加速 HP 恢复\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败后缓慢恢复，回首页互动可加速。\n\n© 2026 WordPet');
 }
 function confirmReset(){
   if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
