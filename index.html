@@ -722,39 +722,42 @@ body{
 .enemy-hud-txt,.player-hud-txt{
   font-size:10px;color:rgba(241,240,255,0.4);
 }
-/* 旧样式兼容（JS引用 monster-art 抖动动画） */
-/* 倒计时 */
-.timer-row{
+/* 怪物蓄力攻击条 */
+.atk-charge-row{
   position:relative;z-index:2;flex-shrink:0;
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:6px;padding:0 2px;
 }
-.timer-num{
-  font-family:'Fredoka One','Noto Sans SC',cursive;
-  font-size:26px;color:#fff;min-width:38px;text-align:center;
-  text-shadow:0 0 16px rgba(255,220,50,0.7);
+.atk-charge-icon{
+  font-size:18px;flex-shrink:0;
+  animation:none;transition:transform .1s;
 }
-.timer-num.urgent{
-  color:#f97316;
-  animation:timerUrge .5s ease-in-out infinite;
-  text-shadow:0 0 16px rgba(249,115,22,0.9);
+.atk-charge-icon.shake{animation:atkShake .25s ease}
+@keyframes atkShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px) rotate(-8deg)}75%{transform:translateX(4px) rotate(8deg)}}
+.atk-charge-track{
+  flex:1;height:14px;position:relative;
+  background:rgba(255,255,255,0.1);
+  border-radius:7px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
 }
-@keyframes timerUrge{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
-.timer-track{
-  flex:1;height:8px;
-  background:rgba(255,255,255,0.12);
-  border-radius:4px;overflow:hidden;position:relative;
-}
-.timer-track::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:40%;
-  background:rgba(255,255,255,0.2);border-radius:4px 4px 0 0;
-}
-.timer-fill{
-  height:100%;border-radius:4px;
+.atk-charge-fill{
+  height:100%;border-radius:7px;
   background:linear-gradient(90deg,#4ade80,#22d3ee);
-  transition:width 1s linear;
+  transition:width .1s linear;
 }
-.timer-fill.urgent{background:linear-gradient(90deg,#f97316,#ef4444)}
+.atk-charge-fill.mid{background:linear-gradient(90deg,#fbbf24,#f97316)}
+.atk-charge-fill.danger{background:linear-gradient(90deg,#f97316,#ef4444)}
+.atk-charge-fill.fever{background:linear-gradient(90deg,#f97316,#ef4444,#fbbf24);background-size:200% 100%;animation:feverTimerFlow 0.5s linear infinite}
+.atk-charge-fill.reset{transition:width 0.15s ease-out}
+.atk-charge-label{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-size:10px;font-weight:700;color:rgba(255,255,255,0.7);
+  white-space:nowrap;pointer-events:none;letter-spacing:.3px;
+}
+/* 被攻击时，敌人蓄力条红色闪烁 */
+.atk-charge-row.hit-flash-bar{animation:chargeBarHit .3s ease}
+@keyframes chargeBarHit{0%,100%{opacity:1}50%{opacity:0.3}}
+
 /* 答题区 */
 #normal-panel{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;min-height:0}
 .q-card{
@@ -957,9 +960,6 @@ body{
 .battle-wrap.fever-mode .poke-arena{
   box-shadow:0 0 30px rgba(249,115,22,0.2) inset;
 }
-/* FEVER 模式计时器 */
-.timer-fill.fever{background:linear-gradient(90deg,#f97316,#ef4444,#fbbf24) !important;background-size:200% 100% !important;animation:feverTimerFlow 1s linear infinite !important}
-@keyframes feverTimerFlow{0%{background-position:0 0}100%{background-position:200% 0}}
 /* FEVER COMBO 爆字 */
 .fever-combo-pop{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -1050,11 +1050,12 @@ body{
       </div>
     </div>
 
-    <!-- ── 倒计时 ── -->
-    <div class="timer-row">
-      <div class="timer-num" id="timer-num">15</div>
-      <div class="timer-track">
-        <div class="timer-fill" id="timer-fill" style="width:100%"></div>
+    <!-- ── 怪物蓄力攻击条 ── -->
+    <div class="atk-charge-row" id="atk-charge-row">
+      <div class="atk-charge-icon" id="atk-charge-icon">⚔️</div>
+      <div class="atk-charge-track">
+        <div class="atk-charge-fill" id="atk-charge-fill" style="width:0%"></div>
+        <div class="atk-charge-label" id="atk-charge-label">蓄力中…</div>
       </div>
     </div>
 
@@ -1899,7 +1900,7 @@ const PET_CONFIGS = [
     desc:'雷鸣九天，极速斩击。FEVER触发更快，爆发力十足。',
     maxHp:100, atk:12, def:8,
     auraClass:'pet-aura-thunder', artBgClass:'pet-art-bg-thunder',
-    trait:'⚡ 迅捷天赋：每道题倒计时额外 +3 秒',
+    trait:'⚡ 迅捷天赋：答题后怪物蓄力额外延迟 1 秒，争取更多出手时机',
     evo:[
       { stage:0, name:'闪电狐',   key:'thunder',  lv:1,  maxHp:100, atk:12, def:8,  condLv:0  },
       { stage:1, name:'雷霆九尾', key:'thunder2', lv:15, maxHp:145, atk:18, def:13, condLv:15 },
@@ -1909,9 +1910,9 @@ const PET_CONFIGS = [
 ];
 
 const MONSTER_CONFIGS = [
-  { key:'slime',  name:'野生史莱姆', hp:150 },
-  { key:'goblin', name:'岩石哥布林', hp:180 },
-  { key:'dragon', name:'熔岩巨龙',   hp:220 }
+  { key:'slime',  name:'野生史莱姆', hp:150, atk:10, def:3,  atkInterval:3   },
+  { key:'goblin', name:'岩石哥布林', hp:180, atk:16, def:6,  atkInterval:2.5 },
+  { key:'dragon', name:'熔岩巨龙',   hp:220, atk:28, def:12, atkInterval:2   }
 ];
 
 const DUNGEON_CONFIGS = [
@@ -2372,7 +2373,7 @@ const MAP_DATA = {
     tiles:[
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      [0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
       [0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],
       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
       [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -2461,6 +2462,20 @@ let ms = {
 function enterMap(dungId){
   const md = MAP_DATA[dungId];
   if(!md){ startBattle(dungId); return; } // 兜底
+
+  // 安全检查：清除玩家出生点及周边1格内的所有障碍，防止卡死
+  (function clearSpawnArea(mapData){
+    const sx = mapData.playerStart.x, sy = mapData.playerStart.y;
+    for(let dy=-1; dy<=1; dy++){
+      for(let dx=-1; dx<=1; dx++){
+        const cx=sx+dx, cy=sy+dy;
+        if(cy>=0 && cy<mapData.rows && cx>=0 && cx<mapData.cols){
+          mapData.tiles[cy][cx] = 0;
+        }
+      }
+    }
+  })(md);
+
   ms.dungId = dungId;
   ms.mapData = md;
   ms.pendingBattle = null;
@@ -2900,7 +2915,11 @@ function exitMap(){
 
 const BC={ NORMAL_DMG:12, COMBO_BONUS:0.15, WRONG_PEN:15,
   FEVER_TRIG:3, FEVER_DUR:12, FEVER_DMG:15, FEVER_MULT:1.2,
-  NORMAL_TIME:15, FEVER_PAIRS:4 };
+  FEVER_PAIRS:4,
+  // DPS系统：怪物攻击间隔在MONSTER_CONFIGS.atkInterval中定义
+  // FEVER模式下攻击间隔减半
+  FEVER_ATK_MULT:2.0
+};
 
 let bs={};
 let btimer=null;
@@ -2926,16 +2945,20 @@ function startBattle(dungId, monsterKeyOverride){
     ? MONSTER_CONFIGS.find(m=>m.key===monsterKeyOverride)
     : null) || MONSTER_CONFIGS[dc.monster] || MONSTER_CONFIGS[0];
   wLevel=getWLevel();
-  // 四维差异化：雷系计时+3s
+  // 雷系天赋：答题后怪物蓄力延迟额外+1s
   const petCfg = PET_CONFIGS[gd.petIndex];
   const isThunder = petCfg?.key==='thunder';
-  const normalTime = isThunder ? BC.NORMAL_TIME+3 : BC.NORMAL_TIME;
   bs={
     phase:'normal', dungId, monsterKey:mc.key, monsterName:mc.name,
     monsterHp:mc.hp, monsterMaxHp:mc.hp,
+    monsterAtk:mc.atk, monsterDef:mc.def,
+    monsterAtkInterval:mc.atkInterval,  // 攻击间隔（秒）
     playerHp:gd.hp, playerMaxHp:gd.maxHp,
     combo:0, correctCount:0,
-    timeLeft:normalTime, normalTime,
+    // DPS 系统：蓄力进度 0~1
+    atkProgress:0,      // 当前蓄力进度（0=刚重置，1=即将攻击）
+    atkPaused:true,     // 加载中或答题后短暂暂停
+    thunderBonus: isThunder ? 1.0 : 0, // 雷系：答题后额外延迟秒数
     feverTimeLeft:BC.FEVER_DUR,
     feverTotalMatched:0,
     feverPairs:[], feverRight:[],
@@ -2980,11 +3003,22 @@ function nextQ(){
     const b=document.getElementById('opt'+i);
     b.textContent=q.opts[i]?.en||''; b.disabled=false; b.className='opt-btn';
   }
-  bs.timeLeft=bs.normalTime||BC.NORMAL_TIME; updateTimerUI();
+  // 题目刷新时重置蓄力条（含雷系额外延迟：进度从负值开始）
+  const thunderDelay = bs.thunderBonus || 0;
+  bs.atkProgress = thunderDelay > 0
+    ? -(thunderDelay / (bs.monsterAtkInterval||3))  // 负进度 = 额外延迟
+    : 0;
+  bs.atkPaused=false;
+  updateAtkChargeUI();
 }
 function selectOption(idx){
   if(answering||bs.isOver||bs.phase!=='normal') return;
   answering=true;
+  // 答题瞬间：暂停怪物蓄力，并重置
+  bs.atkPaused=true;
+  bs.atkProgress=0;
+  updateAtkChargeUI();
+
   const chosen=curOpts[idx];
   const ok=chosen.en===curQ.en;
   const petCfg = PET_CONFIGS[gd.petIndex];
@@ -2992,19 +3026,18 @@ function selectOption(idx){
   if(ok){
     document.getElementById('opt'+idx).classList.add('correct');
     bs.combo++; bs.correctCount++;
-    let dmg=Math.floor(BC.NORMAL_DMG*(1+BC.COMBO_BONUS*bs.combo));
+    // 玩家伤害受怪物DEF减免
+    let dmg=Math.max(1, Math.floor(BC.NORMAL_DMG*(1+BC.COMBO_BONUS*bs.combo)) - (bs.monsterDef||0));
     // 四维差异化：火系暴击 20% 概率 1.5x
     let critHit = false;
     if(petCfg?.key==='fire' && Math.random()<0.2){ dmg=Math.floor(dmg*1.5); critHit=true; }
     bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
-    // 答对打击感
     flashHit('correct');
     monsterHitAnim();
     spawnSparks(document.getElementById('opt'+idx));
     if(bs.combo>1) showComboBurst(bs.combo);
     showDmg((critHit?'💥 暴击 -':'-')+dmg, document.getElementById('enemy-sprite'));
     taskProgress('correct',1);
-    // Web Audio 答对音效
     playBeep(660, 0.08, 'square');
     if(bs.combo>=3) setTimeout(()=>playBeep(880,0.06,'sine'),80);
     if(critHit) setTimeout(()=>playBeep(1100,0.1,'sine'),40);
@@ -3012,12 +3045,14 @@ function selectOption(idx){
     document.getElementById('opt'+idx).classList.add('wrong');
     for(let i=0;i<4;i++) if(curOpts[i].en===curQ.en) document.getElementById('opt'+i).classList.add('correct');
     bs.combo=0;
-    // 四维差异化：水系减伤 30%
-    let pen = BC.WRONG_PEN;
-    if(petCfg?.key==='shield') pen=Math.floor(pen*0.7);
-    bs.playerHp=Math.max(0,bs.playerHp-pen);
+    // 答错立即受到一次怪物攻击（额外惩罚，不受减伤）
+    const petDef = getCurrentEvoData()?.def || 5;
+    let wrongPen = Math.max(1, (bs.monsterAtk||10) - petDef);
+    // 水系减伤 30%
+    if(petCfg?.key==='shield') wrongPen = Math.max(1, Math.floor(wrongPen*0.7));
+    bs.playerHp=Math.max(0,bs.playerHp-wrongPen);
     flashHit('wrong');
-    showDmg('-'+pen, document.getElementById('player-sprite'));
+    showDmg('-'+wrongPen, document.getElementById('player-sprite'));
     playBeep(150, 0.12, 'sawtooth');
   }
   updateBattleUI();
@@ -3027,58 +3062,123 @@ function selectOption(idx){
   else setTimeout(()=>nextQ(),500);
 }
 
+/* ── DPS 计时器：每 50ms tick，怪物蓄力条推进 ── */
 function startBTimer(){
   if(btimer) clearInterval(btimer);
+  const TICK = 50; // ms
   btimer=setInterval(()=>{
     if(bs.isOver){ clearInterval(btimer); return; }
+
     if(bs.phase==='normal'){
-      bs.timeLeft--;
-      updateTimerUI();
-      if(bs.timeLeft<=0&&!answering){
-        answering=true; bs.combo=0;
-        bs.playerHp=Math.max(0,bs.playerHp-BC.WRONG_PEN);
-        updateBattleUI();
-        if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
-        setTimeout(()=>nextQ(),300);
+      if(!bs.atkPaused && !answering){
+        const interval = bs.monsterAtkInterval || 3;
+        bs.atkProgress += TICK / (interval * 1000);
+        if(bs.atkProgress >= 1){
+          // 怪物攻击！
+          bs.atkProgress = 0;
+          const petDef = getCurrentEvoData()?.def || 5;
+          let dmg = Math.max(1, (bs.monsterAtk||10) - petDef);
+          // 水系：受怪物攻击减伤30%
+          const petCfg = PET_CONFIGS[gd.petIndex];
+          if(petCfg?.key==='shield') dmg = Math.max(1, Math.floor(dmg*0.7));
+          bs.playerHp = Math.max(0, bs.playerHp - dmg);
+          updateBattleUI();
+          // 攻击动画：图标抖动 + 进度条闪烁
+          const icon = document.getElementById('atk-charge-icon');
+          const row  = document.getElementById('atk-charge-row');
+          if(icon){ icon.classList.add('shake'); setTimeout(()=>icon.classList.remove('shake'),250); }
+          if(row){  row.classList.add('hit-flash-bar'); setTimeout(()=>row.classList.remove('hit-flash-bar'),300); }
+          showDmg('-'+dmg, document.getElementById('player-sprite'));
+          flashHit('wrong');
+          playBeep(150, 0.08, 'sawtooth');
+          if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
+        }
+        updateAtkChargeUI();
       }
     } else if(bs.phase==='fever'){
-      bs.feverTimeLeft--;
-      updateTimerUI();
-      if(bs.feverTimeLeft<=0){
-        bs.phase='normal';
-        // 退出 FEVER 恢复背景
-        document.getElementById('fever-overlay').classList.remove('on');
-        document.getElementById('battle-wrap').classList.remove('fever-mode');
-        document.getElementById('timer-fill').classList.remove('fever');
-        setTimeout(()=>nextQ(),300);
+      // FEVER 计时（保留秒级）
+      bs._feverTick = (bs._feverTick||0) + TICK;
+      if(bs._feverTick >= 1000){
+        bs._feverTick -= 1000;
+        bs.feverTimeLeft--;
+        if(bs.feverTimeLeft<=0){
+          bs.phase='normal';
+          bs._feverTick = 0;
+          document.getElementById('fever-overlay').classList.remove('on');
+          document.getElementById('battle-wrap').classList.remove('fever-mode');
+          // 离开FEVER，重置蓄力
+          bs.atkProgress=0; bs.atkPaused=false;
+          setTimeout(()=>nextQ(),300);
+        }
+      }
+      // FEVER期间蓄力条也正常推进（双倍速）
+      if(!answering){
+        const interval = (bs.monsterAtkInterval||3) / BC.FEVER_ATK_MULT;
+        bs.atkProgress += TICK / (interval * 1000);
+        if(bs.atkProgress >= 1){
+          bs.atkProgress = 0;
+          const petDef = getCurrentEvoData()?.def || 5;
+          let dmg = Math.max(1, Math.floor((bs.monsterAtk||10) * 1.5) - petDef);
+          const petCfg = PET_CONFIGS[gd.petIndex];
+          if(petCfg?.key==='shield') dmg = Math.max(1, Math.floor(dmg*0.7));
+          bs.playerHp = Math.max(0, bs.playerHp - dmg);
+          updateBattleUI();
+          showDmg('-'+dmg, document.getElementById('player-sprite'));
+          if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
+        }
+        updateAtkChargeUI();
       }
     }
-  },1000);
+  }, TICK);
 }
-function updateTimerUI(){
-  const isN=bs.phase==='normal';
-  const max=isN?BC.NORMAL_TIME:BC.FEVER_DUR;
-  const cur=isN?bs.timeLeft:bs.feverTimeLeft;
-  const pct=max>0?cur/max*100:0;
-  const urg=cur<=5;
-  const n=document.getElementById('timer-num');
-  const f=document.getElementById('timer-fill');
-  n.textContent=Math.max(0,cur);
-  n.className='timer-num'+(urg?' urgent':'');
-  f.style.width=pct+'%';
-  f.className='timer-fill'+(urg?' urgent':'');
+
+/* ── 更新怪物蓄力条 UI ── */
+function updateAtkChargeUI(){
+  const fill  = document.getElementById('atk-charge-fill');
+  const label = document.getElementById('atk-charge-label');
+  const icon  = document.getElementById('atk-charge-icon');
+  if(!fill) return;
+  const raw = bs.atkProgress || 0;
+  const pct = Math.min(100, Math.max(0, raw * 100)); // 负值视为0
+  fill.style.width = pct + '%';
+  // 颜色分三段
+  fill.className = 'atk-charge-fill' +
+    (bs.phase==='fever' ? ' fever' : pct >= 75 ? ' danger' : pct >= 40 ? ' mid' : '');
+  // 标签文字
+  if(label){
+    if(bs.atkPaused || answering){
+      label.textContent = '…';
+    } else if(bs.phase==='fever'){
+      label.textContent = `⚡ FEVER 攻击中`;
+    } else {
+      // 含负进度时：剩余 = (1 - raw) * interval；负进度使remaining更大，正确反映额外等待
+      const remaining = Math.max(0, (1 - raw) * (bs.monsterAtkInterval||3));
+      label.textContent = `${(bs.monsterName||'敌人')} 蓄力 ${remaining.toFixed(1)}s`;
+    }
+  }
+  // 图标随蓄力变化
+  if(icon && bs.phase!=='fever'){
+    icon.textContent = pct >= 75 ? '💢' : pct >= 40 ? '⚡' : '⚔️';
+  }
 }
+
+/* ── 进入FEVER时重置蓄力状态 ── */
+function updateTimerUI(){ updateAtkChargeUI(); } // 兼容旧引用
+
 
 function enterFever(){
   if(bs.isOver) return;
   bs.phase='fever'; bs.feverTimeLeft=BC.FEVER_DUR;
+  bs._feverTick=0;
+  bs.atkProgress=0; bs.atkPaused=false; // FEVER开始时蓄力条重置并开始
   gd.feverTriggered=true;
   document.getElementById('normal-panel').style.display='none';
   document.getElementById('fever-panel').className='on';
   // 全屏氛围效果
   document.getElementById('fever-overlay').classList.add('on');
   document.getElementById('battle-wrap').classList.add('fever-mode');
-  document.getElementById('timer-fill').classList.add('fever');
+  // 更新蓄力条为FEVER样式
+  updateAtkChargeUI();
   // FEVER 入场爆字
   const pop=document.createElement('div');
   pop.className='fever-combo-pop'; pop.textContent='🔥 FEVER!';
@@ -3126,6 +3226,8 @@ function selectFeverRight(idx){
     bs.feverTotalMatched++;
     const dmg=Math.floor(BC.FEVER_DMG*Math.pow(BC.FEVER_MULT,bs.feverTotalMatched));
     bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
+    // 消除成功：重置蓄力条
+    bs.atkProgress=0; updateAtkChargeUI();
     document.getElementById('fever-title-txt').textContent=`⚡ FEVER! -${dmg}💥 已消除 ${bs.feverTotalMatched} 对`;
 
     // ── FEVER 强打击感 ──
@@ -3248,7 +3350,7 @@ function exitBattle(){
   // 清理 FEVER 特效
   document.getElementById('fever-overlay').classList.remove('on');
   document.getElementById('battle-wrap').classList.remove('fever-mode');
-  document.getElementById('timer-fill').classList.remove('fever');
+  bs.atkPaused=true; updateAtkChargeUI();
   gd.hp=bs.playerHp||gd.hp;
   saveGame();
   if(ms.dungId){
@@ -3281,7 +3383,7 @@ function endBattle(win){
   // 清理 FEVER 特效
   document.getElementById('fever-overlay').classList.remove('on');
   document.getElementById('battle-wrap').classList.remove('fever-mode');
-  document.getElementById('timer-fill').classList.remove('fever');
+  bs.atkPaused=true; updateAtkChargeUI();
   let exp=0, coins=0;
   if(win){
     exp=20+bs.correctCount*5; coins=15+bs.correctCount*3;
