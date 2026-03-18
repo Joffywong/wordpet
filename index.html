@@ -4680,7 +4680,7 @@ function playBeep(freq, dur, type){
    初始化
 ══════════════════════════════════════════════════ */
 function init(){
-  loadGame(); initTasks(); buildSelectPage();
+  loadGame(); initTasks(); buildFirstSelectPage();
   if(gd.petIndex>=0){
     // 若HP未满（如上次战败），启动恢复计时器
     if(gd.hp < gd.maxHp && gd.hpRegenStart > 0) startHpRegen();
