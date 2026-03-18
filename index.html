@@ -150,6 +150,13 @@ body{
 }
 .top-coins{font-size:14px;font-weight:700;color:var(--c-gold);display:flex;align-items:center;gap:4px}
 .top-vocab{font-size:12px;color:var(--c-text2)}
+.top-actions{display:flex;align-items:center;gap:6px}
+.top-btn{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px;padding:4px 9px;font-size:15px;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;
+}
+.top-btn:active{transform:scale(0.92);background:rgba(255,255,255,0.15)}
 .dmg-float{
   position:fixed;font-family:var(--ff-title);
   font-size:34px;color:#fbbf24;
@@ -292,24 +299,76 @@ body{
 }
 </style>
 
-<!-- ══════ SELECT PAGE ══════ -->
-<div id="select-page" class="page active">
-  <div class="sel-bg"></div>
-  <div class="sel-header">
-    <div class="sel-logo">🐾 WordPet</div>
-    <div class="sel-tagline">背单词 · 养宠物 · 打副本</div>
+<!-- ══════ PET DEX PAGE ══════ -->
+<div id="select-page" class="page">
+  <div class="dex-bg"></div>
+  <div class="dex-header">
+    <div class="dex-logo">🎒 宠物图鉴</div>
+    <div class="dex-sub">已解锁 <span id="dex-count">0/3</span></div>
   </div>
-  <div class="sel-prompt">🥚 选择你的宠物蛋</div>
-  <div class="pet-cards" id="pet-list"></div>
-  <div class="sel-bottom">
-    <div class="sel-chosen" id="sel-chosen"></div>
-    <button class="btn btn-primary" id="start-btn" onclick="startAdventure()" disabled>
-      🥚 孵化宠物蛋！
-    </button>
-  </div>
+  <div class="dex-grid" id="pet-list"></div>
+  <button class="btn btn-gold" style="margin:12px auto 36px;width:180px" onclick="go('home')">
+    ← 返回主页
+  </button>
 </div>
 <style>
-/* ══ HOME PAGE ══ */
+/* ── DEX PAGE ── */
+#select-page{
+  background:radial-gradient(ellipse at 50% 5%,#1e1b4b 0%,#0f0a1e 70%);
+}
+.dex-bg{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 100%, #312e81 0%, transparent 60%);
+  opacity:0.25;pointer-events:none;
+}
+.dex-header{
+  text-align:center;padding:20px 0 12px;
+}
+.dex-logo{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:26px;color:#f1f0ff;margin-bottom:4px;
+}
+.dex-sub{
+  font-size:12px;color:rgba(241,240,255,0.5);
+}
+.dex-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;padding:0 14px;
+}
+.dex-pet-card{
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;padding:10px;cursor:pointer;
+  transition:all .15s;
+  display:flex;flex-direction:column;gap:6px;
+}
+.dex-pet-card:active{transform:scale(0.96)}
+.dex-pet-card.locked{
+  opacity:0.6;cursor:not-allowed;
+}
+.dex-pet-card.current{
+  border-color:#a78bfa;
+  background:rgba(167,139,250,0.12);
+}
+.dex-pet-art{
+  height:80px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(0,0,0,0.3),transparent 70%);
+  border-radius:12px;
+}
+.dex-pet-svg{width:56px;height:56px}
+.dex-pet-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:14px;color:#f1f0ff;
+}
+.dex-pet-badge{
+  align-self:flex-start;font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:10px;
+}
+.dex-badge-current{background:#10b981;color:#fff}
+.dex-badge-locked{background:rgba(241,240,255,0.15);color:rgba(241,240,255,0.5)}
+.dex-pet-desc{font-size:11px;color:rgba(241,240,255,0.4);line-height:1.4}
+</style>
+
+<!-- ══════ HOME PAGE ══════ -->
 #home-page{
   background:radial-gradient(ellipse at 50% -5%,#1e1042 0%,#0f0a1e 60%);
 }
@@ -481,7 +540,10 @@ body{
     <div class="top-row1">
       <span class="top-level" id="h-level">Lv.1</span>
       <span class="top-vocab" id="h-vocab">词汇量 0</span>
-      <span class="top-coins" id="h-coins">🪙 <span id="h-coins-num">0</span></span>
+      <div class="top-actions">
+        <button class="top-btn" onclick="showPetDex()">🎒</button>
+        <button class="top-btn" onclick="showSharePanel()">📤</button>
+      </div>
     </div>
     <div class="stamina-inline" id="h-stamina-wrap">
       <span class="stamina-icon">⚡</span>
@@ -2001,6 +2063,10 @@ body{
     </div>
     <div class="mine-section">
       <div class="mine-sec-title">⚙️ 设置</div>
+      <div class="setting-card" onclick="showNicknameModal()">
+        <span class="setting-lbl">👤 昵称</span>
+        <span class="setting-val" id="nickname-val">训练家</span>
+      </div>
       <div class="setting-card" onclick="toggleSound()">
         <span class="setting-lbl">🔊 游戏音效</span>
         <span class="setting-val" id="sound-val">开启</span>
@@ -2139,6 +2205,7 @@ const PET_CONFIGS = [
   {
     key:'fire', name:'小火球', type:'攻击型', typeClass:'type-atk',
     desc:'焰心之子，高爆发输出。连击加成翻倍，适合速战速决。',
+    unlockLv:0,     // 初始即可解锁
     maxHp:80, atk:15, def:5,
     auraClass:'pet-aura-fire', artBgClass:'pet-art-bg-fire',
     trait:'🔥 暴击天赋：答对时 20% 概率造成 1.5× 伤害',
@@ -2151,6 +2218,7 @@ const PET_CONFIGS = [
   {
     key:'shield', name:'护盾龟', type:'防御型', typeClass:'type-def',
     desc:'铁壁守护者，超高容错率。HP上限最高，适合稳扎稳打。',
+    unlockLv:0,     // 初始即可解锁
     maxHp:130, atk:8, def:15,
     auraClass:'pet-aura-shield', artBgClass:'pet-art-bg-shield',
     trait:'💧 铁壁天赋：答错受到的HP惩罚减少 30%',
@@ -2163,6 +2231,7 @@ const PET_CONFIGS = [
   {
     key:'thunder', name:'闪电狐', type:'速度型', typeClass:'type-spd',
     desc:'雷鸣九天，极速斩击。FEVER触发更快，爆发力十足。',
+    unlockLv:0,     // 初始即可解锁
     maxHp:100, atk:12, def:8,
     auraClass:'pet-aura-thunder', artBgClass:'pet-art-bg-thunder',
     trait:'⚡ 迅捷天赋：怪物攻击间隔额外延长 1 秒，让你有更充裕的时间作答',
@@ -2269,6 +2338,7 @@ const WORDBANK = {
 ══════════════════════════════════════════════════ */
 const DEFAULT = {
   petIndex:-1, petKey:'fire', petName:'', petType:'',
+  nickname:'训练家',      // 玩家昵称
   level:1, exp:0, vocab:0, hp:100, maxHp:100,
   coins:0, stamina:100, maxStamina:100,
   evoStage:0,
@@ -2432,28 +2502,132 @@ function setMonsterSvg(el, key){
    领养页
 ══════════════════════════════════════════════════ */
 let selectedPet = -1;
-function buildSelectPage(){
-  // 蛋的 key 映射
+/* ══════════════════════════════════════════════════
+   宠物图鉴系统
+══════════════════════════════════════════════════ */
+function showPetDex(){
+  // 如果还没有宠物（首次进入），显示选蛋页面
+  if(gd.petIndex < 0){
+    tab('select');
+    buildFirstSelectPage();
+  } else {
+    // 有宠物：显示图鉴
+    buildDexPage();
+    tab('select');
+  }
+}
+function buildFirstSelectPage(){
+  // 首次选蛋（保持原有逻辑）
   const eggKeyMap = {fire:'egg_fire', shield:'egg_shield', thunder:'egg_thunder'};
   const list = document.getElementById('pet-list');
   list.innerHTML = PET_CONFIGS.map((p,i)=>`
-    <div class="pet-card" id="pc${i}" onclick="selectPet(${i})">
-      <div class="pet-card-inner">
-        <div class="pet-card-art ${p.artBgClass}">
-          <svg class="pet-card-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[eggKeyMap[p.key]]||SVG_PETS[p.key], ++_svgUid)}</svg>
-        </div>
-        <div class="pet-card-info">
-          <div class="pet-card-name">${p.type}系宠物蛋</div>
-          <span class="pet-type-badge ${p.typeClass}">${p.type}</span>
-          <div class="pet-card-desc">${p.desc}</div>
-          <div class="pet-mini-stats">
-            <div class="pms-item"><div class="pms-val">❤️${p.maxHp}</div><div class="pms-key">HP</div></div>
-            <div class="pms-item"><div class="pms-val">⚔️${p.atk}</div><div class="pms-key">攻击</div></div>
-            <div class="pms-item"><div class="pms-val">🛡️${p.def}</div><div class="pms-key">防御</div></div>
-          </div>
-        </div>
+    <div class="dex-pet-card" onclick="hatchFirstPet(${i})">
+      <div class="dex-pet-art">
+        <svg class="dex-pet-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[eggKeyMap[p.key]]||SVG_PETS[p.key], ++_svgUid)}</svg>
       </div>
+      <div class="dex-pet-name">${p.name}</div>
+      <div class="dex-pet-badge dex-badge-locked">未解锁</div>
+      <div class="dex-pet-desc">${p.desc}</div>
     </div>`).join('');
+}
+function buildDexPage(){
+  // 宠物图鉴页面
+  const unlocked = gd.pets || [];
+  const totalCount = PET_CONFIGS.length;
+  document.getElementById('dex-count').textContent = `${unlocked.length}/${totalCount}`;
+
+  const list = document.getElementById('pet-list');
+  list.innerHTML = PET_CONFIGS.map((p,i)=>{
+    const isUnlocked = unlocked.some(u => u.petKey === p.key);
+    const isCurrent = gd.petIndex >= 0 && gd.petKey === p.key;
+    const artKey = p.key;
+
+    return `
+    <div class="dex-pet-card ${isCurrent?'current':''} ${!isUnlocked?'locked':''}" onclick="${isUnlocked?`switchCurrentPet('${p.key}')`:`showUnlockCondition(${i})`}">
+      <div class="dex-pet-art">
+        <svg class="dex-pet-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[artKey]||'', ++_svgUid)}</svg>
+      </div>
+      <div class="dex-pet-name">${p.name}</div>
+      <div class="dex-pet-badge ${isCurrent?'dex-badge-current':isUnlocked?'dex-badge-unlocked':'dex-badge-locked'}">
+        ${isCurrent?'当前使用':isUnlocked?'已解锁':'未解锁'}
+      </div>
+      <div class="dex-pet-desc">${isUnlocked?p.desc:`解锁条件：达到 Lv.${p.unlockLv||10}`}</div>
+    </div>`;
+  }).join('');
+}
+function hatchFirstPet(idx){
+  selectedPet=idx;
+  const cfg = PET_CONFIGS[idx];
+  // 孵化逻辑复用原有 hatchEgg
+  tab('home');
+  updateHomeUI();
+  setTimeout(()=>hatchEgg(cfg, idx), 300);
+}
+function switchCurrentPet(petKey){
+  // 切换到已解锁的宠物
+  if(petKey === gd.petKey) return;
+  const newIdx = PET_CONFIGS.findIndex(p => p.key === petKey);
+  if(newIdx < 0) return;
+
+  // 切换宠物：保留等级/经验/错题等数据（按宠物类型分别存储）
+  if(!gd.pets) gd.pets = [];
+  const currentPetData = gd.pets.find(p => p.petKey === gd.petKey) || {};
+  // 保存当前宠物的进度
+  if(gd.petKey && Object.keys(currentPetData).length > 0){
+    // 更新或添加当前宠物数据
+    const existingIdx = gd.pets.findIndex(p => p.petKey === gd.petKey);
+    const saveData = {
+      petKey: gd.petKey,
+      level: gd.level,
+      exp: gd.exp,
+      hp: gd.hp,
+      maxHp: gd.maxHp,
+      evoStage: gd.evoStage
+    };
+    if(existingIdx >= 0){
+      gd.pets[existingIdx] = saveData;
+    } else {
+      gd.pets.push(saveData);
+    }
+  }
+
+  // 加载新宠物数据
+  const newPetData = gd.pets.find(p => p.petKey === petKey);
+  const cfg = PET_CONFIGS[newIdx];
+  if(newPetData){
+    // 有历史数据：恢复进度
+    gd.petKey = cfg.key;
+    gd.petName = cfg.name;
+    gd.petType = cfg.type;
+    gd.petIndex = newIdx;
+    gd.level = newPetData.level || 1;
+    gd.exp = newPetData.exp || 0;
+    gd.hp = newPetData.hp || cfg.maxHp;
+    gd.maxHp = newPetData.maxHp || cfg.maxHp;
+    gd.evoStage = newPetData.evoStage || 0;
+  } else {
+    // 无历史数据：初始值
+    gd.petKey = cfg.key;
+    gd.petName = cfg.name;
+    gd.petType = cfg.type;
+    gd.petIndex = newIdx;
+    gd.level = 1;
+    gd.exp = 0;
+    gd.hp = cfg.maxHp;
+    gd.maxHp = cfg.maxHp;
+    gd.evoStage = 0;
+  }
+  saveGame();
+  updateHomeUI();
+  buildDexPage();
+  showModal('🎉','切换成功',`已切换为 ${cfg.name}！`);
+}
+function showUnlockCondition(idx){
+  const p = PET_CONFIGS[idx];
+  const unlockLv = p.unlockLv || 10;
+  const msg = `解锁 ${p.name} 需要：\n• 达到 Lv.${unlockLv}`;
+  showModal('🔒','宠物未解锁',msg);
+}
 }
 function selectPet(idx){
   selectedPet=idx;
@@ -4287,6 +4461,8 @@ function updateMineUI(){
   document.getElementById('m-vocab').textContent=gd.vocab;
   document.getElementById('m-stamina').textContent=gd.stamina;
   document.getElementById('sound-val').textContent=gd.settings.sound?'开启':'关闭';
+  updateNicknameVal();
+}
   const el=document.getElementById('achieve-list');
   el.innerHTML=ACHIEVE_LIST.map(a=>{
     const ok=a.unlock(gd);
@@ -4303,6 +4479,99 @@ function updateMineUI(){
 function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
 function showAbout(){
   showModal('🐾','WordPet v1.3.1','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.3.1 更新：\n• 诊所永远有题：无错题时改为练习题模式\n• 错题需连续答对 2 次才算掌握（巩固记忆）\n• 首页互动不再回血，回血统一走诊所\n\n✨ v1.3.0 更新：\n• 战后HP不回满，保留实际剩余血量\n• 新增诊所治疗系统，学习形成闭环\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ HP 不满时去诊所做题回血。\n\n© 2026 WordPet');
+}
+
+/* ══════════════════════════════════════════════════
+   社交分享系统
+══════════════════════════════════════════════════ */
+function showSharePanel(){
+  if(gd.petIndex < 0){
+    showModal('📤','分享','请先孵化一只宠物！');
+    return;
+  }
+  const curEvo = getCurrentEvoData();
+  const nickname = gd.nickname || '训练家';
+  const lines = [
+    `🎮 我的宠物：${curEvo.name}`,
+    `⭐ 等级：Lv.${gd.level} · 词汇量：${gd.vocab}`,
+    `🪙 金币：${gd.coins}`,
+    '',
+    `用 WordPet 在玩单词对战游戏，一起来吧！`,
+    `https://joffywong.github.io/wordpet/`
+  ];
+  const shareText = lines.join('\n');
+  const shareData = {
+    title: '我在 WordPet 养了一只宠物！',
+    text: shareText
+  };
+  // 优先使用原生分享API
+  if(navigator.share){
+    navigator.share(shareData).catch(()=>showFallbackShare(shareText));
+  } else {
+    showFallbackShare(shareText);
+  }
+}
+function showFallbackShare(text){
+  // 创建一个可复制的文本区域
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.cssText='position:fixed;top:0;left:0;opacity:0;width:1px;height:1px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+  showModal('✅','分享','文案已复制到剪贴板！\n\n可直接粘贴到朋友圈/微博/微信等。');
+}
+
+/* ══════════════════════════════════════════════════
+   昵称设置
+══════════════════════════════════════════════════ */
+function showNicknameModal(){
+  const current = gd.nickname || '训练家';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = '输入你的昵称';
+  input.value = current;
+  input.maxLength = 12;
+  input.style.cssText='width:100%;padding:10px;border:1px solid rgba(255,255,255,0.2);border-radius:10px;background:rgba(0,0,0,0.3);color:#fff;font-size:15px;outline:none;box-sizing:border-box;font-family:"Noto Sans SC",-apple-system,sans-serif;';
+  input.focus();
+
+  const btns = document.createElement('div');
+  btns.innerHTML = `
+    <button class="btn btn-gold" style="flex:1;margin:0" onclick="saveNickname(this)">保存</button>
+  `;
+  btns.style.cssText='display:flex;gap:8px;margin-top:12px;';
+
+  const content = document.createElement('div');
+  content.style.cssText='min-width:240px;';
+  content.appendChild(input);
+  content.appendChild(btns);
+
+  showModal('👤','设置昵称', content);
+}
+function saveNickname(btn){
+  const input = btn.closest('div').previousElementSibling.previousElementSibling; // 找到 input
+  let val = input.value.trim();
+  if(!val){
+    showModal('⚠️','昵称不能为空','请输入1-12个字符的昵称');
+    return;
+  }
+  if(val.length > 12){
+    showModal('⚠️','昵称太长','最多支持12个字符');
+    return;
+  }
+  gd.nickname = val;
+  saveGame();
+  // 关闭模态框
+  const modal = document.getElementById('modal-mask');
+  if(modal) modal.remove();
+  // 更新UI
+  updateMineUI();
+  updateNicknameVal();
+}
+function updateNicknameVal(){
+  const el = document.getElementById('nickname-val');
+  if(el) el.textContent = gd.nickname || '训练家';
 }
 function confirmReset(){
   if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
