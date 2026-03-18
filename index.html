@@ -2662,27 +2662,22 @@ function interact(){
 
   taskProgress('interact', 1);
 
-  // HP 为零时：宠物晕倒中，点击加速恢复（每次互动+10 HP）
+  // 互动不再直接回血；HP 低时给出治疗提示
   if(gd.hp <= 0){
-    // 即使HP=0也能通过互动直接给一点HP，让恢复更有体感
-    gd.hp = Math.min(10, gd.maxHp);
-    gd.hpRegenStart = Date.now(); // 重置恢复计时起点
     wrap.classList.remove('shake-anim');
     void wrap.offsetWidth;
     wrap.classList.add('shake-anim');
     setTimeout(()=>wrap.classList.remove('shake-anim'), 420);
     spawnEmote(wrap, '😵');
-    showDmg('+10 HP', wrap, 'heal');
+    // 轻提示：去诊所
+    showDmg('去治疗!', wrap, 'heal');
     saveGame(); updateHomeUI();
     return;
   }
 
-  // HP 未满时：互动加速HP恢复（+10 HP）
   if(gd.hp < gd.maxHp){
-    const heal = Math.min(10, gd.maxHp - gd.hp);
-    gd.hp = Math.min(gd.hp + heal, gd.maxHp);
-    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
-    showDmg(`+${heal} HP`, wrap, 'heal');
+    // 只显示提示气泡，不加血
+    spawnEmote(wrap, '💊');
   }
 
   saveGame(); updateHomeUI();
@@ -2743,15 +2738,16 @@ function buildDungeonList(){
   const healEntry = document.getElementById('heal-entry');
   const healDesc  = document.getElementById('heal-entry-desc');
   if(healEntry){
-    const hasWrong = gd.wrongWords && gd.wrongWords.length > 0;
+    const wrongPending = (gd.wrongWords||[]).filter(w=>(w.masteredCount||0)<2);
     const hpNotFull = gd.hp < gd.maxHp;
-    healEntry.style.display = (hasWrong || hpNotFull) ? 'block' : 'none';
+    // HP 不满时始终显示治疗入口（即使没有错题，也有练习题可以刷）
+    healEntry.style.display = hpNotFull ? 'block' : 'none';
     if(healDesc){
-      const cnt = gd.wrongWords ? gd.wrongWords.length : 0;
+      const cnt = wrongPending.length;
       if(cnt > 0){
-        healDesc.textContent = `${cnt} 道错题待复习 · 答对一题回 +15 HP（当前 HP: ${gd.hp}/${gd.maxHp}）`;
+        healDesc.textContent = `${cnt} 道错题待巩固 · 答对一题回 +${HEAL_HP_PER_Q} HP（当前 ${gd.hp}/${gd.maxHp}）`;
       } else {
-        healDesc.textContent = `HP 未满，点击互动或入诊所治疗（当前 HP: ${gd.hp}/${gd.maxHp}）`;
+        healDesc.textContent = `HP 未满，去诊所做练习题回血吧！（当前 ${gd.hp}/${gd.maxHp}）`;
       }
     }
   }
@@ -3855,16 +3851,13 @@ function enterHeal(){
   // 初始化界面
   const curEvo = getCurrentEvoData();
   setPetSvg(document.getElementById('heal-pet-svg'), curEvo.key);
+  // 确保 wrongWords 里每项都有 masteredCount 字段（兼容旧存档）
+  if(gd.wrongWords) gd.wrongWords = gd.wrongWords.map(w=>({en:w.en,cn:w.cn,masteredCount:w.masteredCount||0}));
   updateHealUI();
-  if(!gd.wrongWords || gd.wrongWords.length === 0){
-    // 无错题：显示空态
-    document.getElementById('heal-quiz-area').style.display = 'none';
-    document.getElementById('heal-empty-area').style.display = 'flex';
-  } else {
-    document.getElementById('heal-quiz-area').style.display = 'flex';
-    document.getElementById('heal-empty-area').style.display = 'none';
-    nextHealQ();
-  }
+  // 无论有没有错题，始终显示答题区（有错题优先错题，否则用备用题池）
+  document.getElementById('heal-quiz-area').style.display = 'flex';
+  document.getElementById('heal-empty-area').style.display = 'none';
+  nextHealQ();
   go('heal-page');
 }
 
@@ -3883,24 +3876,34 @@ function updateHealUI(){
   if(hp >= maxHp){
     document.getElementById('heal-hint').innerHTML = '🌟 HP 已满！宠物精神满满，可以出发冒险了！';
   } else {
-    document.getElementById('heal-hint').innerHTML = `💊 重温错题，每答对一题恢复 <strong>+${HEAL_HP_PER_Q} HP</strong>`;
+    document.getElementById('heal-hint').innerHTML = `💊 每答对一题恢复 <strong>+${HEAL_HP_PER_Q} HP</strong>`;
   }
 }
 
+// 当前治疗题的来源（'wrong' | 'normal'），用于结果展示差异化
+let healQSource = 'normal';
+
 function nextHealQ(){
   healAnswering = false;
-  if(!gd.wrongWords || gd.wrongWords.length === 0){
-    // 错题清空了：切换到空态
-    document.getElementById('heal-quiz-area').style.display = 'none';
-    document.getElementById('heal-empty-area').style.display = 'flex';
-    return;
-  }
-  // 从错题池随机取一题
-  const pool = gd.wrongWords;
-  const correct = pool[Math.floor(Math.random() * pool.length)];
+  const wrongPool = (gd.wrongWords || []).filter(w => (w.masteredCount||0) < 2); // masteredCount<2 的才出现
+  const allWords  = Object.values(WORDBANK).flatMap(b=>b.words);
 
-  // 干扰项：从所有单词库里取不同单词
-  const allWords = Object.values(WORDBANK).flatMap(b=>b.words);
+  let correct;
+  if(wrongPool.length > 0){
+    // 优先从未完全掌握的错题里随机选
+    correct = wrongPool[Math.floor(Math.random() * wrongPool.length)];
+    healQSource = 'wrong';
+    document.getElementById('heal-q-sub').textContent = '🔴 错题复习 · 选出正确英文单词';
+  } else {
+    // 备用题池：从所有单词随机出一题（与战斗一样的逻辑）
+    const fallback = allWords.filter(w => w.en && w.cn);
+    if(fallback.length === 0) return; // 词库空（不可能，安全兜底）
+    correct = fallback[Math.floor(Math.random() * fallback.length)];
+    healQSource = 'normal';
+    document.getElementById('heal-q-sub').textContent = '✅ 练习题 · 选出正确英文单词';
+  }
+
+  // 干扰项：从所有单词库里取不同的词
   const distractors = allWords
     .filter(w => w.en !== correct.en)
     .sort(() => Math.random() - 0.5)
@@ -3926,12 +3929,22 @@ function selectHealOption(idx){
   const ok = chosen.en === healQ.en;
   if(ok){
     document.getElementById('hopt'+idx).classList.add('correct');
-    // 答对：回血 + 从错题本移除
+    // 答对：回血
     const heal = Math.min(HEAL_HP_PER_Q, gd.maxHp - gd.hp);
     if(heal > 0) gd.hp = Math.min(gd.hp + heal, gd.maxHp);
     if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
-    // 从错题本移除（已掌握）
-    gd.wrongWords = gd.wrongWords.filter(w => w.en !== healQ.en);
+
+    // 错题本处理：错题答对 → masteredCount+1；达到 2 次才移除（巩固记忆）
+    if(healQSource === 'wrong' && gd.wrongWords){
+      const entry = gd.wrongWords.find(w => w.en === healQ.en);
+      if(entry){
+        entry.masteredCount = (entry.masteredCount||0) + 1;
+        if(entry.masteredCount >= 2){
+          gd.wrongWords = gd.wrongWords.filter(w => w.en !== healQ.en);
+        }
+      }
+    }
+
     // 闪光动画
     const card = document.getElementById('heal-q-card');
     card.classList.remove('heal-flash');
@@ -3944,10 +3957,14 @@ function selectHealOption(idx){
     setTimeout(()=>nextHealQ(), 800);
   } else {
     document.getElementById('hopt'+idx).classList.add('wrong');
-    // 答错：高亮正确答案
+    // 答错：高亮正确答案；错题的 masteredCount 重置为 0（忘记了，重新来）
     for(let i=0;i<4;i++) if(healOpts[i].en === healQ.en) document.getElementById('hopt'+i).classList.add('correct');
+    if(healQSource === 'wrong' && gd.wrongWords){
+      const entry = gd.wrongWords.find(w => w.en === healQ.en);
+      if(entry) entry.masteredCount = 0;
+    }
     playBeep(220, 0.1, 'sawtooth');
-    // 错了不移除题目、不减血，再出一题（重新随机，不一定是同一道）
+    // 不减血，换下一题继续
     setTimeout(()=>nextHealQ(), 1000);
   }
 }
@@ -4285,7 +4302,7 @@ function updateMineUI(){
 }
 function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
 function showAbout(){
-  showModal('🐾','WordPet v1.3.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.3.0 更新：\n• 战后HP不回满，保留实际剩余血量\n• 新增诊所治疗：重温错题回血，学习形成闭环！\n• 错题自动记录，掌握后从本移除\n\n✨ v1.2.x 更新：\n• 怪物持续蓄力、Fever模式降缓\n• 蓄力条位置修复、战场UI重布局\n• HP 与精力概念分离\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败/受伤后缓慢恢复，互动或治疗可加速。\n\n© 2026 WordPet');
+  showModal('🐾','WordPet v1.3.1','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.3.1 更新：\n• 诊所永远有题：无错题时改为练习题模式\n• 错题需连续答对 2 次才算掌握（巩固记忆）\n• 首页互动不再回血，回血统一走诊所\n\n✨ v1.3.0 更新：\n• 战后HP不回满，保留实际剩余血量\n• 新增诊所治疗系统，学习形成闭环\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ HP 不满时去诊所做题回血。\n\n© 2026 WordPet');
 }
 function confirmReset(){
   if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
