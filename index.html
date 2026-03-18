@@ -4561,8 +4561,7 @@ function saveNickname(btn){
   gd.nickname = val;
   saveGame();
   // 关闭模态框
-  const modal = document.getElementById('modal-mask');
-  if(modal) modal.remove();
+  closeModal();
   // 更新UI
   updateMineUI();
   updateNicknameVal();
