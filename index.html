@@ -4461,7 +4461,7 @@ function updateMineUI(){
   document.getElementById('m-stamina').textContent=gd.stamina;
   document.getElementById('sound-val').textContent=gd.settings.sound?'开启':'关闭';
   updateNicknameVal();
-}
+  
   const el=document.getElementById('achieve-list');
   el.innerHTML=ACHIEVE_LIST.map(a=>{
     const ok=a.unlock(gd);
