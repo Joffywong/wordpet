@@ -1,0 +1,5098 @@
+/**
+ * WordPet 宠物 SVG 素材库 v1.0
+ * 
+ * 规范：
+ * - 每个 SVG defs 内的 id 使用 "KEY_suffix" 格式，全局唯一，避免多个 inline SVG 同时渲染时的 gradient ID 冲突
+ * - viewBox 统一 "0 0 100 100"
+ * - 替换美术资源时直接修改对应 key 的字符串即可
+ * 
+ * Key 说明：
+ *   fire     → 小火球（Lv.1）
+ *   fire2    → 烈焰狐妖（Lv.15）
+ *   fire3    → 焰龙王（Lv.30）
+ *   shield   → 护盾龟（Lv.1）
+ *   shield2  → 重甲古龟（Lv.15）
+ *   shield3  → 神盾玄武（Lv.30）
+ *   thunder  → 闪电狐（Lv.1）
+ *   thunder2 → 雷霆九尾（Lv.15）
+ *   thunder3 → 雷神天狐（Lv.30）
+ */
+const SVG_PETS = {
+
+  /* ══════ 火系 ══════ */
+  fire: `
+    <defs>
+      <radialGradient id="fire_b0" cx="50%" cy="60%" r="50%"><stop offset="0%" stop-color="#fbbf24"/><stop offset="60%" stop-color="#ef4444"/><stop offset="100%" stop-color="#7f1d1d"/></radialGradient>
+      <radialGradient id="fire_b1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fef08a"/><stop offset="100%" stop-color="#f97316"/></radialGradient>
+      <filter id="fire_glow"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="88" rx="20" ry="5" fill="rgba(0,0,0,0.3)"/>
+    <path d="M46 78 C40 88 30 92 28 84 C26 76 34 70 40 74Z" fill="#f97316" opacity=".7"/>
+    <path d="M54 78 C60 88 70 92 72 84 C74 76 66 70 60 74Z" fill="#f97316" opacity=".7"/>
+    <path d="M50 82 C30 82 18 68 18 52 C18 36 30 20 50 14 C70 20 82 36 82 52 C82 68 70 82 50 82Z" fill="url(#fire_b0)"/>
+    <ellipse cx="50" cy="54" rx="18" ry="20" fill="url(#fire_b1)" opacity=".8"/>
+    <ellipse cx="40" cy="48" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="60" cy="48" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="41.5" cy="46.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <ellipse cx="61.5" cy="46.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <circle cx="42" cy="47" r="1" fill="#ff6b35"/>
+    <circle cx="62" cy="47" r="1" fill="#ff6b35"/>
+    <path d="M44 62 Q50 68 56 62" stroke="#7f1d1d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M38 22 C36 14 40 8 44 13 C42 7 48 4 50 10 C52 4 58 7 56 13 C60 8 64 14 62 22" fill="#f97316" filter="url(#fire_glow)"/>
+    <path d="M42 19 C41 13 44 9 46 14 C47 10 50 8 52 13 C54 9 57 13 58 19" fill="#fbbf24"/>
+    <ellipse cx="32" cy="58" rx="5" ry="3" fill="#f97316" opacity=".3"/>
+    <ellipse cx="68" cy="58" rx="5" ry="3" fill="#f97316" opacity=".3"/>`,
+
+  fire2: `
+    <defs>
+      <radialGradient id="fire2_b0" cx="50%" cy="55%" r="52%"><stop offset="0%" stop-color="#fed7aa"/><stop offset="50%" stop-color="#f97316"/><stop offset="100%" stop-color="#7c2d12"/></radialGradient>
+      <radialGradient id="fire2_b1" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#fff7ed"/><stop offset="100%" stop-color="#fb923c"/></radialGradient>
+      <filter id="fire2_glow"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="88" rx="24" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <path d="M40 76 C28 88 14 94 12 82 C10 70 24 62 36 68Z" fill="#ef4444" opacity=".85"/>
+    <path d="M60 76 C72 88 86 94 88 82 C90 70 76 62 64 68Z" fill="#ef4444" opacity=".85"/>
+    <path d="M18 52 C8 44 4 34 10 30 C16 26 24 34 22 44Z" fill="#fb923c" opacity=".6"/>
+    <path d="M82 52 C92 44 96 34 90 30 C84 26 76 34 78 44Z" fill="#fb923c" opacity=".6"/>
+    <path d="M50 84 C26 84 14 66 14 50 C14 32 28 14 50 10 C72 14 86 32 86 50 C86 66 74 84 50 84Z" fill="url(#fire2_b0)"/>
+    <ellipse cx="50" cy="52" rx="20" ry="22" fill="url(#fire2_b1)" opacity=".75"/>
+    <ellipse cx="39" cy="47" rx="7" ry="8" fill="#1c1917"/>
+    <ellipse cx="61" cy="47" rx="7" ry="8" fill="#1c1917"/>
+    <ellipse cx="40.5" cy="45.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+    <ellipse cx="62.5" cy="45.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+    <circle cx="41" cy="46" r="1.2" fill="#ff6b35"/>
+    <circle cx="63" cy="46" r="1.2" fill="#ff6b35"/>
+    <path d="M34 40 L44 43" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M56 43 L66 40" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M43 62 Q50 70 57 62" stroke="#7c2d12" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M34 20 C30 10 34 4 38 10 C36 3 42 -1 44 6 C46 -1 50 -3 50 5 C50 -3 54 -1 56 6 C58 -1 64 3 62 10 C66 4 70 10 66 20" fill="#ef4444" filter="url(#fire2_glow)"/>
+    <path d="M38 17 C36 9 40 5 42 10 C43 6 46 4 48 8 C49 4 51 4 53 8 C55 4 57 6 58 10 C60 5 64 9 62 17" fill="#fbbf24"/>
+    <ellipse cx="32" cy="56" rx="6" ry="3.5" fill="#f97316" opacity=".3"/>
+    <ellipse cx="68" cy="56" rx="6" ry="3.5" fill="#f97316" opacity=".3"/>`,
+
+  fire3: `
+    <defs>
+      <radialGradient id="fire3_b0" cx="50%" cy="50%" r="55%"><stop offset="0%" stop-color="#fef3c7"/><stop offset="35%" stop-color="#f59e0b"/><stop offset="75%" stop-color="#dc2626"/><stop offset="100%" stop-color="#450a0a"/></radialGradient>
+      <radialGradient id="fire3_b1" cx="50%" cy="35%" r="45%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/></radialGradient>
+      <filter id="fire3_glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="90" rx="28" ry="7" fill="rgba(0,0,0,0.35)"/>
+    <path d="M18 55 C4 42 0 26 8 20 C16 14 28 24 26 40Z" fill="#dc2626" opacity=".9"/>
+    <path d="M82 55 C96 42 100 26 92 20 C84 14 72 24 74 40Z" fill="#dc2626" opacity=".9"/>
+    <path d="M38 80 C22 94 8 96 6 84 C4 72 18 64 32 72Z" fill="#ef4444" opacity=".9"/>
+    <path d="M62 80 C78 94 92 96 94 84 C96 72 82 64 68 72Z" fill="#ef4444" opacity=".9"/>
+    <path d="M50 86 C20 86 8 64 8 47 C8 26 24 8 50 6 C76 8 92 26 92 47 C92 64 80 86 50 86Z" fill="url(#fire3_b0)"/>
+    <ellipse cx="50" cy="47" rx="30" ry="32" fill="url(#fire3_b1)" opacity=".5"/>
+    <path d="M36 36 L32 52 L36 68 L50 74 L64 68 L68 52 L64 36 L50 30Z" fill="none" stroke="#fbbf24" stroke-width="1.5" opacity=".4"/>
+    <ellipse cx="36" cy="46" rx="8.5" ry="9.5" fill="#1c1917"/>
+    <ellipse cx="64" cy="46" rx="8.5" ry="9.5" fill="#1c1917"/>
+    <ellipse cx="37.5" cy="44.5" rx="3.5" ry="4" fill="#fef08a" opacity=".95" filter="url(#fire3_glow)"/>
+    <ellipse cx="65.5" cy="44.5" rx="3.5" ry="4" fill="#fef08a" opacity=".95" filter="url(#fire3_glow)"/>
+    <path d="M28 36 L38 41" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+    <path d="M62 41 L72 36" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/>
+    <path d="M41 65 Q50 76 59 65" stroke="#7f1d1d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M30 20 C22 6 26 -2 32 4 C28 -4 36 -8 38 2 C40 -6 46 -8 46 2 C46 -8 50 -10 50 0 C50 -10 54 -8 54 2 C54 -8 60 -4 58 2 C62 -8 68 -4 66 4 C72 -2 76 6 68 20" fill="#ef4444" filter="url(#fire3_glow)"/>
+    <path d="M34 16 C28 6 32 0 36 6 C37 0 40 -2 42 4 C43 0 46 -2 48 4 C49 0 51 0 53 4 C55 -2 57 0 58 4 C60 -2 63 6 66 16" fill="#fbbf24"/>
+    <circle cx="50" cy="47" r="14" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".3" filter="url(#fire3_glow)"/>`,
+
+  /* ══════ 水系（盾龟） ══════ */
+  shield: `
+    <defs>
+      <radialGradient id="shield_b0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#6ee7b7"/><stop offset="70%" stop-color="#10b981"/><stop offset="100%" stop-color="#064e3b"/></radialGradient>
+      <linearGradient id="shield_b1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#34d399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+    </defs>
+    <ellipse cx="50" cy="88" rx="26" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <ellipse cx="26" cy="72" rx="10" ry="8" fill="#10b981"/>
+    <ellipse cx="74" cy="72" rx="10" ry="8" fill="#10b981"/>
+    <ellipse cx="32" cy="80" rx="8" ry="6" fill="#10b981"/>
+    <ellipse cx="68" cy="80" rx="8" ry="6" fill="#10b981"/>
+    <ellipse cx="50" cy="54" rx="34" ry="30" fill="url(#shield_b0)"/>
+    <path d="M34 30 L28 52 L34 72 L50 78 L66 72 L72 52 L66 30 L50 24Z" fill="url(#shield_b1)" opacity=".55"/>
+    <line x1="50" y1="24" x2="50" y2="78" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+    <line x1="28" y1="52" x2="72" y2="52" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+    <line x1="34" y1="30" x2="66" y2="72" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <line x1="66" y1="30" x2="34" y2="72" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <ellipse cx="50" cy="32" rx="16" ry="14" fill="#10b981"/>
+    <ellipse cx="50" cy="30" rx="14" ry="12" fill="#34d399"/>
+    <ellipse cx="43" cy="29" rx="5.5" ry="6" fill="#064e3b"/>
+    <ellipse cx="57" cy="29" rx="5.5" ry="6" fill="#064e3b"/>
+    <ellipse cx="44" cy="28" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <ellipse cx="58" cy="28" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <ellipse cx="36" cy="34" rx="5" ry="3" fill="#059669" opacity=".4"/>
+    <ellipse cx="64" cy="34" rx="5" ry="3" fill="#059669" opacity=".4"/>
+    <path d="M45 39 Q50 44 55 39" stroke="#064e3b" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M42 48 L38 56 L42 64 L50 68 L58 64 L62 56 L58 48 L50 44Z" fill="rgba(255,255,255,0.15)" stroke="#6ee7b7" stroke-width="1.5" opacity=".7"/>`,
+
+  shield2: `
+    <defs>
+      <radialGradient id="shield2_b0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#a7f3d0"/><stop offset="60%" stop-color="#059669"/><stop offset="100%" stop-color="#022c22"/></radialGradient>
+      <linearGradient id="shield2_b1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6ee7b7"/><stop offset="100%" stop-color="#047857"/></linearGradient>
+    </defs>
+    <ellipse cx="50" cy="89" rx="28" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <ellipse cx="22" cy="70" rx="12" ry="10" fill="#059669"/>
+    <ellipse cx="78" cy="70" rx="12" ry="10" fill="#059669"/>
+    <ellipse cx="28" cy="82" rx="10" ry="7" fill="#047857"/>
+    <ellipse cx="72" cy="82" rx="10" ry="7" fill="#047857"/>
+    <ellipse cx="50" cy="55" rx="36" ry="32" fill="url(#shield2_b0)"/>
+    <path d="M34 28 L26 52 L34 74 L50 80 L66 74 L74 52 L66 28 L50 22Z" fill="url(#shield2_b1)" opacity=".5"/>
+    <path d="M50 22 L42 30 L38 52 L42 74 L50 80 L58 74 L62 52 L58 30Z" fill="rgba(255,255,255,0.1)"/>
+    <line x1="50" y1="22" x2="50" y2="80" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="26" y1="52" x2="74" y2="52" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+    <line x1="34" y1="28" x2="66" y2="74" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+    <line x1="66" y1="28" x2="34" y2="74" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+    <ellipse cx="50" cy="30" rx="18" ry="16" fill="#059669"/>
+    <ellipse cx="50" cy="28" rx="16" ry="14" fill="#34d399"/>
+    <path d="M34 38 L32 42 L50 44 L68 42 L66 38Z" fill="#047857" opacity=".7"/>
+    <ellipse cx="42" cy="27" rx="7" ry="7.5" fill="#022c22"/>
+    <ellipse cx="58" cy="27" rx="7" ry="7.5" fill="#022c22"/>
+    <ellipse cx="43.5" cy="25.5" rx="3" ry="3.5" fill="#fff" opacity=".92"/>
+    <ellipse cx="59.5" cy="25.5" rx="3" ry="3.5" fill="#fff" opacity=".92"/>
+    <path d="M36 21 L44 24" stroke="#022c22" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M56 24 L64 21" stroke="#022c22" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M44 37 Q50 43 56 37" stroke="#022c22" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M40 48 L36 58 L40 68 L50 72 L60 68 L64 58 L60 48 L50 44Z" fill="rgba(255,255,255,0.1)" stroke="#6ee7b7" stroke-width="2" opacity=".8"/>
+    <path d="M44 52 L42 58 L44 64 L50 66 L56 64 L58 58 L56 52 L50 50Z" fill="none" stroke="#a7f3d0" stroke-width="1" opacity=".5"/>`,
+
+  shield3: `
+    <defs>
+      <radialGradient id="shield3_b0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#d1fae5"/><stop offset="40%" stop-color="#10b981"/><stop offset="80%" stop-color="#065f46"/><stop offset="100%" stop-color="#022c22"/></radialGradient>
+      <linearGradient id="shield3_b1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a7f3d0"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+      <filter id="shield3_glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="91" rx="32" ry="7" fill="rgba(0,0,0,0.35)"/>
+    <circle cx="50" cy="50" r="44" fill="none" stroke="#10b981" stroke-width="1.5" opacity=".2" filter="url(#shield3_glow)"/>
+    <ellipse cx="18" cy="68" rx="14" ry="12" fill="#065f46"/>
+    <ellipse cx="82" cy="68" rx="14" ry="12" fill="#065f46"/>
+    <ellipse cx="24" cy="82" rx="12" ry="8" fill="#022c22"/>
+    <ellipse cx="76" cy="82" rx="12" ry="8" fill="#022c22"/>
+    <ellipse cx="50" cy="55" rx="40" ry="36" fill="url(#shield3_b0)"/>
+    <path d="M30 24 L22 52 L30 76 L50 84 L70 76 L78 52 L70 24 L50 18Z" fill="url(#shield3_b1)" opacity=".45"/>
+    <path d="M50 18 L40 28 L36 52 L40 76 L50 84 L60 76 L64 52 L60 28Z" fill="rgba(255,255,255,0.12)"/>
+    <line x1="50" y1="18" x2="50" y2="84" stroke="rgba(255,255,255,0.2)" stroke-width="2.5"/>
+    <line x1="22" y1="52" x2="78" y2="52" stroke="rgba(255,255,255,0.2)" stroke-width="2.5"/>
+    <line x1="30" y1="24" x2="70" y2="76" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+    <line x1="70" y1="24" x2="30" y2="76" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+    <path d="M42 48 L38 58 L42 68 L50 72 L58 68 L62 58 L58 48 L50 44Z" fill="none" stroke="#bbf7d0" stroke-width="2.5" opacity=".9" filter="url(#shield3_glow)"/>
+    <ellipse cx="50" cy="28" rx="20" ry="18" fill="#065f46"/>
+    <ellipse cx="50" cy="26" rx="18" ry="16" fill="#10b981"/>
+    <path d="M44 12 C42 4 46 0 50 6 C54 0 58 4 56 12" fill="#059669"/>
+    <path d="M47 11 C46 5 48 2 50 6 C52 2 54 5 53 11" fill="#a7f3d0" opacity=".8"/>
+    <ellipse cx="40" cy="25" rx="8.5" ry="9" fill="#022c22"/>
+    <ellipse cx="60" cy="25" rx="8.5" ry="9" fill="#022c22"/>
+    <ellipse cx="41.5" cy="23.5" rx="3.5" ry="4" fill="#bbf7d0" opacity=".95" filter="url(#shield3_glow)"/>
+    <ellipse cx="61.5" cy="23.5" rx="3.5" ry="4" fill="#bbf7d0" opacity=".95" filter="url(#shield3_glow)"/>
+    <path d="M32 17 L42 21" stroke="#022c22" stroke-width="3" stroke-linecap="round"/>
+    <path d="M58 21 L68 17" stroke="#022c22" stroke-width="3" stroke-linecap="round"/>
+    <path d="M43 37 Q50 44 57 37" stroke="#022c22" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+
+  /* ══════ 雷系（狐） ══════ */
+  thunder: `
+    <defs>
+      <radialGradient id="thunder_b0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#fde68a"/><stop offset="60%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></radialGradient>
+      <filter id="thunder_glow"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="88" rx="22" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 78 C44 86 36 90 38 82 C34 86 28 82 32 74 C28 76 26 70 32 68 L50 72Z" fill="#f59e0b" opacity=".8"/>
+    <ellipse cx="50" cy="52" rx="28" ry="30" fill="url(#thunder_b0)"/>
+    <ellipse cx="50" cy="56" rx="18" ry="20" fill="#fef9c3" opacity=".5"/>
+    <path d="M34 28 C30 16 36 10 40 18Z" fill="#f59e0b"/>
+    <path d="M66 28 C70 16 64 10 60 18Z" fill="#f59e0b"/>
+    <path d="M35 26 C32 18 36 13 39 19Z" fill="#fde68a"/>
+    <path d="M65 26 C68 18 64 13 61 19Z" fill="#fde68a"/>
+    <path d="M52 22 L44 38 L52 38 L42 58 L58 34 L50 34Z" fill="#fff" opacity=".85" filter="url(#thunder_glow)"/>
+    <path d="M52 22 L44 38 L52 38 L42 58 L58 34 L50 34Z" fill="#fbbf24"/>
+    <ellipse cx="41" cy="50" rx="5.5" ry="6.5" fill="#78350f"/>
+    <ellipse cx="59" cy="50" rx="5.5" ry="6.5" fill="#78350f"/>
+    <ellipse cx="42" cy="48.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <ellipse cx="60" cy="48.5" rx="2.5" ry="3" fill="#fff" opacity=".9"/>
+    <circle cx="42.5" cy="49" r="1" fill="#facc15" filter="url(#thunder_glow)"/>
+    <circle cx="60.5" cy="49" r="1" fill="#facc15" filter="url(#thunder_glow)"/>
+    <ellipse cx="32" cy="56" rx="5" ry="3" fill="#fbbf24" opacity=".35"/>
+    <ellipse cx="68" cy="56" rx="5" ry="3" fill="#fbbf24" opacity=".35"/>
+    <path d="M44 63 Q50 68 56 63" stroke="#78350f" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M28 38 Q22 32 24 40" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9" filter="url(#thunder_glow)"/>
+    <path d="M72 38 Q78 32 76 40" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9" filter="url(#thunder_glow)"/>`,
+
+  thunder2: `
+    <defs>
+      <radialGradient id="thunder2_b0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#fef9c3"/><stop offset="55%" stop-color="#eab308"/><stop offset="100%" stop-color="#713f12"/></radialGradient>
+      <filter id="thunder2_glow"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="88" rx="26" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 76 C36 90 18 96 16 82 C14 70 28 60 40 68Z" fill="#eab308" opacity=".7"/>
+    <path d="M50 76 C42 94 26 98 26 84 C26 74 38 66 44 72Z" fill="#fbbf24" opacity=".6"/>
+    <path d="M50 76 C52 96 38 100 36 88 C34 78 44 70 48 74Z" fill="#eab308" opacity=".65"/>
+    <path d="M50 76 C64 90 82 96 84 82 C86 70 72 60 60 68Z" fill="#eab308" opacity=".7"/>
+    <path d="M50 76 C58 94 74 98 74 84 C74 74 62 66 56 72Z" fill="#fbbf24" opacity=".6"/>
+    <ellipse cx="50" cy="50" rx="32" ry="34" fill="url(#thunder2_b0)"/>
+    <ellipse cx="50" cy="54" rx="22" ry="22" fill="#fef9c3" opacity=".45"/>
+    <path d="M32 24 C26 10 32 2 38 12Z" fill="#eab308"/>
+    <path d="M68 24 C74 10 68 2 62 12Z" fill="#eab308"/>
+    <path d="M33 22 C28 12 33 6 37 14Z" fill="#fde68a"/>
+    <path d="M67 22 C72 12 67 6 63 14Z" fill="#fde68a"/>
+    <path d="M56 14 L44 36 L54 36 L40 60 L62 30 L52 30Z" fill="#fff" opacity=".9" filter="url(#thunder2_glow)"/>
+    <path d="M56 14 L44 36 L54 36 L40 60 L62 30 L52 30Z" fill="#fbbf24"/>
+    <path d="M44 14 L34 32 L42 32 L30 52 L50 26 L42 26Z" fill="#fde68a" opacity=".6"/>
+    <ellipse cx="39" cy="49" rx="6.5" ry="7.5" fill="#713f12"/>
+    <ellipse cx="61" cy="49" rx="6.5" ry="7.5" fill="#713f12"/>
+    <ellipse cx="40.5" cy="47.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+    <ellipse cx="62.5" cy="47.5" rx="3" ry="3.5" fill="#fff" opacity=".95"/>
+    <circle cx="41" cy="48" r="1.2" fill="#facc15" filter="url(#thunder2_glow)"/>
+    <circle cx="63" cy="48" r="1.2" fill="#facc15" filter="url(#thunder2_glow)"/>
+    <path d="M43 63 Q50 70 57 63" stroke="#713f12" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M22 36 Q14 28 16 38" stroke="#fbbf24" stroke-width="2.5" fill="none" stroke-linecap="round" filter="url(#thunder2_glow)"/>
+    <path d="M78 36 Q86 28 84 38" stroke="#fbbf24" stroke-width="2.5" fill="none" stroke-linecap="round" filter="url(#thunder2_glow)"/>
+    <path d="M18 48 Q10 42 12 50" stroke="#fde68a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/>
+    <path d="M82 48 Q90 42 88 50" stroke="#fde68a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/>`,
+
+  thunder3: `
+    <defs>
+      <radialGradient id="thunder3_b0" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#fefce8"/><stop offset="30%" stop-color="#facc15"/><stop offset="70%" stop-color="#b45309"/><stop offset="100%" stop-color="#431407"/></radialGradient>
+      <filter id="thunder3_glow" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="91" rx="30" ry="7" fill="rgba(0,0,0,0.35)"/>
+    <circle cx="50" cy="48" r="42" fill="none" stroke="#facc15" stroke-width="2" opacity=".2" filter="url(#thunder3_glow)"/>
+    <path d="M50 76 C30 94 8 100 6 84 C4 70 22 60 36 68Z" fill="#b45309" opacity=".8" filter="url(#thunder3_glow)"/>
+    <path d="M50 76 C38 98 18 100 18 84 C18 72 34 62 42 70Z" fill="#eab308" opacity=".7"/>
+    <path d="M50 76 C46 98 30 100 30 86 C30 76 42 68 46 74Z" fill="#b45309" opacity=".75"/>
+    <path d="M50 76 C70 94 92 100 94 84 C96 70 78 60 64 68Z" fill="#b45309" opacity=".8" filter="url(#thunder3_glow)"/>
+    <path d="M50 76 C62 98 82 100 82 84 C82 72 66 62 58 70Z" fill="#eab308" opacity=".7"/>
+    <path d="M50 76 C54 98 70 100 70 86 C70 76 58 68 54 74Z" fill="#b45309" opacity=".75"/>
+    <ellipse cx="50" cy="48" rx="36" ry="36" fill="url(#thunder3_b0)"/>
+    <ellipse cx="50" cy="52" rx="24" ry="24" fill="#fefce8" opacity=".35"/>
+    <path d="M30 22 C22 4 28 -4 36 8Z" fill="#b45309"/>
+    <path d="M70 22 C78 4 72 -4 64 8Z" fill="#b45309"/>
+    <path d="M31 20 C25 6 30 0 35 10Z" fill="#fde68a"/>
+    <path d="M69 20 C75 6 70 0 65 10Z" fill="#fde68a"/>
+    <path d="M62 8 L46 36 L58 36 L36 72 L72 28 L58 28Z" fill="#fff" opacity=".92" filter="url(#thunder3_glow)"/>
+    <path d="M62 8 L46 36 L58 36 L36 72 L72 28 L58 28Z" fill="#fbbf24"/>
+    <path d="M48 8 L32 32 L44 32 L24 62 L56 24 L44 24Z" fill="#fde68a" opacity=".7"/>
+    <path d="M38 12 L26 30 L36 30 L20 52 L44 22 L34 22Z" fill="#fff" opacity=".3"/>
+    <ellipse cx="37" cy="47" rx="8.5" ry="9.5" fill="#431407"/>
+    <ellipse cx="63" cy="47" rx="8.5" ry="9.5" fill="#431407"/>
+    <ellipse cx="38.5" cy="45.5" rx="3.5" ry="4" fill="#fef9c3" opacity=".95" filter="url(#thunder3_glow)"/>
+    <ellipse cx="64.5" cy="45.5" rx="3.5" ry="4" fill="#fef9c3" opacity=".95" filter="url(#thunder3_glow)"/>
+    <path d="M42 64 Q50 73 58 64" stroke="#431407" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M16 30 Q4 20 6 32" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#thunder3_glow)"/>
+    <path d="M84 30 Q96 20 94 32" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round" filter="url(#thunder3_glow)"/>
+    <path d="M10 46 Q0 38 2 48" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>
+    <path d="M90 46 Q100 38 98 48" stroke="#fde68a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".8"/>`,
+
+  /* ══════ 宠物蛋 ══════ */
+
+  /* 火系蛋：橙红色，有火纹 */
+  egg_fire: `
+    <defs>
+      <radialGradient id="eggf_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#fed7aa"/>
+        <stop offset="55%" stop-color="#f97316"/>
+        <stop offset="100%" stop-color="#7c2d12"/>
+      </radialGradient>
+      <radialGradient id="eggf_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+      <filter id="eggf_glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <!-- 阴影 -->
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.28)"/>
+    <!-- 蛋身 -->
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggf_bg)"/>
+    <!-- 高光 -->
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggf_shine)" opacity=".8"/>
+    <!-- 火纹路 -->
+    <path d="M40 62 Q44 54 42 48 Q50 56 48 44 Q56 54 54 48 Q60 58 56 68 Q52 72 46 70 Q42 68 40 62Z"
+          fill="#fef08a" opacity=".85" filter="url(#eggf_glow)"/>
+    <path d="M36 72 Q38 66 36 62 Q41 66 40 60 Q44 66 42 72Z"
+          fill="#fbbf24" opacity=".6"/>
+    <!-- 裂纹（即将孵化感）-->
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+
+  /* 水系蛋：蓝绿色，有六角龟纹 */
+  egg_shield: `
+    <defs>
+      <radialGradient id="eggs_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#a7f3d0"/>
+        <stop offset="55%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#064e3b"/>
+      </radialGradient>
+      <radialGradient id="eggs_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.28)"/>
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggs_bg)"/>
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggs_shine)" opacity=".8"/>
+    <!-- 六角纹 -->
+    <polygon points="50,42 56,46 56,54 50,58 44,54 44,46" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+    <polygon points="50,50 54,52 54,56 50,58 46,56 46,52" fill="rgba(255,255,255,0.12)"/>
+    <polygon points="36,54 40,56 40,62 36,64 32,62 32,56" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <polygon points="64,54 68,56 68,62 64,64 60,62 60,56" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <polygon points="43,68 47,70 47,76 43,78 39,76 39,70" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <polygon points="57,68 61,70 61,76 57,78 53,76 53,70" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+
+  /* 雷系蛋：金黄色，有闪电纹 */
+  egg_thunder: `
+    <defs>
+      <radialGradient id="eggt_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#fef9c3"/>
+        <stop offset="55%" stop-color="#f59e0b"/>
+        <stop offset="100%" stop-color="#78350f"/>
+      </radialGradient>
+      <radialGradient id="eggt_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.6)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+      <filter id="eggt_glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.28)"/>
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggt_bg)"/>
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggt_shine)" opacity=".8"/>
+    <!-- 闪电纹 -->
+    <path d="M54 38 L46 56 L52 56 L44 74" stroke="#fff7ed" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#eggt_glow)" opacity=".9"/>
+    <path d="M54 38 L46 56 L52 56 L44 74" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>
+    <!-- 小闪电装饰 -->
+    <path d="M64 44 L61 51 L64 51 L60 60" stroke="rgba(255,251,235,0.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M36 48 L33 55 L36 55 L32 64" stroke="rgba(255,251,235,0.4)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`,
+
+  /* 通用神秘蛋（未选宠物时主页显示） */
+  egg_mystery: `
+    <defs>
+      <radialGradient id="eggm_bg" cx="42%" cy="38%" r="60%">
+        <stop offset="0%" stop-color="#e9d5ff"/>
+        <stop offset="55%" stop-color="#7c3aed"/>
+        <stop offset="100%" stop-color="#2e1065"/>
+      </radialGradient>
+      <radialGradient id="eggm_shine" cx="38%" cy="30%" r="30%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.6)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+      <filter id="eggm_glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="50" cy="91" rx="22" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 18 C72 18 82 38 82 58 C82 76 68 88 50 88 C32 88 18 76 18 58 C18 38 28 18 50 18Z"
+          fill="url(#eggm_bg)"/>
+    <ellipse cx="42" cy="36" rx="12" ry="16" fill="url(#eggm_shine)" opacity=".85"/>
+    <!-- 星光纹 -->
+    <circle cx="50" cy="55" r="4" fill="#c4b5fd" filter="url(#eggm_glow)" opacity=".9"/>
+    <circle cx="40" cy="62" r="2.5" fill="#a78bfa" filter="url(#eggm_glow)" opacity=".7"/>
+    <circle cx="62" cy="58" r="2" fill="#ddd6fe" opacity=".6"/>
+    <path d="M50 44 L51.2 48.6 L56 48.6 L52.4 51.4 L53.6 56 L50 53.2 L46.4 56 L47.6 51.4 L44 48.6 L48.8 48.6Z"
+          fill="rgba(255,255,255,0.35)" filter="url(#eggm_glow)"/>
+    <!-- ??? 文字 -->
+    <text x="50" y="76" text-anchor="middle" font-size="12" font-weight="bold" fill="rgba(255,255,255,0.4)" font-family="sans-serif">???</text>
+    <path d="M50 26 L52 32 L49 36 L53 42" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>`
+
+};
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WordPet · 英语对战宠物 v1.1.0</title>
+<meta name="description" content="背单词·养宠物·打副本 — 用战斗的方式学英语">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WordPet">
+<meta property="og:title" content="WordPet · 英语对战宠物">
+<meta property="og:description" content="背单词·养宠物·打副本 — 用战斗的方式学英语">
+<meta property="og:type" content="game">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ff-title:'Fredoka One','Noto Sans SC',cursive;
+  --ff-body:'Noto Sans SC',-apple-system,sans-serif;
+  --c-primary:#7c3aed;
+  --c-primary-light:#a78bfa;
+  --c-primary-dark:#5b21b6;
+  --c-accent:#f59e0b;
+  --c-accent2:#10b981;
+  --c-danger:#ef4444;
+  --c-fever:#f97316;
+  --c-gold:#fbbf24;
+  --c-bg:#0f0a1e;
+  --c-text:#f1f0ff;
+  --c-text2:rgba(241,240,255,0.55);
+  --r-card:20px;
+  --r-btn:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:var(--ff-body);
+  background:var(--c-bg);
+  display:flex;justify-content:center;
+  min-height:100vh;
+}
+#app{
+  width:100%;max-width:420px;height:100vh;
+  position:relative;overflow:hidden;
+  background:var(--c-bg);
+}
+#particles-canvas{
+  position:fixed;top:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:420px;height:100vh;
+  pointer-events:none;z-index:0;
+}
+.page{display:none;flex-direction:column;height:100vh;position:relative;z-index:1;overflow:hidden}
+.page.active{display:flex}
+.scroll-area{flex:1;overflow-y:auto;padding-bottom:24px;-webkit-overflow-scrolling:touch}
+.scroll-area::-webkit-scrollbar{display:none}
+.glass{
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:var(--r-card);
+}
+.btn{
+  border:none;cursor:pointer;
+  border-radius:var(--r-btn);
+  font-family:var(--ff-body);
+  font-size:16px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s ease;
+  -webkit-user-select:none;user-select:none;
+  position:relative;overflow:hidden;
+}
+.btn:active{transform:scale(0.96)}
+.btn-primary{
+  background:linear-gradient(135deg,#7c3aed,#9d4edd);
+  color:#fff;padding:15px 24px;width:100%;
+  box-shadow:0 4px 20px rgba(124,58,237,0.45),inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none}
+.btn-gold{
+  background:linear-gradient(135deg,#f59e0b,#ef8c0a);
+  color:#1a0a00;padding:15px 24px;width:100%;
+  box-shadow:0 4px 20px rgba(245,158,11,0.45),inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.btn-danger{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:#fff;padding:15px 24px;width:100%;
+  box-shadow:0 4px 14px rgba(239,68,68,0.4);
+}
+.tab-bar{
+  display:flex;
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(15,10,30,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,0.1);
+  padding:10px 0 max(10px,env(safe-area-inset-bottom));
+  z-index:50;
+}
+.tab-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  font-size:11px;color:rgba(241,240,255,0.45);cursor:pointer;padding:4px 0;
+  transition:all .2s;
+}
+.tab-item.active{color:var(--c-primary-light)}
+.tab-icon{
+  width:28px;height:28px;margin-bottom:3px;
+  transition:transform .2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.tab-icon svg{width:24px;height:24px;transition:all .2s}
+.tab-item .tab-icon svg{stroke:rgba(241,240,255,0.45);fill:none}
+.tab-item.active .tab-icon svg{stroke:var(--c-primary-light)}
+.tab-item.active .tab-icon{transform:scale(1.2) translateY(-2px)}
+/* 激活tab高亮点 */
+.tab-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:var(--c-primary-light);
+  margin-top:2px;
+  opacity:0;transition:opacity .2s;
+}
+.tab-item.active .tab-dot{opacity:1}
+.tab-placeholder{height:72px;flex-shrink:0}
+.bar-wrap{margin:6px 0}
+.bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--c-text2);margin-bottom:4px}
+.bar-bg{height:10px;background:rgba(255,255,255,0.1);border-radius:5px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:5px;transition:width .4s cubic-bezier(.4,0,.2,1);position:relative}
+.bar-fill::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:rgba(255,255,255,0.25);border-radius:5px 5px 0 0;
+}
+.bar-hp{background:linear-gradient(90deg,#10b981,#34d399)}
+.bar-hp.danger{background:linear-gradient(90deg,#ef4444,#f97316)}
+.bar-hp.warning{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.bar-exp{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.bar-stamina{background:linear-gradient(90deg,#0ea5e9,#38bdf8)}
+.top-bar{
+  padding:14px 16px 12px;
+  background:linear-gradient(180deg,rgba(30,15,60,0.98) 0%,rgba(15,10,30,0) 100%);
+  position:sticky;top:0;z-index:20;flex-shrink:0;
+}
+.top-row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.top-level{
+  font-family:var(--ff-title);
+  font-size:16px;color:var(--c-gold);
+  background:rgba(251,191,36,0.12);
+  border:1px solid rgba(251,191,36,0.25);
+  border-radius:20px;padding:3px 12px;
+}
+.top-coins{font-size:14px;font-weight:700;color:var(--c-gold);display:flex;align-items:center;gap:4px}
+.top-vocab{font-size:12px;color:var(--c-text2)}
+.top-actions{display:flex;align-items:center;gap:6px}
+.top-btn{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px;padding:4px 9px;font-size:15px;
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;
+}
+.top-btn:active{transform:scale(0.92);background:rgba(255,255,255,0.15)}
+.dmg-float{
+  position:fixed;font-family:var(--ff-title);
+  font-size:34px;color:#fbbf24;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
+  pointer-events:none;z-index:300;
+  animation:dmgUp .85s ease forwards;
+}
+.dmg-float.heal{color:#4ade80;font-size:22px}
+@keyframes dmgUp{
+  0%{transform:translateY(0) scale(1);opacity:1}
+  80%{opacity:1}
+  100%{transform:translateY(-70px) scale(1.4);opacity:0}
+}
+.levelup-toast{
+  position:fixed;top:18%;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,rgba(124,58,237,0.97),rgba(157,78,237,0.97));
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:20px;padding:14px 30px;
+  font-family:var(--ff-title);font-size:22px;color:#fff;
+  text-align:center;
+  box-shadow:0 8px 30px rgba(124,58,237,0.5);
+  z-index:400;
+  animation:toastIn .4s ease,toastOut .4s 1.8s ease forwards;
+  white-space:nowrap;
+}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(-20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+@keyframes toastOut{to{transform:translateX(-50%) translateY(-20px);opacity:0}}
+.modal-mask{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(5px);
+  z-index:500;
+  align-items:center;justify-content:center;
+}
+.modal-mask.on{display:flex}
+.modal-box{
+  background:rgba(25,16,50,0.98);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:24px;padding:28px 24px;
+  max-width:300px;width:88%;text-align:center;
+  animation:modalIn .22s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes modalIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-ico{font-size:54px;margin-bottom:12px}
+.modal-title{font-family:var(--ff-title);font-size:20px;color:var(--c-text);margin-bottom:8px}
+.modal-desc{font-size:14px;color:var(--c-text2);margin-bottom:22px;line-height:1.6}
+.modal-ok{
+  background:linear-gradient(135deg,#7c3aed,#9d4edd);
+  color:#fff;border:none;border-radius:14px;
+  padding:13px 32px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:var(--ff-body);
+  box-shadow:0 4px 16px rgba(124,58,237,0.4);
+}
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+<div id="app">
+<style>
+/* ══ SELECT PAGE ══ */
+#select-page{
+  background:radial-gradient(ellipse at 50% 0%,#2d1b69 0%,#0f0a1e 70%);
+  overflow-y:auto;overflow-x:hidden;
+}
+.sel-bg{
+  position:absolute;top:0;left:0;right:0;height:280px;
+  background:radial-gradient(ellipse at 50% -10%,rgba(124,58,237,0.5) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+.sel-header{text-align:center;padding:44px 20px 24px;position:relative;z-index:1}
+.sel-logo{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:40px;line-height:1.1;margin-bottom:8px;
+  background:linear-gradient(135deg,#c4b5fd 0%,#f9a8d4 50%,#fbbf24 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 24px rgba(196,181,253,0.5));
+}
+.sel-tagline{font-size:14px;color:rgba(241,240,255,0.55);letter-spacing:.5px}
+.sel-prompt{
+  text-align:center;font-size:13px;font-weight:700;
+  color:#a78bfa;margin:4px 0 20px;
+  letter-spacing:1px;text-transform:uppercase;
+}
+.pet-cards{padding:0 16px;position:relative;z-index:1}
+.pet-card{
+  margin-bottom:14px;cursor:pointer;
+  border-radius:24px;
+  border:2px solid rgba(255,255,255,0.1);
+  background:linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));
+  backdrop-filter:blur(10px);
+  overflow:hidden;
+  transition:all .25s ease;
+  position:relative;
+}
+.pet-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);
+  opacity:0;transition:opacity .25s;border-radius:24px;
+}
+.pet-card:active{transform:scale(0.97)}
+.pet-card.selected{
+  border-color:#a78bfa;
+  box-shadow:0 0 0 1px #7c3aed,0 8px 32px rgba(124,58,237,0.45);
+}
+.pet-card.selected::before{opacity:1}
+.pet-card-inner{display:flex;align-items:stretch}
+.pet-card-art{
+  width:108px;min-height:120px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.pet-art-bg-fire{background:radial-gradient(circle,rgba(239,68,68,0.2),transparent 70%)}
+.pet-art-bg-shield{background:radial-gradient(circle,rgba(16,185,129,0.2),transparent 70%)}
+.pet-art-bg-thunder{background:radial-gradient(circle,rgba(245,158,11,0.2),transparent 70%)}
+.pet-card-svg{width:80px;height:80px}
+.pet-card-info{flex:1;padding:16px 14px 16px 4px}
+.pet-card-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px;color:#f1f0ff;margin-bottom:5px;
+}
+.pet-type-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;font-weight:700;padding:3px 10px;
+  border-radius:20px;margin-bottom:8px;
+}
+.type-atk{background:rgba(239,68,68,0.18);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)}
+.type-def{background:rgba(16,185,129,0.18);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)}
+.type-spd{background:rgba(245,158,11,0.18);color:#fcd34d;border:1px solid rgba(245,158,11,0.3)}
+.pet-card-desc{font-size:12px;color:rgba(241,240,255,0.55);line-height:1.5;margin-bottom:10px}
+.pet-mini-stats{display:flex;gap:14px}
+.pms-item{text-align:center}
+.pms-val{font-family:'Fredoka One','Noto Sans SC',cursive;font-size:15px;color:#f1f0ff}
+.pms-key{font-size:10px;color:rgba(241,240,255,0.45)}
+.sel-bottom{padding:14px 16px 36px;position:relative;z-index:1}
+.sel-chosen{
+  text-align:center;font-size:13px;color:#a78bfa;
+  margin-bottom:10px;min-height:18px;
+}
+</style>
+
+<!-- ══════ PET DEX PAGE ══════ -->
+<div id="select-page" class="page">
+  <div class="dex-bg"></div>
+  <div class="dex-header">
+    <div class="dex-logo">🎒 宠物图鉴</div>
+    <div class="dex-sub">已解锁 <span id="dex-count">0/3</span></div>
+  </div>
+  <div class="dex-grid" id="pet-list"></div>
+  <button class="btn btn-gold" style="margin:12px auto 36px;width:180px" onclick="go('home')">
+    ← 返回主页
+  </button>
+</div>
+<style>
+/* ── DEX PAGE ── */
+#select-page{
+  background:radial-gradient(ellipse at 50% 5%,#1e1b4b 0%,#0f0a1e 70%);
+}
+.dex-bg{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse at 50% 100%, #312e81 0%, transparent 60%);
+  opacity:0.25;pointer-events:none;
+}
+.dex-header{
+  text-align:center;padding:20px 0 12px;
+}
+.dex-logo{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:26px;color:#f1f0ff;margin-bottom:4px;
+}
+.dex-sub{
+  font-size:12px;color:rgba(241,240,255,0.5);
+}
+.dex-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;padding:0 14px;
+}
+.dex-pet-card{
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;padding:10px;cursor:pointer;
+  transition:all .15s;
+  display:flex;flex-direction:column;gap:6px;
+}
+.dex-pet-card:active{transform:scale(0.96)}
+.dex-pet-card.locked{
+  opacity:0.6;cursor:not-allowed;
+}
+.dex-pet-card.current{
+  border-color:#a78bfa;
+  background:rgba(167,139,250,0.12);
+}
+.dex-pet-art{
+  height:80px;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,rgba(0,0,0,0.3),transparent 70%);
+  border-radius:12px;
+}
+.dex-pet-svg{width:56px;height:56px}
+.dex-pet-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:14px;color:#f1f0ff;
+}
+.dex-pet-badge{
+  align-self:flex-start;font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:10px;
+}
+.dex-badge-current{background:#10b981;color:#fff}
+.dex-badge-locked{background:rgba(241,240,255,0.15);color:rgba(241,240,255,0.5)}
+.dex-pet-desc{font-size:11px;color:rgba(241,240,255,0.4);line-height:1.4}
+</style>
+
+<!-- ══════ HOME PAGE ══════ -->
+#home-page{
+  background:radial-gradient(ellipse at 50% -5%,#1e1042 0%,#0f0a1e 60%);
+}
+.home-bg{
+  position:absolute;top:0;left:0;right:0;height:55%;
+  background:
+    radial-gradient(ellipse at 30% 40%,rgba(124,58,237,0.14) 0%,transparent 60%),
+    radial-gradient(ellipse at 70% 25%,rgba(16,185,129,0.09) 0%,transparent 50%);
+  pointer-events:none;
+}
+.pet-stage{
+  display:flex;flex-direction:column;align-items:center;
+  padding:16px 16px 10px;position:relative;
+  flex-shrink:0;
+}
+.pet-aura{
+  position:absolute;top:20px;
+  width:150px;height:150px;border-radius:50%;
+  filter:blur(40px);opacity:0.4;
+  animation:auraPulse 3s ease-in-out infinite;
+}
+.pet-aura-fire{background:radial-gradient(circle,#ef4444,transparent 70%)}
+.pet-aura-shield{background:radial-gradient(circle,#10b981,transparent 70%)}
+.pet-aura-thunder{background:radial-gradient(circle,#f59e0b,transparent 70%)}
+@keyframes auraPulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.18);opacity:.55}}
+.pet-main-wrap{
+  position:relative;z-index:2;cursor:pointer;
+  animation:petFloat 2.5s ease-in-out infinite;
+  transition:filter .15s;
+}
+.pet-main-wrap:active{transform:scale(1.15) translateY(-4px)!important;animation-play-state:paused}
+@keyframes petFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.pet-main-svg{width:118px;height:118px}
+.pet-stage-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:24px;color:#f1f0ff;margin-top:10px;
+  text-shadow:0 0 24px rgba(196,181,253,0.5);
+}
+.pet-stage-sub{font-size:13px;color:rgba(241,240,255,0.5);margin-top:2px}
+.interact-hint{
+  font-size:12px;color:#a78bfa;margin-top:8px;
+  animation:blinkHint 2s ease-in-out infinite;
+}
+@keyframes blinkHint{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ── 精力内联显示（替代进度条） ── */
+.stamina-inline{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 0 2px;
+  font-size:13px;
+}
+.stamina-icon{ font-size:15px; }
+.stamina-label{ color:rgba(255,255,255,0.55);font-size:12px; }
+.stamina-val{ font-weight:700;color:#38bdf8;letter-spacing:0.5px; }
+.stamina-recover-tip{ font-size:11px;color:#f97316;opacity:0.85; }
+
+/* ── 宠物互动特效 ── */
+/* 弹跳 */
+@keyframes petBounce{
+  0%   {transform:scale(1) translateY(0)}
+  25%  {transform:scale(1.22,0.88) translateY(0)}
+  50%  {transform:scale(0.9,1.15) translateY(-18px)}
+  75%  {transform:scale(1.1,0.95) translateY(0)}
+  100% {transform:scale(1) translateY(0)}
+}
+.pet-main-wrap.bounce{ animation:petBounce .45s cubic-bezier(.36,.07,.19,.97) !important; }
+
+/* 受伤抖动（HP 为零时摇晃） */
+@keyframes petShake{
+  0%,100%{transform:translateX(0) rotate(0)}
+  20%    {transform:translateX(-9px) rotate(-6deg)}
+  40%    {transform:translateX(9px) rotate(6deg)}
+  60%    {transform:translateX(-6px) rotate(-3deg)}
+  80%    {transform:translateX(6px) rotate(3deg)}
+}
+.pet-main-wrap.shake-anim{ animation:petShake .4s ease !important; }
+
+/* 表情气泡 */
+.pet-emote{
+  position:absolute;left:50%;top:-18px;transform:translateX(-50%);
+  font-size:22px;pointer-events:none;z-index:10;
+  animation:emoteUp .7s ease forwards;
+}
+@keyframes emoteUp{
+  0%  {transform:translateX(-50%) translateY(0) scale(0.5);opacity:1}
+  60% {transform:translateX(-50%) translateY(-24px) scale(1.2);opacity:1}
+  100%{transform:translateX(-50%) translateY(-40px) scale(0.9);opacity:0}
+}
+
+/* 爱心粒子 */
+.heart-particle{
+  position:fixed;pointer-events:none;z-index:300;
+  font-size:20px;
+  animation:heartFloat 1s ease-out forwards;
+}
+@keyframes heartFloat{
+  0%  {transform:translateY(0) scale(1) rotate(0deg);opacity:1}
+  100%{transform:translateY(-80px) scale(0.5) rotate(20deg);opacity:0}
+}
+
+/* HP 为零时宠物变灰变暗 */
+.pet-main-wrap.fainted{ filter:grayscale(0.7) brightness(0.6); }
+/* HP 恢复中（低于30%）宠物轻微发光闪烁 */
+.pet-main-wrap.low-hp{
+  filter:drop-shadow(0 0 6px rgba(239,68,68,0.6));
+  animation:petFloat 2.5s ease-in-out infinite, lowHpPulse 1.2s ease-in-out infinite !important;
+}
+@keyframes lowHpPulse{0%,100%{filter:drop-shadow(0 0 4px rgba(239,68,68,0.4))}50%{filter:drop-shadow(0 0 10px rgba(239,68,68,0.9))}}
+
+/* HP 满血时宠物光晕更亮 */
+.pet-main-wrap.full-hp{ filter:drop-shadow(0 0 8px rgba(74,222,128,0.5)); }
+.home-stats-card{
+  margin:0 16px 10px;
+  padding:14px 16px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:18px;
+  flex-shrink:0;
+}
+.task-section{padding:0 16px;margin-bottom:10px;flex-shrink:0}
+.task-toggle{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;cursor:pointer;border-radius:16px;
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.12);
+}
+.task-toggle-title{
+  font-size:15px;font-weight:700;color:#f1f0ff;
+  display:flex;align-items:center;gap:6px;
+}
+.task-arrow{transition:transform .2s;color:rgba(241,240,255,0.45);font-size:14px}
+.task-arrow.open{transform:rotate(180deg)}
+.task-body{
+  display:none;
+  border:1px solid rgba(255,255,255,0.1);
+  border-top:none;
+  border-radius:0 0 16px 16px;
+  overflow:hidden;
+  background:rgba(255,255,255,0.04);
+}
+.task-body.open{display:block}
+.task-row{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.task-row:last-child{border-bottom:none}
+.task-icon-bg{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  background:rgba(124,58,237,0.2);
+}
+.task-info{flex:1;min-width:0}
+.task-name{font-size:13px;font-weight:600;color:#f1f0ff}
+.task-desc{font-size:11px;color:rgba(241,240,255,0.5);margin-top:2px}
+.task-done-badge{
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;font-size:11px;font-weight:700;
+  padding:3px 9px;border-radius:10px;flex-shrink:0;
+}
+.task-prog{font-size:12px;font-weight:700;color:#a78bfa;flex-shrink:0}
+</style>
+
+<!-- ══════ HOME PAGE ══════ -->
+<div id="home-page" class="page">
+  <div class="home-bg"></div>
+  <!-- 顶部状态栏 -->
+  <div class="top-bar" style="flex-shrink:0">
+    <div class="top-row1">
+      <span class="top-level" id="h-level">Lv.1</span>
+      <span class="top-vocab" id="h-vocab">词汇量 0</span>
+      <div class="top-actions">
+        <button class="top-btn" onclick="showPetDex()">🎒</button>
+        <button class="top-btn" onclick="showSharePanel()">📤</button>
+      </div>
+    </div>
+    <div class="stamina-inline" id="h-stamina-wrap">
+      <span class="stamina-icon">⚡</span>
+      <span class="stamina-label">精力</span>
+      <span class="stamina-val" id="h-stamina">100/100</span>
+      <span class="stamina-recover-tip" id="h-stamina-tip"></span>
+    </div>
+  </div>
+  <!-- 可滚动内容 -->
+  <div class="scroll-area">
+    <div class="pet-stage">
+      <div class="pet-aura pet-aura-fire" id="pet-aura"></div>
+      <div class="pet-main-wrap" id="pet-main-wrap" onclick="interact()">
+        <svg class="pet-main-svg" id="pet-main-svg" viewBox="0 0 100 100"></svg>
+      </div>
+      <div class="pet-stage-name" id="h-pet-name">宠物名</div>
+      <div class="pet-stage-sub" id="h-pet-type">类型</div>
+      <div class="interact-hint">👆 点击宠物互动 加速HP恢复</div>
+    </div>
+    <div class="home-stats-card">
+      <div class="bar-wrap" style="margin-top:0">
+        <div class="bar-label"><span>❤️ HP</span><span id="h-hp-text">100/100</span></div>
+        <div class="bar-bg"><div class="bar-fill bar-hp" id="h-hp-bar" style="width:100%"></div></div>
+      </div>
+      <div class="bar-wrap" style="margin-bottom:0">
+        <div class="bar-label"><span>⭐ EXP</span><span id="h-exp-text">0/50</span></div>
+        <div class="bar-bg"><div class="bar-fill bar-exp" id="h-exp-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="task-section">
+      <div class="task-toggle" onclick="toggleTasks()">
+        <span class="task-toggle-title">📋 每日任务</span>
+        <span class="task-arrow" id="task-arrow">▼</span>
+      </div>
+      <div class="task-body" id="task-body"></div>
+    </div>
+    <div class="tab-placeholder"></div>
+  </div>
+  <!-- Tab -->
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="tab('home')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <span>宠物</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dungeon')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5C14.5 2.5 16 6 12 8c-4-2-2.5-5.5-2.5-5.5"/><path d="M12 8v3M9.5 13.5l-2-2A9 9 0 0012 21a9 9 0 004.5-9.5l-2 2"/><circle cx="12" cy="14" r="2"/></svg></div>
+      <span>副本</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dex')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="17" cy="16" r="3" fill="none"/><path d="M19.5 18.5l1.5 1.5"/></svg></div>
+      <span>图鉴</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('mine')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>我的</span><div class="tab-dot"></div>
+    </div>
+  </div>
+</div>
+<style>
+/* ══ DUNGEON PAGE ══ */
+#dungeon-page{
+  background:radial-gradient(ellipse at 50% 0%,#0d2340 0%,#0f0a1e 60%);
+}
+.dg-top{
+  padding:22px 16px 14px;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(13,35,64,0.98) 0%,transparent 100%);
+}
+.dg-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:30px;
+  background:linear-gradient(90deg,#60a5fa,#93c5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:4px;
+}
+.dg-sub{font-size:13px;color:rgba(147,197,253,0.65)}
+.dg-cards{padding:8px 16px}
+.dg-card{
+  margin-bottom:16px;cursor:pointer;
+  border-radius:22px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+  transition:all .2s ease;
+  position:relative;background:rgba(255,255,255,0.04);
+}
+.dg-card:active{transform:scale(0.97)}
+.dg-banner{
+  height:130px;position:relative;
+  display:flex;align-items:flex-end;overflow:hidden;
+}
+.dg-banner-grad{
+  position:absolute;inset:0;
+}
+.dg-banner-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(15,10,30,0.92) 0%,rgba(15,10,30,0.15) 100%);
+}
+.dg-banner-emoji{
+  position:absolute;right:18px;top:50%;transform:translateY(-50%);
+  font-size:58px;
+  filter:drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+}
+.dg-banner-title{
+  position:relative;z-index:1;
+  padding:10px 16px;
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px;color:#fff;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
+}
+.dg-body{
+  padding:8px 14px 14px;
+  background:rgba(255,255,255,0.03);
+}
+.dg-desc{font-size:12px;color:rgba(241,240,255,0.5);margin-bottom:8px}
+.dg-tags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dg-tag{
+  font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;
+}
+.dt-blue{background:rgba(96,165,250,0.14);color:#93c5fd;border:1px solid rgba(96,165,250,0.24)}
+.dt-orange{background:rgba(249,115,22,0.14);color:#fdba74;border:1px solid rgba(249,115,22,0.24)}
+.dt-green{background:rgba(16,185,129,0.14);color:#6ee7b7;border:1px solid rgba(16,185,129,0.24)}
+.dt-red{background:rgba(239,68,68,0.14);color:#fca5a5;border:1px solid rgba(239,68,68,0.24)}
+.dg-enter{
+  margin-left:auto;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:#fff;font-size:13px;font-weight:700;
+  padding:7px 16px;border-radius:20px;border:none;cursor:pointer;
+  box-shadow:0 4px 12px rgba(59,130,246,0.4);
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+}
+</style>
+
+<!-- ══════ DUNGEON PAGE ══════ -->
+<div id="dungeon-page" class="page">
+  <div class="dg-top">
+    <div class="dg-title">⚔️ 副本站</div>
+    <div class="dg-sub">选择副本，消耗精力，出发冒险</div>
+  </div>
+  <div class="scroll-area">
+    <!-- 诊所治疗入口（HP < maxHp 且有错题时显示） -->
+    <div id="heal-entry" style="display:none;padding:0 0 12px">
+      <div onclick="enterHeal()" style="
+        background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(52,211,153,0.1));
+        border:1.5px solid rgba(52,211,153,0.35);border-radius:18px;
+        padding:14px 16px;cursor:pointer;
+        display:flex;align-items:center;gap:14px;
+        transition:all .15s;
+      ">
+        <div style="font-size:40px;line-height:1">🏥</div>
+        <div style="flex:1">
+          <div style="font-family:'Fredoka One','Noto Sans SC',cursive;font-size:18px;color:#6ee7b7;margin-bottom:3px">诊所治疗</div>
+          <div id="heal-entry-desc" style="font-size:12px;color:rgba(110,231,183,0.65)">重温错题，恢复宠物HP</div>
+        </div>
+        <div style="font-size:22px;color:rgba(110,231,183,0.5)">›</div>
+      </div>
+    </div>
+    <div class="dg-cards" id="dungeon-list"></div>
+    <div class="tab-placeholder"></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="tab('home')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <span>宠物</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item active" onclick="tab('dungeon')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5C14.5 2.5 16 6 12 8c-4-2-2.5-5.5-2.5-5.5"/><path d="M12 8v3M9.5 13.5l-2-2A9 9 0 0012 21a9 9 0 004.5-9.5l-2 2"/><circle cx="12" cy="14" r="2"/></svg></div>
+      <span>副本</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dex')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="17" cy="16" r="3" fill="none"/><path d="M19.5 18.5l1.5 1.5"/></svg></div>
+      <span>图鉴</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('mine')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>我的</span><div class="tab-dot"></div>
+    </div>
+  </div>
+</div>
+<style>
+/* ══ BATTLE PAGE ══ */
+#battle-page{height:100vh;overflow:hidden}
+.battle-wrap{
+  height:100vh;display:flex;flex-direction:column;
+  padding:8px 14px 10px;
+  background:
+    radial-gradient(ellipse at 50% 15%,rgba(20,40,90,0.7) 0%,transparent 65%),
+    linear-gradient(180deg,#080d1a 0%,#0d1827 40%,#100512 100%);
+  position:relative;overflow:hidden;
+}
+.battle-stars{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(1px 1px at 12% 8%,rgba(255,255,255,0.85),transparent),
+    radial-gradient(1px 1px at 78% 20%,rgba(255,255,255,0.65),transparent),
+    radial-gradient(1.5px 1.5px at 45% 45%,rgba(255,255,255,0.4),transparent),
+    radial-gradient(1px 1px at 62% 6%,rgba(255,255,255,0.75),transparent),
+    radial-gradient(1px 1px at 8% 68%,rgba(255,255,255,0.35),transparent),
+    radial-gradient(1px 1px at 88% 55%,rgba(255,255,255,0.5),transparent),
+    radial-gradient(1px 1px at 35% 80%,rgba(255,255,255,0.3),transparent),
+    radial-gradient(1.5px 1.5px at 92% 15%,rgba(255,255,255,0.6),transparent);
+}
+.battle-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:6px;position:relative;z-index:2;flex-shrink:0;
+}
+.battle-back{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;border-radius:12px;padding:8px 14px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+  transition:all .15s;
+}
+.battle-back:active{transform:scale(0.95)}
+.combo-badge{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:18px;color:#f97316;min-height:28px;
+  text-shadow:0 0 12px rgba(249,115,22,0.8);
+}
+/* 怪物区 */
+/* ══ 宝可梦战场区 ══ */
+.poke-arena{
+  position:relative;z-index:2;flex-shrink:0;
+  height:200px;
+  /* 草地渐变背景 */
+  background:
+    linear-gradient(180deg,
+      rgba(20,40,90,0) 0%,
+      rgba(10,20,50,0.4) 55%,
+      rgba(14,30,14,0.6) 75%,
+      rgba(8,18,8,0.8) 100%);
+  border-radius:20px;
+  overflow:visible;           /* 允许蓄力条/特效超出边界显示 */
+  margin-bottom:8px;
+  /* 用伪元素保留圆角裁剪背景，不影响子元素overflow */
+  isolation:isolate;
+}
+/* 地面椭圆 */
+.arena-ground{
+  position:absolute;bottom:0;left:0;right:0;height:60%;pointer-events:none;
+}
+.arena-ground-enemy{
+  position:absolute;
+  left:10%;top:20%;
+  width:130px;height:28px;
+  background:rgba(255,255,255,0.08);
+  border-radius:50%;
+  filter:blur(4px);
+}
+.arena-ground-player{
+  position:absolute;
+  right:10%;bottom:12%;
+  width:110px;height:26px;
+  background:rgba(255,255,255,0.1);
+  border-radius:50%;
+  filter:blur(3px);
+}
+/* 敌方精灵：右上（宝可梦正面朝向玩家，远处偏右） */
+.enemy-sprite{
+  position:absolute;
+  right:8%;top:4%;
+  width:76px;height:76px;   /* 与SVG一致，使头顶蓄力条定位有正确参照 */
+  animation:mFloat 3s ease-in-out infinite;
+  overflow:visible;          /* 蓄力条超出边界时可见 */
+}
+.enemy-sprite svg{width:76px;height:76px}
+.enemy-sprite.hit{animation:monsterHit .35s ease!important}
+/* 敌方血量 HUD：左上 */
+.enemy-hud{
+  position:absolute;
+  left:4%;top:6%;
+  width:150px;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px;
+  padding:8px 12px;
+}
+/* 己方精灵：左下（近处偏左，背对/侧面朝向）*/
+.player-sprite{
+  position:absolute;
+  left:6%;bottom:6%;
+  animation:pFloat 3.5s ease-in-out infinite .4s;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,0.6));
+}
+.player-sprite svg{width:84px;height:84px;transform:scaleX(-1)}
+@keyframes pFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+/* 己方血量 HUD：右下 */
+.player-hud{
+  position:absolute;
+  right:4%;bottom:6%;
+  width:145px;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:14px;
+  padding:8px 12px;
+}
+/* 共用 HUD 样式 */
+.enemy-hud-name,.player-hud-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:13px;font-weight:700;
+  color:#f1f0ff;margin-bottom:5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.enemy-hud-hp-wrap,.player-hud-hp-wrap{
+  display:flex;align-items:center;gap:5px;margin-bottom:3px;
+}
+.hud-hp-lbl{
+  font-size:9px;font-weight:700;color:rgba(241,240,255,0.5);
+  letter-spacing:.5px;flex-shrink:0;
+}
+.hud-hp-bg{
+  flex:1;height:8px;
+  background:rgba(255,255,255,0.1);
+  border-radius:4px;overflow:hidden;position:relative;
+}
+.hud-hp-bg::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:rgba(255,255,255,0.2);border-radius:4px 4px 0 0;
+}
+.hud-hp-fill{
+  height:100%;border-radius:4px;
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+.enemy-fill{background:linear-gradient(90deg,#ef4444,#f97316)}
+.player-fill{background:linear-gradient(90deg,#10b981,#34d399)}
+.player-fill.danger{background:linear-gradient(90deg,#ef4444,#f97316)}
+.enemy-hud-txt,.player-hud-txt{
+  font-size:10px;color:rgba(241,240,255,0.4);
+}
+/* 怪物蓄力攻击条（悬浮在怪物脚下） */
+.atk-charge-row{
+  position:absolute;
+  top:calc(100% + 4px);      /* 怪物SVG底部下方4px */
+  left:0;right:0;            /* 与怪物等宽 */
+  display:flex;align-items:center;gap:4px;
+  z-index:5;pointer-events:none;
+}
+.atk-charge-icon{
+  font-size:12px;flex-shrink:0;
+  animation:none;transition:transform .1s;
+}
+.atk-charge-icon.shake{animation:atkShake .25s ease}
+@keyframes atkShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px) rotate(-8deg)}75%{transform:translateX(4px) rotate(8deg)}}
+.atk-charge-track{
+  flex:1;height:6px;position:relative;
+  background:rgba(255,255,255,0.15);
+  border-radius:3px;overflow:hidden;
+}
+.atk-charge-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,#4ade80,#22d3ee);
+  transition:width .1s linear;
+}
+.atk-charge-fill.mid{background:linear-gradient(90deg,#fbbf24,#f97316)}
+.atk-charge-fill.danger{background:linear-gradient(90deg,#f97316,#ef4444)}
+.atk-charge-fill.fever{background:linear-gradient(90deg,#f97316,#ef4444,#fbbf24);background-size:200% 100%;animation:feverTimerFlow 0.5s linear infinite}
+.atk-charge-fill.reset{transition:width 0.15s ease-out}
+.atk-charge-label{
+  display:none; /* 小条不显示文字，靠颜色传达紧张感 */
+}
+/* 被攻击时，蓄力条闪烁 */
+.atk-charge-row.hit-flash-bar{animation:chargeBarHit .3s ease}
+@keyframes chargeBarHit{0%,100%{opacity:1}50%{opacity:0.2}}
+
+  /* 答题区 */
+  #normal-panel{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;min-height:0}
+  .q-card{
+    background:rgba(255,255,255,0.07);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.14);
+    border-radius:14px;
+    padding:7px 14px 6px;margin-bottom:6px;
+    text-align:center;flex-shrink:0;
+  }
+  .q-cn{
+    font-family:'Fredoka One','Noto Sans SC',cursive;
+    font-size:26px;color:#fff;
+    text-shadow:0 0 24px rgba(167,139,250,0.6);
+    line-height:1.15;
+  }
+  .q-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px}
+  .opts-grid{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:6px;flex:1;max-height:160px;
+  }
+  .opt-btn{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(8px);
+    border:1.5px solid rgba(255,255,255,0.14);
+    border-radius:12px;padding:6px 6px;
+    font-family:'Noto Sans SC',-apple-system,sans-serif;
+    font-size:14px;font-weight:700;color:#fff;cursor:pointer;
+    transition:all .15s;
+    display:flex;align-items:center;justify-content:center;
+    min-height:44px;
+    position:relative;overflow:hidden;
+  }
+.opt-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.06),transparent);
+}
+.opt-btn:active{transform:scale(0.95)}
+.opt-btn:disabled{cursor:not-allowed}
+.opt-btn.correct{
+  background:rgba(16,185,129,0.25);border-color:#10b981;color:#6ee7b7;
+  animation:optCorrect .3s ease;
+  box-shadow:0 0 18px rgba(16,185,129,0.35);
+}
+@keyframes optCorrect{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+.opt-btn.wrong{
+  background:rgba(239,68,68,0.25);border-color:#ef4444;color:#fca5a5;
+  animation:optWrong .4s ease;
+}
+@keyframes optWrong{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-7px)}40%{transform:translateX(7px)}
+  60%{transform:translateX(-4px)}80%{transform:translateX(4px)}
+}
+
+@keyframes feverBigFlash{
+  0%{opacity:0}15%{opacity:1}100%{opacity:0}
+}
+@keyframes hatchPop{
+  0%{transform:translate(-50%,-50%) scale(.4);opacity:0}
+  40%{transform:translate(-50%,-60%) scale(1.2);opacity:1}
+  100%{transform:translate(-50%,-80%) scale(1);opacity:0}
+}
+@keyframes feverDmgPop{
+  0%{transform:translate(-50%,-50%) scale(.3);opacity:0}
+  35%{transform:translate(-50%,-60%) scale(1.3);opacity:1}
+  70%{transform:translate(-50%,-70%) scale(1.1);opacity:1}
+  100%{transform:translate(-50%,-90%) scale(1);opacity:0}
+}
+@keyframes feverSpark{
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{transform:translate(var(--sx),var(--sy)) scale(.2);opacity:0}
+}
+/* ── 答对闪光蒙层 ── */
+#hit-flash{
+  position:absolute;inset:0;pointer-events:none;z-index:5;
+  border-radius:0;opacity:0;
+}
+#hit-flash.correct-flash{
+  background:radial-gradient(ellipse at 50% 50%,rgba(52,211,153,0.22) 0%,transparent 65%);
+  animation:hitFlash .3s ease forwards;
+}
+#hit-flash.wrong-flash{
+  background:radial-gradient(ellipse at 50% 50%,rgba(239,68,68,0.22) 0%,transparent 65%);
+  animation:hitFlash .35s ease forwards;
+}
+@keyframes hitFlash{
+  0%{opacity:0}20%{opacity:1}100%{opacity:0}
+}
+
+/* ── 怪物受击震动 ── */
+@keyframes monsterHit{
+  0%,100%{transform:translateX(0) translateY(0)}
+  20%{transform:translateX(-8px) translateY(-3px) rotate(-3deg)}
+  40%{transform:translateX(6px) translateY(2px) rotate(2deg)}
+  60%{transform:translateX(-4px) rotate(-1deg)}
+  80%{transform:translateX(3px)}
+}
+
+/* ── 答对连击数字爆字 ── */
+.combo-burst{
+  position:absolute;
+  left:50%;transform:translateX(-50%);
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:26px;font-weight:900;
+  color:#fbbf24;pointer-events:none;z-index:8;
+  text-shadow:0 0 12px rgba(251,191,36,0.8);
+  animation:comboBurst .5s cubic-bezier(.175,.885,.32,1.275) forwards;
+  white-space:nowrap;
+}
+@keyframes comboBurst{
+  0%{transform:translateX(-50%) translateY(0) scale(.6);opacity:0}
+  40%{transform:translateX(-50%) translateY(-16px) scale(1.15);opacity:1}
+  100%{transform:translateX(-50%) translateY(-36px) scale(1);opacity:0}
+}
+
+/* ── 答对粒子环 ── */
+.opt-spark{
+  position:fixed;pointer-events:none;z-index:200;
+  width:8px;height:8px;border-radius:50%;
+  animation:sparkFly .55s ease forwards;
+}
+@keyframes sparkFly{
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(.3)}
+}
+/* FEVER */
+#fever-panel{position:relative;z-index:2;flex:1;display:none;flex-direction:column;min-height:0}
+#fever-panel.on{display:flex}
+.fever-banner{
+  text-align:center;margin-bottom:10px;flex-shrink:0;
+  padding:10px;
+  background:rgba(249,115,22,0.1);
+  border:1px solid rgba(249,115,22,0.2);
+  border-radius:14px;
+}
+.fever-title-txt{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px;
+  background:linear-gradient(90deg,#fbbf24,#f97316,#ef4444);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:feverShine 1s ease-in-out infinite;
+}
+@keyframes feverShine{0%,100%{filter:brightness(1)}50%{filter:brightness(1.45)}}
+.fever-sub-txt{font-size:12px;color:rgba(249,115,22,0.75);margin-top:2px}
+.fever-pairs{display:flex;gap:10px;flex:1;min-height:0}
+.fever-col{flex:1;display:flex;flex-direction:column;gap:8px}
+.fever-col-hd{text-align:center;font-size:11px;font-weight:700;color:rgba(241,240,255,0.5);margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+.fever-item{
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.14);
+  border-radius:13px;padding:10px 6px;
+  text-align:center;font-size:14px;font-weight:700;color:#fff;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  flex:1;min-height:0;
+}
+.fever-item:active{transform:scale(0.95)}
+.fever-item.sel{background:rgba(249,115,22,0.25);border-color:#f97316;color:#fdba74;box-shadow:0 0 12px rgba(249,115,22,0.3)}
+.fever-item.matched{background:rgba(16,185,129,0.25);border-color:#10b981;color:#6ee7b7;animation:optCorrect .15s ease}
+.fever-item.err{animation:optWrong .4s ease}
+.fever-item.gone{opacity:0;pointer-events:none;transition:opacity .2s}
+
+/* ── FEVER 全屏光晕特效 ── */
+#fever-overlay{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  opacity:0;transition:opacity .4s;
+  background:radial-gradient(ellipse at 50% 50%,rgba(249,115,22,0.18) 0%,rgba(239,68,68,0.08) 50%,transparent 75%);
+}
+#fever-overlay.on{opacity:1}
+/* 左右边缘热焰 */
+#fever-overlay::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(249,115,22,0.25) 0%,transparent 18%),
+    linear-gradient(270deg,rgba(239,68,68,0.22) 0%,transparent 18%);
+  animation:feverEdge 1.2s ease-in-out infinite alternate;
+}
+@keyframes feverEdge{
+  0%{opacity:.6}100%{opacity:1}
+}
+/* 屏幕顶部火焰条 */
+#fever-overlay::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,#ef4444,#f97316,#fbbf24,#f97316,#ef4444);
+  background-size:200% 100%;
+  animation:feverTopBar 1s linear infinite;
+  box-shadow:0 0 12px rgba(249,115,22,0.8);
+}
+@keyframes feverTopBar{0%{background-position:0 0}100%{background-position:200% 0}}
+
+/* 战斗背景 FEVER 态 */
+.battle-wrap.fever-mode{
+  background:
+    radial-gradient(ellipse at 50% 15%,rgba(80,30,10,0.85) 0%,transparent 60%),
+    linear-gradient(180deg,#12070a 0%,#1a0a10 40%,#100512 100%) !important;
+  transition:background .6s ease;
+}
+/* FEVER 模式战场高亮 */
+.battle-wrap.fever-mode .poke-arena{
+  box-shadow:0 0 30px rgba(249,115,22,0.2) inset;
+}
+/* FEVER COMBO 爆字 */
+.fever-combo-pop{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:48px;font-weight:900;
+  background:linear-gradient(135deg,#fbbf24,#f97316,#ef4444);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  pointer-events:none;z-index:10;
+  animation:feverComboPop .5s cubic-bezier(.175,.885,.32,1.275) forwards;
+  text-shadow:none;filter:drop-shadow(0 0 20px rgba(249,115,22,0.8));
+  white-space:nowrap;
+}
+@keyframes feverComboPop{
+  0%{transform:translate(-50%,-50%) scale(.4);opacity:0}
+  50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}
+  100%{transform:translate(-50%,-58%) scale(1);opacity:0}
+}
+/* Loading */
+#battle-loading{
+  position:relative;z-index:2;flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+}
+.spin{
+  width:44px;height:44px;
+  border:3px solid rgba(255,255,255,0.1);
+  border-top-color:#a78bfa;border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:14px;color:rgba(241,240,255,0.5)}
+/* 震屏 */
+@keyframes battleShake{
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-6px) rotate(-.5deg)}
+  30%{transform:translateX(6px) rotate(.5deg)}
+  45%{transform:translateX(-4px)}
+  60%{transform:translateX(4px)}
+  75%{transform:translateX(-2px)}
+}
+</style>
+
+<!-- ══════ BATTLE PAGE ══════ -->
+<div id="battle-page" class="page">
+  <div class="battle-wrap" id="battle-wrap">
+    <div class="battle-stars"></div>
+    <div id="fever-overlay"></div>
+    <div id="hit-flash"></div>
+
+    <!-- ── 顶栏：撤退 + combo ── -->
+    <div class="battle-header">
+      <button class="battle-back" onclick="exitBattle()">← 撤退</button>
+      <div class="combo-badge" id="combo-badge"></div>
+      <div style="width:60px"></div>
+    </div>
+
+    <!-- ══ 宝可梦式战场区 ══ -->
+    <div class="poke-arena">
+      <!-- 地面 -->
+      <div class="arena-ground">
+        <div class="arena-ground-enemy"></div>
+        <div class="arena-ground-player"></div>
+      </div>
+
+      <!-- 敌方：左上角 血量卡在右侧 -->
+      <div class="enemy-hud">
+        <div class="enemy-hud-name" id="monster-name">野生怪物</div>
+        <div class="enemy-hud-hp-wrap">
+          <span class="hud-hp-lbl">HP</span>
+          <div class="hud-hp-bg"><div class="hud-hp-fill enemy-fill" id="monster-hp-bar" style="width:100%"></div></div>
+        </div>
+        <div class="enemy-hud-txt" id="monster-hp-txt">150/150</div>
+      </div>
+      <div class="enemy-sprite" id="enemy-sprite">
+        <!-- 怪物头顶蓄力条 -->
+        <div class="atk-charge-row" id="atk-charge-row">
+          <div class="atk-charge-icon" id="atk-charge-icon">⚔️</div>
+          <div class="atk-charge-track">
+            <div class="atk-charge-fill" id="atk-charge-fill" style="width:0%"></div>
+            <div class="atk-charge-label" id="atk-charge-label">蓄力中…</div>
+          </div>
+        </div>
+        <svg id="monster-svg" viewBox="0 0 100 100"></svg>
+      </div>
+
+      <!-- 己方：右下角 血量卡在左侧 -->
+      <div class="player-sprite" id="player-sprite">
+        <svg class="player-mini-svg" id="player-mini-svg" viewBox="0 0 100 100"></svg>
+      </div>
+      <div class="player-hud">
+        <div class="player-hud-name" id="player-name-txt">宠物名</div>
+        <div class="player-hud-hp-wrap">
+          <span class="hud-hp-lbl">HP</span>
+          <div class="hud-hp-bg"><div class="hud-hp-fill player-fill" id="player-hp-fill" style="width:100%"></div></div>
+        </div>
+        <div class="player-hud-txt" id="player-hp-num">100/100</div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="battle-loading">
+      <div class="spin"></div>
+      <div class="load-txt">加载词库中…</div>
+    </div>
+
+    <!-- 普通答题 -->
+    <div id="normal-panel" style="display:none">
+      <div class="q-card">
+        <div class="q-cn" id="q-cn">火</div>
+        <div class="q-sub">选择正确的英文翻译</div>
+      </div>
+      <div class="opts-grid" id="opts-grid">
+        <button class="opt-btn" id="opt0" onclick="selectOption(0)"></button>
+        <button class="opt-btn" id="opt1" onclick="selectOption(1)"></button>
+        <button class="opt-btn" id="opt2" onclick="selectOption(2)"></button>
+        <button class="opt-btn" id="opt3" onclick="selectOption(3)"></button>
+      </div>
+    </div>
+
+    <!-- FEVER -->
+    <div id="fever-panel">
+      <div class="fever-banner">
+        <div class="fever-title-txt" id="fever-title-txt">⚡ FEVER! 快速配对消除!</div>
+        <div class="fever-sub-txt">中英文配对，连续消除！</div>
+      </div>
+      <div class="fever-pairs">
+        <div class="fever-col">
+          <div class="fever-col-hd">中文</div>
+          <div class="fever-item" id="fl0" onclick="selectFeverLeft(0)"></div>
+          <div class="fever-item" id="fl1" onclick="selectFeverLeft(1)"></div>
+          <div class="fever-item" id="fl2" onclick="selectFeverLeft(2)"></div>
+          <div class="fever-item" id="fl3" onclick="selectFeverLeft(3)"></div>
+        </div>
+        <div class="fever-col">
+          <div class="fever-col-hd">英文</div>
+          <div class="fever-item" id="fr0" onclick="selectFeverRight(0)"></div>
+          <div class="fever-item" id="fr1" onclick="selectFeverRight(1)"></div>
+          <div class="fever-item" id="fr2" onclick="selectFeverRight(2)"></div>
+          <div class="fever-item" id="fr3" onclick="selectFeverRight(3)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+/* ══ RESULT PAGE ══ */
+#result-page{
+  flex-direction:column;align-items:center;
+  justify-content:center;min-height:100vh;
+  background:radial-gradient(ellipse at 50% 30%,#1e0a3c 0%,#0f0a1e 70%);
+  padding:32px 20px;overflow-y:auto;
+}
+#result-page.active{display:flex}
+.res-burst{
+  font-size:92px;margin-bottom:16px;
+  animation:resIn .5s cubic-bezier(.175,.885,.32,1.275) both;
+  filter:drop-shadow(0 0 32px rgba(251,191,36,0.5));
+}
+@keyframes resIn{0%{transform:scale(0.2) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+.res-heading{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:46px;margin-bottom:6px;
+  animation:resIn .6s .1s both;
+}
+.res-heading.win{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.res-heading.lose{color:#ef4444}
+.res-sub{font-size:15px;color:rgba(241,240,255,0.55);margin-bottom:24px;animation:resIn .6s .15s both}
+.res-card{
+  width:100%;
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:22px;padding:20px 22px;
+  margin-bottom:22px;
+  animation:resIn .6s .2s both;
+}
+.res-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.res-row:last-child{border-bottom:none}
+.res-lbl{font-size:14px;color:rgba(241,240,255,0.55)}
+.res-val{font-family:'Fredoka One','Noto Sans SC',cursive;font-size:20px;color:#f1f0ff}
+.res-val.gold{color:#fbbf24}
+.res-val.exp{color:#a78bfa}
+.res-btn-wrap{width:100%;animation:resIn .6s .3s both}
+
+/* ══ MINE PAGE ══ */
+#mine-page{
+  background:radial-gradient(ellipse at 50% 0%,#1e0a3c 0%,#0f0a1e 60%);
+}
+.mine-hero{
+  padding:30px 16px 18px;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(25,10,55,0.98) 0%,transparent 100%);
+  text-align:center;position:relative;
+}
+.mine-hero-glow{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,0.28),transparent 70%);
+  pointer-events:none;
+}
+.mine-avatar-wrap{position:relative;display:inline-block;margin-bottom:10px}
+.mine-avatar-ring{
+  position:absolute;inset:-5px;border-radius:50%;
+  background:conic-gradient(#7c3aed,#a78bfa,#fbbf24,#7c3aed);
+  border-radius:50%;
+  z-index:-1;
+  animation:ringRotate 3s linear infinite;
+}
+@keyframes ringRotate{to{transform:rotate(360deg)}}
+.mine-avatar-inner{
+  position:relative;z-index:1;
+  background:rgba(15,10,30,1);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  width:84px;height:84px;
+}
+.mine-avatar-svg{width:70px;height:70px}
+.mine-hero-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:24px;color:#f1f0ff;
+  text-shadow:0 0 16px rgba(167,139,250,0.4);
+}
+.mine-hero-lv{font-size:13px;color:#a78bfa;margin-top:4px}
+.mine-stats-row{display:flex;justify-content:center;margin-top:16px}
+.mine-stat-item{
+  flex:1;text-align:center;padding:0 8px;
+  border-right:1px solid rgba(255,255,255,0.1);
+}
+.mine-stat-item:last-child{border-right:none}
+.mine-stat-val{font-family:'Fredoka One','Noto Sans SC',cursive;font-size:22px;color:#f1f0ff}
+.mine-stat-lbl{font-size:11px;color:rgba(241,240,255,0.5);margin-top:2px}
+.mine-section{padding:0 16px;margin-bottom:6px}
+.mine-sec-title{
+  font-size:12px;font-weight:700;color:rgba(241,240,255,0.45);
+  padding:12px 0 8px;display:flex;align-items:center;gap:6px;
+  text-transform:uppercase;letter-spacing:.8px;
+}
+.achieve-card{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;margin-bottom:8px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+}
+.achieve-locked{opacity:0.3}
+.achieve-ico{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  background:rgba(124,58,237,0.2);
+}
+.achieve-name{font-size:13px;font-weight:700;color:#f1f0ff}
+.achieve-desc{font-size:11px;color:rgba(241,240,255,0.5);margin-top:2px}
+.achieve-status{font-size:18px;margin-left:auto;flex-shrink:0}
+.setting-card{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;margin-bottom:8px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  cursor:pointer;
+}
+.setting-lbl{font-size:14px;font-weight:600;color:#f1f0ff}
+.setting-val{font-size:13px;color:rgba(241,240,255,0.5)}
+
+/* ══ 进化提示横幅 ══ */
+.evo-banner{
+  margin:0 16px 12px;
+  background:linear-gradient(135deg,rgba(167,139,250,0.25),rgba(245,158,11,0.2));
+  border:1px solid rgba(245,158,11,0.4);border-radius:14px;
+  padding:12px 16px;display:flex;align-items:center;gap:10px;
+  cursor:pointer;overflow:hidden;
+  animation:evoPulse 2s ease-in-out infinite;
+}
+@keyframes evoPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)}50%{box-shadow:0 0 16px 4px rgba(245,158,11,0.25)}}
+.evo-banner-ico{font-size:24px;flex-shrink:0}
+.evo-banner-txt{flex:1}
+.evo-banner-txt strong{display:block;font-size:14px;color:#fbbf24}
+.evo-banner-txt span{font-size:12px;color:rgba(241,240,255,0.6)}
+.evo-banner-arrow{font-size:18px;color:#fbbf24}
+
+/* ══ 进化确认面板 ══ */
+.evo-panel-mask{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.evo-panel{
+  background:linear-gradient(160deg,#1a0e3a,#0f0a1e);
+  border:1px solid rgba(167,139,250,0.3);border-radius:24px;
+  padding:28px 24px;width:100%;max-width:380px;text-align:center;
+}
+.evo-panel-title{font-size:22px;font-weight:700;color:#f1f0ff;margin-bottom:6px}
+.evo-panel-sub{font-size:13px;color:rgba(241,240,255,0.5);margin-bottom:24px}
+.evo-compare{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:24px}
+.evo-pet-box{display:flex;flex-direction:column;align-items:center;gap:8px}
+.evo-pet-box svg{width:80px;height:80px}
+.evo-pet-lbl{font-size:12px;color:rgba(241,240,255,0.5)}
+.evo-pet-name{font-size:14px;font-weight:700;color:#f1f0ff}
+.evo-arrow-txt{font-size:28px;color:#fbbf24}
+.evo-stats-diff{background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:20px}
+.evo-stat-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:13px}
+.evo-stat-lbl{color:rgba(241,240,255,0.5)}
+.evo-stat-val{color:#a78bfa;font-weight:700}
+.evo-stat-up{color:#4ade80;font-size:12px;margin-left:6px}
+.evo-btn-row{display:flex;gap:12px}
+.btn-evo-cancel{flex:1;padding:12px;border:1px solid rgba(167,139,250,0.3);background:transparent;color:rgba(241,240,255,0.6);border-radius:12px;font-size:14px;cursor:pointer}
+.btn-evo-go{flex:2;padding:12px;background:linear-gradient(135deg,#7c3aed,#f59e0b);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.5px}
+
+/* ══ 进化过场动画 ══ */
+.evo-anim-layer{
+  position:fixed;inset:0;z-index:600;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#000;
+}
+.evo-anim-pet{width:160px;height:160px;position:relative}
+.evo-anim-pet svg{width:160px;height:160px}
+.evo-anim-glow{
+  position:absolute;inset:-20px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,0.6),transparent 70%);
+  animation:evoGlow 0.5s ease-in-out infinite alternate;
+}
+@keyframes evoGlow{from{opacity:0.5;transform:scale(0.9)}to{opacity:1;transform:scale(1.1)}}
+.evo-anim-flash{position:fixed;inset:0;background:#fff;z-index:700;pointer-events:none;opacity:0}
+.evo-anim-name{
+  font-size:26px;font-weight:900;color:#fff;margin-top:24px;
+  opacity:0;transform:translateY(20px);
+  transition:all 0.5s cubic-bezier(.34,1.56,.64,1);letter-spacing:1px;
+}
+.evo-anim-subtitle{font-size:14px;color:rgba(255,255,255,0.6);margin-top:6px;opacity:0;transition:all 0.4s 0.2s}
+.evo-stat-fly{
+  position:fixed;font-size:15px;font-weight:700;color:#4ade80;
+  pointer-events:none;z-index:710;
+  animation:statFly 1.2s ease-out forwards;
+}
+@keyframes statFly{0%{opacity:0;transform:translateY(0)}20%{opacity:1}100%{opacity:0;transform:translateY(-60px)}}
+
+/* ══ 图鉴页 ══ */
+#dex-page{padding-bottom:100px}
+.dex-header{padding:20px 16px 8px;text-align:center}
+.dex-title{font-size:20px;font-weight:900;color:#f1f0ff;letter-spacing:.5px}
+.dex-sub{font-size:12px;color:rgba(241,240,255,0.45);margin-top:4px}
+.dex-progress-wrap{margin:10px 16px 0}
+.dex-progress-bar{background:rgba(255,255,255,0.08);border-radius:99px;height:6px;overflow:hidden}
+.dex-progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:99px;transition:width .6s}
+.dex-progress-lbl{text-align:center;font-size:11px;color:rgba(241,240,255,0.4);margin-top:5px}
+.dex-section-title{font-size:12px;font-weight:700;color:rgba(241,240,255,0.45);padding:14px 16px 6px;text-transform:uppercase;letter-spacing:1px}
+.dex-pet-card{
+  margin:0 16px 10px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;
+}
+.dex-pet-head{
+  display:flex;align-items:center;padding:14px 16px;gap:12px;cursor:pointer;transition:background .2s;
+}
+.dex-pet-head:active{background:rgba(255,255,255,0.06)}
+.dex-pet-head svg{width:52px;height:52px;flex-shrink:0}
+.dex-pet-head-info{flex:1}
+.dex-pet-head-name{font-size:15px;font-weight:700;color:#f1f0ff}
+.dex-pet-head-type{font-size:11px;margin-top:3px}
+.dex-pet-head-stage{font-size:12px;color:rgba(241,240,255,0.45);margin-top:2px}
+/* ── 图鉴展开详情 ── */
+.dex-detail{display:none;border-top:1px solid rgba(255,255,255,0.07)}
+.dex-detail.open{display:block}
+
+/* 天赋说明条 */
+.dex-trait-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 16px;background:rgba(255,255,255,0.03);
+  font-size:12px;color:rgba(241,240,255,0.65);border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.dex-trait-icon{font-size:18px;flex-shrink:0}
+
+/* 描述文字 */
+.dex-desc-txt{
+  font-size:12px;color:rgba(241,240,255,0.45);
+  padding:10px 16px 4px;line-height:1.6;
+}
+
+/* 进化链区 */
+.dex-evo-chain-wrap{
+  padding:12px 16px;overflow-x:auto;
+  /* 允许横向滚动 */
+  -webkit-overflow-scrolling:touch;
+}
+.dex-evo-chain{
+  display:flex;align-items:flex-start;gap:4px;
+  min-width:max-content;
+}
+.dex-evo-node{
+  display:flex;flex-direction:column;align-items:center;
+  width:80px;gap:4px;flex-shrink:0;cursor:pointer;
+  padding:8px 4px;border-radius:12px;
+  transition:background .15s;
+}
+.dex-evo-node:not(.locked):active{background:rgba(255,255,255,0.07)}
+.dex-evo-node svg{width:64px;height:64px}
+.dex-evo-node.locked svg{opacity:0.18;filter:grayscale(1)}
+.dex-evo-node-name{font-size:11px;font-weight:700;color:#a78bfa;text-align:center;line-height:1.3}
+.dex-evo-node.locked .dex-evo-node-name{color:rgba(241,240,255,0.18)}
+.dex-evo-node-cond{font-size:10px;color:rgba(245,158,11,0.75);text-align:center}
+.dex-evo-sep{font-size:20px;color:rgba(241,240,255,0.2);flex-shrink:0;padding-top:22px;margin:0 2px}
+
+/* 选中形态高亮 */
+.dex-evo-node.selected{
+  background:rgba(167,139,250,0.12);
+  outline:1px solid rgba(167,139,250,0.3);
+}
+
+/* 形态详情卡 */
+.dex-stage-detail{
+  margin:0 16px 14px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;overflow:hidden;
+}
+.dex-stage-head{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.dex-stage-head svg{width:72px;height:72px;flex-shrink:0}
+.dex-stage-head-info{flex:1}
+.dex-stage-name{font-size:16px;font-weight:800;color:#f1f0ff}
+.dex-stage-cond{
+  font-size:11px;margin-top:4px;
+  color:rgba(245,158,11,0.85);
+  background:rgba(245,158,11,0.1);
+  display:inline-block;padding:2px 8px;border-radius:99px;
+}
+.dex-stage-locked-hint{font-size:12px;color:rgba(241,240,255,0.25);margin-top:4px}
+.dex-stage-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  padding:12px 16px;gap:8px;
+}
+.dex-stat-item{
+  display:flex;flex-direction:column;align-items:center;
+  background:rgba(255,255,255,0.04);border-radius:10px;
+  padding:8px 4px;gap:3px;
+}
+.dex-stat-icon{font-size:16px}
+.dex-stat-val{font-size:17px;font-weight:800;color:#a78bfa}
+.dex-stat-val.locked-val{color:rgba(241,240,255,0.2)}
+.dex-stat-lbl{font-size:10px;color:rgba(241,240,255,0.4)}
+/* 进化提升对比条 */
+.dex-stage-diff{
+  padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:6px;
+}
+.dex-diff-chip{
+  font-size:11px;color:#4ade80;
+  background:rgba(74,222,128,0.1);
+  padding:3px 9px;border-radius:99px;
+}
+
+.dex-new-badge{background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:99px;margin-left:6px;vertical-align:middle}
+/* 形态标签：当前/未解锁 */
+.dex-stage-tag{
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;
+  display:inline-block;margin-top:4px;
+}
+.dex-stage-tag.current{background:rgba(74,222,128,0.15);color:#4ade80}
+.dex-stage-tag.locked{background:rgba(255,255,255,0.06);color:rgba(241,240,255,0.25)}
+
+.vip-card{
+  padding:16px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(251,191,36,0.13),rgba(245,158,11,0.07));
+  border:1px solid rgba(251,191,36,0.2);text-align:center;margin-bottom:8px;
+}
+.vip-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;font-size:18px;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.vip-desc{font-size:13px;color:rgba(251,191,36,0.65);margin-top:4px}
+.reset-btn{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:12px;width:100%;
+  font-size:13px;color:rgba(255,255,255,0.25);
+  cursor:pointer;font-family:'Noto Sans SC',-apple-system,sans-serif;
+  margin-top:8px;transition:all .15s;
+}
+</style>
+
+<!-- ══════ HEAL PAGE ══════ -->
+<style>
+/* ── HEAL PAGE ── */
+#heal-page{
+  background:radial-gradient(ellipse at 50% 20%, #0a2a1a 0%, #0a1225 60%, #0f0a1e 100%);
+}
+#heal-page.active{display:flex;flex-direction:column}
+.heal-wrap{
+  height:100vh;display:flex;flex-direction:column;
+  padding:10px 14px 12px;box-sizing:border-box;
+}
+/* 顶部标题栏 */
+.heal-topbar{
+  display:flex;align-items:center;gap:10px;
+  padding-bottom:8px;flex-shrink:0;
+}
+.heal-back-btn{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;padding:6px 12px;color:rgba(255,255,255,0.7);
+  font-size:13px;cursor:pointer;font-family:'Noto Sans SC',-apple-system,sans-serif;
+}
+.heal-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:20px;color:#fff;flex:1;
+  background:linear-gradient(90deg,#34d399,#6ee7b7);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.heal-hp-badge{
+  font-size:13px;color:#6ee7b7;font-weight:700;
+  background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);
+  border-radius:10px;padding:4px 10px;
+}
+/* 战斗演示区（护士 + 宠物） */
+.heal-arena{
+  position:relative;flex-shrink:0;height:180px;
+  background:linear-gradient(180deg,rgba(10,42,26,0) 0%,rgba(10,20,50,0.5) 55%,rgba(8,18,8,0.7) 100%);
+  border-radius:20px;overflow:visible;
+  margin-bottom:10px;
+}
+/* 护士（左侧） */
+.heal-nurse{
+  position:absolute;left:8%;top:10%;
+  font-size:64px;line-height:1;
+  animation:mFloat 3.5s ease-in-out infinite;
+  filter:drop-shadow(0 4px 12px rgba(52,211,153,0.4));
+}
+/* 宠物（右侧，与battle页player-sprite对称） */
+.heal-pet-wrap{
+  position:absolute;right:10%;bottom:12%;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.heal-pet-svg{
+  width:56px;height:56px;
+}
+/* HP 恢复进度条 */
+.heal-hp-row{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(0,0,0,0.25);border-radius:8px;padding:4px 8px;
+}
+.heal-hp-bar-bg{
+  width:80px;height:7px;background:rgba(255,255,255,0.12);border-radius:4px;overflow:hidden;
+}
+.heal-hp-bar-fill{
+  height:100%;background:linear-gradient(90deg,#34d399,#6ee7b7);
+  border-radius:4px;transition:width .5s ease;
+}
+.heal-hp-txt{ font-size:11px;color:#6ee7b7;font-weight:700;min-width:46px;text-align:right;}
+/* 治疗效果提示 */
+.heal-hint{
+  text-align:center;font-size:12px;color:rgba(110,231,183,0.7);
+  flex-shrink:0;margin-bottom:6px;
+}
+/* 答题卡 */
+.heal-q-card{
+  background:rgba(52,211,153,0.07);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(52,211,153,0.18);
+  border-radius:14px;
+  padding:10px 14px 8px;margin-bottom:8px;
+  text-align:center;flex-shrink:0;
+}
+.heal-q-cn{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:26px;color:#fff;
+  text-shadow:0 0 20px rgba(52,211,153,0.5);
+  line-height:1.2;
+}
+.heal-q-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px}
+/* 选项区 */
+.heal-opts-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;flex:1;max-height:160px;
+}
+.heal-opt-btn{
+  background:rgba(52,211,153,0.07);
+  backdrop-filter:blur(8px);
+  border:1.5px solid rgba(52,211,153,0.15);
+  border-radius:12px;padding:6px 6px;
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+  font-size:14px;font-weight:700;color:#fff;cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  min-height:44px;
+  position:relative;overflow:hidden;
+}
+.heal-opt-btn:active{transform:scale(0.95)}
+.heal-opt-btn:disabled{cursor:not-allowed}
+.heal-opt-btn.correct{
+  background:rgba(16,185,129,0.25);border-color:#10b981;color:#6ee7b7;
+  animation:optCorrect .3s ease;
+}
+.heal-opt-btn.wrong{
+  background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#fca5a5;
+  animation:optWrong .4s ease;
+}
+/* HP回复动画 */
+@keyframes healHpFlash{
+  0%{background:rgba(52,211,153,0.3)}
+  100%{background:rgba(52,211,153,0.07)}
+}
+.heal-q-card.heal-flash{ animation:healHpFlash .6s ease; }
+/* 无错题空态 */
+.heal-empty{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  color:rgba(255,255,255,0.4);font-size:14px;
+}
+.heal-empty-ico{font-size:52px;}
+</style>
+<div id="heal-page" class="page">
+  <div class="heal-wrap">
+    <!-- 顶部 -->
+    <div class="heal-topbar">
+      <button class="heal-back-btn" onclick="leaveHeal()">← 返回</button>
+      <div class="heal-title">🏥 诊所治疗</div>
+      <div class="heal-hp-badge" id="heal-hp-badge">❤️ 100/100</div>
+    </div>
+    <!-- 演示区 -->
+    <div class="heal-arena">
+      <div class="heal-nurse" id="heal-nurse">👩‍⚕️</div>
+      <div class="heal-pet-wrap">
+        <svg class="heal-pet-svg" id="heal-pet-svg" viewBox="0 0 100 100"></svg>
+        <div class="heal-hp-row">
+          <div class="heal-hp-bar-bg">
+            <div class="heal-hp-bar-fill" id="heal-hp-bar" style="width:100%"></div>
+          </div>
+          <div class="heal-hp-txt" id="heal-hp-txt">100/100</div>
+        </div>
+      </div>
+    </div>
+    <!-- 提示文字 -->
+    <div class="heal-hint" id="heal-hint">💊 重温错题，每答对一题恢复 <strong>+15 HP</strong></div>
+    <!-- 答题区（切换显示/隐藏） -->
+    <div id="heal-quiz-area" style="display:flex;flex-direction:column;flex:1;min-height:0;">
+      <div class="heal-q-card" id="heal-q-card">
+        <div class="heal-q-cn" id="heal-q-cn">—</div>
+        <div class="heal-q-sub" id="heal-q-sub">选出正确的英文单词</div>
+      </div>
+      <div class="heal-opts-grid" id="heal-opts-grid">
+        <button class="heal-opt-btn" id="hopt0" onclick="selectHealOption(0)"></button>
+        <button class="heal-opt-btn" id="hopt1" onclick="selectHealOption(1)"></button>
+        <button class="heal-opt-btn" id="hopt2" onclick="selectHealOption(2)"></button>
+        <button class="heal-opt-btn" id="hopt3" onclick="selectHealOption(3)"></button>
+      </div>
+    </div>
+    <!-- 无错题空态 -->
+    <div id="heal-empty-area" style="display:none;flex:1">
+      <div class="heal-empty">
+        <div class="heal-empty-ico">🌟</div>
+        <div>你还没有答错的题目！</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.25)">先去战斗，答错的单词会在这里出现</div>
+        <button class="btn btn-gold" style="margin-top:12px" onclick="leaveHeal()">去冒险</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ RESULT PAGE ══════ -->
+<div id="result-page" class="page">
+  <div class="res-burst" id="res-burst">🏆</div>
+  <div class="res-heading" id="res-heading">胜利!</div>
+  <div class="res-sub" id="res-sub">太棒了！继续加油！</div>
+  <div class="res-card">
+    <div class="res-row">
+      <span class="res-lbl">✅ 答对题数</span>
+      <span class="res-val" id="res-correct">0 题</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl">⭐ 获得经验</span>
+      <span class="res-val exp" id="res-exp">+0 EXP</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl">🪙 获得金币</span>
+      <span class="res-val gold" id="res-coins">+0</span>
+    </div>
+    <div class="res-row">
+      <span class="res-lbl">📖 词汇量增加</span>
+      <span class="res-val" id="res-vocab">+0</span>
+    </div>
+  </div>
+  <div class="res-btn-wrap">
+    <button class="btn btn-gold" onclick="backToHome()">🏠 返回主页</button>
+  </div>
+</div>
+
+<!-- ══════ MAP PAGE ══════ -->
+<div id="map-page" class="page">
+  <!-- 顶部状态栏 -->
+  <div class="map-topbar">
+    <button class="map-back-btn" onclick="exitMap()">← 离开</button>
+    <div class="map-dungeon-name" id="map-dungeon-name">🌲 森林冒险</div>
+    <div class="map-hp-wrap">
+      <span class="map-hp-icon">❤️</span>
+      <span class="map-hp-txt" id="map-hp-txt">100</span>
+    </div>
+  </div>
+  <!-- 地图区域：canvas背景 + 精灵层 -->
+  <div class="map-arena" id="map-arena">
+    <canvas id="map-canvas"></canvas>
+    <!-- 精灵层 -->
+    <div class="map-sprites" id="map-sprites">
+      <div class="map-player" id="map-player">🐾</div>
+    </div>
+    <!-- 悬浮提示 -->
+    <div class="map-hint" id="map-hint">摇杆控制移动 · 靠近怪物自动战斗</div>
+  </div>
+  <!-- 虚拟摇杆 -->
+  <div class="map-joystick-wrap" id="map-joystick-wrap">
+    <div class="map-joystick-base" id="map-joystick-base">
+      <div class="map-joystick-knob" id="map-joystick-knob"></div>
+    </div>
+  </div>
+</div>
+<style>
+/* ══ MAP PAGE ══ */
+#map-page{ background:#091508; overflow:hidden; position:relative; }
+#map-page.active{ display:flex; flex-direction:column; }
+
+/* 顶部状态栏 */
+.map-topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 14px 8px;
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  flex-shrink:0; z-index:10; position:relative;
+}
+.map-back-btn{
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff; border-radius:10px; padding:6px 12px;
+  font-size:13px; font-weight:700; cursor:pointer;
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+}
+.map-dungeon-name{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:16px; color:#e2e8f0; letter-spacing:.5px;
+}
+.map-hp-wrap{
+  display:flex; align-items:center; gap:4px;
+  background:rgba(239,68,68,0.15);
+  border:1px solid rgba(239,68,68,0.3);
+  border-radius:10px; padding:4px 10px;
+}
+.map-hp-icon{ font-size:14px; }
+.map-hp-txt{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:15px; color:#fca5a5; font-weight:700;
+}
+
+/* 地图主区域 */
+.map-arena{
+  flex:1; position:relative; overflow:hidden;
+}
+#map-canvas{
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  display:block;
+}
+/* 精灵层 */
+.map-sprites{
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  pointer-events:none;
+}
+/* 玩家精灵 */
+.map-player{
+  position:absolute;
+  font-size:28px; line-height:1;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 8px rgba(167,139,250,0.9));
+  animation:playerBob 1.8s ease-in-out infinite;
+  z-index:5; pointer-events:none;
+  transition:left .06s linear, top .06s linear;
+}
+@keyframes playerBob{
+  0%,100%{ transform:translate(-50%,-50%) scale(1); }
+  50%{ transform:translate(-50%,-60%) scale(1.06); }
+}
+/* 怪物精灵 */
+.map-monster{
+  position:absolute;
+  font-size:26px; line-height:1;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 2px 8px rgba(239,68,68,0.6));
+  animation:monFloat 2.2s ease-in-out infinite;
+  z-index:4; pointer-events:none;
+  transition:left .12s linear, top .12s linear;
+}
+@keyframes monFloat{
+  0%,100%{ transform:translate(-50%,-50%) scale(1); }
+  50%{ transform:translate(-50%,-60%) scale(1.08); }
+}
+
+/* 悬浮提示 */
+.map-hint{
+  position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+  font-size:11px; color:rgba(255,255,255,0.22);
+  background:rgba(0,0,0,0.28); backdrop-filter:blur(4px);
+  padding:3px 12px; border-radius:20px;
+  pointer-events:none; z-index:6; white-space:nowrap;
+}
+
+/* 虚拟摇杆区域 */
+.map-joystick-wrap{
+  flex-shrink:0;
+  height:130px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(8px);
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.map-joystick-base{
+  width:90px; height:90px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  border:2px solid rgba(255,255,255,0.12);
+  position:relative;
+  touch-action:none; user-select:none;
+}
+.map-joystick-knob{
+  width:40px; height:40px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, rgba(167,139,250,0.9), rgba(109,40,217,0.8));
+  border:2px solid rgba(167,139,250,0.5);
+  box-shadow:0 2px 12px rgba(124,58,237,0.5);
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  transition:transform .05s;
+  pointer-events:none;
+}
+
+/* 遭遇战斗过场动画遮罩 */
+.encounter-overlay{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  z-index:200; pointer-events:none;
+  transition:background .25s;
+}
+.encounter-overlay.on{
+  background:rgba(0,0,0,0.85);
+  pointer-events:all;
+}
+.encounter-mon{
+  font-size:72px;
+  opacity:0; transform:scale(.4);
+  transition:all .3s cubic-bezier(.175,.885,.32,1.275);
+  filter:drop-shadow(0 0 30px rgba(239,68,68,0.7));
+}
+.encounter-overlay.on .encounter-mon{
+  opacity:1; transform:scale(1.1);
+}
+.encounter-txt{
+  margin-top:14px;
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:22px; color:#fca5a5;
+  opacity:0; transform:translateY(10px);
+  transition:all .3s .15s;
+}
+.encounter-overlay.on .encounter-txt{
+  opacity:1; transform:translateY(0);
+}
+
+/* 战斗结算小弹窗（地图内） */
+.map-result-toast{
+  position:fixed; left:50%; top:50%;
+  transform:translate(-50%,-50%) scale(.5);
+  background:rgba(15,25,50,0.96);
+  border:1px solid rgba(255,255,255,0.15);
+  backdrop-filter:blur(20px);
+  border-radius:22px; padding:24px 28px;
+  text-align:center; z-index:150;
+  opacity:0; transition:all .3s cubic-bezier(.175,.885,.32,1.275);
+  min-width:220px;
+  pointer-events:none;
+}
+.map-result-toast.show{
+  opacity:1; transform:translate(-50%,-50%) scale(1);
+  pointer-events:all;
+}
+.map-rt-emoji{ font-size:52px; margin-bottom:8px; }
+.map-rt-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:24px; color:#fff; margin-bottom:6px;
+}
+.map-rt-title.win{ color:#fbbf24; }
+.map-rt-title.lose{ color:#f87171; }
+.map-rt-stats{ font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:16px; line-height:1.8; }
+.map-rt-stats span{ color:#a78bfa; font-weight:700; }
+.map-rt-btn{
+  background:linear-gradient(135deg,#7c3aed,#6d28d9);
+  border:none; border-radius:14px; color:#fff;
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:16px; padding:12px 28px; cursor:pointer;
+  width:100%;
+}
+
+/* 怪物刷新提示 */
+.mon-spawn-pop{
+  position:fixed; left:50%; top:20%;
+  transform:translateX(-50%);
+  background:rgba(239,68,68,0.2);
+  border:1px solid rgba(239,68,68,0.4);
+  border-radius:20px; padding:6px 16px;
+  font-size:13px; color:#fca5a5;
+  font-family:'Noto Sans SC',sans-serif;
+  z-index:100; pointer-events:none;
+  animation:spawnPop .4s ease both, spawnFade 1.5s 1s forwards;
+}
+@keyframes spawnPop{0%{transform:translateX(-50%) scale(.7);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
+@keyframes spawnFade{0%{opacity:1}100%{opacity:0}}
+</style>
+
+<!-- ══════ MINE PAGE ══════ -->
+<div id="mine-page" class="page">
+  <div class="mine-hero">
+    <div class="mine-hero-glow"></div>
+    <div class="mine-avatar-wrap">
+      <div class="mine-avatar-ring"></div>
+      <div class="mine-avatar-inner">
+        <svg class="mine-avatar-svg" id="mine-avatar-svg" viewBox="0 0 100 100"></svg>
+      </div>
+    </div>
+    <div class="mine-hero-name" id="mine-hero-name">冒险者</div>
+    <div class="mine-hero-lv" id="mine-hero-lv">Lv.1 · 攻击型</div>
+    <div class="mine-stats-row">
+      <div class="mine-stat-item"><div class="mine-stat-val" id="m-coins">0</div><div class="mine-stat-lbl">金币</div></div>
+      <div class="mine-stat-item"><div class="mine-stat-val" id="m-vocab">0</div><div class="mine-stat-lbl">词汇量</div></div>
+      <div class="mine-stat-item"><div class="mine-stat-val" id="m-stamina">100</div><div class="mine-stat-lbl">精力</div></div>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <div class="mine-section">
+      <div class="mine-sec-title">🏆 成就</div>
+      <div id="achieve-list"></div>
+    </div>
+    <div class="mine-section">
+      <div class="mine-sec-title">💎 会员与权益</div>
+      <div class="vip-card">
+        <div class="vip-title">👑 高级会员</div>
+        <div class="vip-desc">解锁专属宠物皮肤 · 即将上线</div>
+      </div>
+    </div>
+    <div class="mine-section">
+      <div class="mine-sec-title">⚙️ 设置</div>
+      <div class="setting-card" onclick="showNicknameModal()">
+        <span class="setting-lbl">👤 昵称</span>
+        <span class="setting-val" id="nickname-val">训练家</span>
+      </div>
+      <div class="setting-card" onclick="toggleSound()">
+        <span class="setting-lbl">🔊 游戏音效</span>
+        <span class="setting-val" id="sound-val">开启</span>
+      </div>
+      <div class="setting-card">
+        <span class="setting-lbl">🌐 语言</span>
+        <span class="setting-val">中文</span>
+      </div>
+      <div class="setting-card" onclick="showAbout()">
+        <span class="setting-lbl">ℹ️ 关于 WordPet</span>
+        <span class="setting-val">v1.1.0</span>
+      </div>
+      <button class="reset-btn" onclick="confirmReset()">🗑️ 重置存档</button>
+    </div>
+    <div class="tab-placeholder"></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="tab('home')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <span>宠物</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dungeon')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5C14.5 2.5 16 6 12 8c-4-2-2.5-5.5-2.5-5.5"/><path d="M12 8v3M9.5 13.5l-2-2A9 9 0 0012 21a9 9 0 004.5-9.5l-2 2"/><circle cx="12" cy="14" r="2"/></svg></div>
+      <span>副本</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dex')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="17" cy="16" r="3" fill="none"/><path d="M19.5 18.5l1.5 1.5"/></svg></div>
+      <span>图鉴</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item active" onclick="tab('mine')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>我的</span><div class="tab-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ DEX PAGE ══════ -->
+<div id="dex-page" class="page">
+  <div class="scroll-area">
+    <div class="dex-header">
+      <div class="dex-title">📖 宠物图鉴</div>
+      <div class="dex-sub">收集所有宠物形态，解锁完整图鉴</div>
+    </div>
+    <div class="dex-progress-wrap">
+      <div class="dex-progress-bar"><div class="dex-progress-fill" id="dex-progress-fill" style="width:0%"></div></div>
+      <div class="dex-progress-lbl" id="dex-progress-lbl">0 / 9 形态已解锁</div>
+    </div>
+    <div class="dex-section-title">🐾 宠物进化链</div>
+    <div id="dex-pet-list"></div>
+    <div class="tab-placeholder"></div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item" onclick="tab('home')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <span>宠物</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('dungeon')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2.5C14.5 2.5 16 6 12 8c-4-2-2.5-5.5-2.5-5.5"/><path d="M12 8v3M9.5 13.5l-2-2A9 9 0 0012 21a9 9 0 004.5-9.5l-2 2"/><circle cx="12" cy="14" r="2"/></svg></div>
+      <span>副本</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item active" onclick="tab('dex')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/><circle cx="17" cy="16" r="3" fill="none"/><path d="M19.5 18.5l1.5 1.5"/></svg></div>
+      <span>图鉴</span><div class="tab-dot"></div>
+    </div>
+    <div class="tab-item" onclick="tab('mine')">
+      <div class="tab-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      <span>我的</span><div class="tab-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL ══════ -->
+<div class="modal-mask" id="modal">
+  <div class="modal-box">
+    <div class="modal-ico" id="modal-ico">⚠️</div>
+    <div class="modal-title" id="modal-title">提示</div>
+    <div class="modal-desc" id="modal-desc">内容</div>
+    <button class="modal-ok" onclick="closeModal()">确定</button>
+  </div>
+</div>
+<!-- 宠物 SVG 素材库（独立文件，gradient ID 唯一，方便美术替换） -->
+<script src="assets/pets.js"></script>
+<script>
+/* ══════════════════════════════════════════════════
+   SVG 宠物 / 怪物 插画库
+══════════════════════════════════════════════════ */
+// SVG_PETS 已移至 assets/pets.js（避免 gradient ID 冲突）
+
+const SVG_MONSTERS = {
+  slime: `
+    <defs><radialGradient id="slg" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#86efac"/><stop offset="100%" stop-color="#16a34a"/></radialGradient></defs>
+    <ellipse cx="50" cy="74" rx="28" ry="8" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 78 C22 78 15 60 15 50 C15 36 28 22 50 20 C72 22 85 36 85 50 C85 60 78 78 50 78Z" fill="url(#slg)"/>
+    <ellipse cx="38" cy="48" rx="7" ry="8" fill="#14532d"/>
+    <ellipse cx="62" cy="48" rx="7" ry="8" fill="#14532d"/>
+    <ellipse cx="39.5" cy="47" rx="3" ry="3.5" fill="#fff" opacity=".9"/>
+    <ellipse cx="63.5" cy="47" rx="3" ry="3.5" fill="#fff" opacity=".9"/>
+    <path d="M42 62 Q50 70 58 62" stroke="#14532d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M38 22 Q32 14 26 20" fill="#4ade80" stroke="none"/><path d="M50 18 Q50 10 54 14" fill="#4ade80"/><path d="M62 22 Q68 14 74 20" fill="#4ade80"/>`,
+
+  goblin: `
+    <defs><radialGradient id="gg" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#a8a29e"/><stop offset="100%" stop-color="#44403c"/></radialGradient></defs>
+    <ellipse cx="50" cy="78" rx="22" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <rect x="34" y="45" width="32" height="30" rx="6" fill="#57534e"/>
+    <ellipse cx="50" cy="42" rx="20" ry="22" fill="url(#gg)"/>
+    <polygon points="32,28 26,14 38,24" fill="#78716c"/>
+    <polygon points="68,28 74,14 62,24" fill="#78716c"/>
+    <ellipse cx="41" cy="40" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="59" cy="40" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="42" cy="39" rx="2.5" ry="3" fill="#ef4444" opacity=".9"/>
+    <ellipse cx="60" cy="39" rx="2.5" ry="3" fill="#ef4444" opacity=".9"/>
+    <path d="M44 55 Q50 60 56 55" stroke="#1c1917" stroke-width="2" fill="none"/>
+    <rect x="22" y="48" width="10" height="4" rx="2" fill="#a8a29e"/>
+    <rect x="68" y="48" width="10" height="4" rx="2" fill="#a8a29e"/>`,
+
+  dragon: `
+    <defs><radialGradient id="dg" cx="50%" cy="35%" r="60%"><stop offset="0%" stop-color="#fca5a5"/><stop offset="60%" stop-color="#ef4444"/><stop offset="100%" stop-color="#7f1d1d"/></radialGradient></defs>
+    <ellipse cx="50" cy="78" rx="24" ry="7" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 80 C28 80 16 64 16 50 C16 34 28 16 50 12 C72 16 84 34 84 50 C84 64 72 80 50 80Z" fill="url(#dg)"/>
+    <path d="M28 28 L18 10 L36 24Z" fill="#fca5a5" opacity=".8"/>
+    <path d="M72 28 L82 10 L64 24Z" fill="#fca5a5" opacity=".8"/>
+    <path d="M28 35 L14 18 L32 30Z" fill="#fca5a5" opacity=".6"/>
+    <path d="M72 35 L86 18 L68 30Z" fill="#fca5a5" opacity=".6"/>
+    <ellipse cx="38" cy="48" rx="8" ry="9" fill="#7f1d1d"/>
+    <ellipse cx="62" cy="48" rx="8" ry="9" fill="#7f1d1d"/>
+    <ellipse cx="39.5" cy="47" rx="3.5" ry="4" fill="#fbbf24"/>
+    <ellipse cx="63.5" cy="47" rx="3.5" ry="4" fill="#fbbf24"/>
+    <path d="M43 64 Q50 72 57 64" stroke="#7f1d1d" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M43 64 L40 70 M53 68 L52 74 M57 64 L60 70" stroke="#7f1d1d" stroke-width="2" fill="none"/>`
+};
+
+/* ══════════════════════════════════════════════════
+   宠物 & 副本配置
+══════════════════════════════════════════════════ */
+const PET_CONFIGS = [
+  {
+    key:'fire', name:'小火球', type:'攻击型', typeClass:'type-atk',
+    desc:'焰心之子，高爆发输出。连击加成翻倍，适合速战速决。',
+    unlockLv:0,     // 初始即可解锁
+    maxHp:80, atk:15, def:5,
+    auraClass:'pet-aura-fire', artBgClass:'pet-art-bg-fire',
+    trait:'🔥 暴击天赋：答对时 20% 概率造成 1.5× 伤害',
+    evo:[
+      { stage:0, name:'小火球',   key:'fire',   lv:1,  maxHp:80,  atk:15, def:5,  condLv:0  },
+      { stage:1, name:'烈焰狐妖', key:'fire2',  lv:15, maxHp:115, atk:22, def:8,  condLv:15 },
+      { stage:2, name:'焰龙王',   key:'fire3',  lv:30, maxHp:160, atk:32, def:12, condLv:30 },
+    ]
+  },
+  {
+    key:'shield', name:'护盾龟', type:'防御型', typeClass:'type-def',
+    desc:'铁壁守护者，超高容错率。HP上限最高，适合稳扎稳打。',
+    unlockLv:0,     // 初始即可解锁
+    maxHp:130, atk:8, def:15,
+    auraClass:'pet-aura-shield', artBgClass:'pet-art-bg-shield',
+    trait:'💧 铁壁天赋：答错受到的HP惩罚减少 30%',
+    evo:[
+      { stage:0, name:'护盾龟',   key:'shield',  lv:1,  maxHp:130, atk:8,  def:15, condLv:0  },
+      { stage:1, name:'重甲古龟', key:'shield2', lv:15, maxHp:195, atk:12, def:24, condLv:15 },
+      { stage:2, name:'神盾玄武', key:'shield3', lv:30, maxHp:280, atk:18, def:36, condLv:30 },
+    ]
+  },
+  {
+    key:'thunder', name:'闪电狐', type:'速度型', typeClass:'type-spd',
+    desc:'雷鸣九天，极速斩击。FEVER触发更快，爆发力十足。',
+    unlockLv:0,     // 初始即可解锁
+    maxHp:100, atk:12, def:8,
+    auraClass:'pet-aura-thunder', artBgClass:'pet-art-bg-thunder',
+    trait:'⚡ 迅捷天赋：怪物攻击间隔额外延长 1 秒，让你有更充裕的时间作答',
+    evo:[
+      { stage:0, name:'闪电狐',   key:'thunder',  lv:1,  maxHp:100, atk:12, def:8,  condLv:0  },
+      { stage:1, name:'雷霆九尾', key:'thunder2', lv:15, maxHp:145, atk:18, def:13, condLv:15 },
+      { stage:2, name:'雷神天狐', key:'thunder3', lv:30, maxHp:200, atk:26, def:20, condLv:30 },
+    ]
+  }
+];
+
+const MONSTER_CONFIGS = [
+  { key:'slime',  name:'野生史莱姆', hp:150, atk:10, def:3,  atkInterval:3   },
+  { key:'goblin', name:'岩石哥布林', hp:180, atk:16, def:6,  atkInterval:2.5 },
+  { key:'dragon', name:'熔岩巨龙',   hp:220, atk:28, def:12, atkInterval:2   }
+];
+
+const DUNGEON_CONFIGS = [
+  {
+    id:'forest', name:'森林冒险', desc:'新手友好关卡，Lv.1~10',
+    grad:'linear-gradient(135deg,#14532d,#166534,#16a34a)',
+    emoji:'🌲', tags:['新手', '⚡×10', 'Lv.1~10'], tagClasses:['dt-green','dt-orange','dt-blue'],
+    staminaCost:10, monster:0
+  },
+  {
+    id:'cave', name:'洞穴探险', desc:'中等难度地下迷宫，Lv.5~20',
+    grad:'linear-gradient(135deg,#1c1917,#292524,#44403c)',
+    emoji:'⛰️', tags:['中等', '⚡×10', 'Lv.5~20'], tagClasses:['dt-blue','dt-orange','dt-blue'],
+    staminaCost:10, monster:1
+  },
+  {
+    id:'volcano', name:'火山试炼', desc:'极限高难度挑战，Lv.15+',
+    grad:'linear-gradient(135deg,#7f1d1d,#991b1b,#b91c1c)',
+    emoji:'🌋', tags:['高难', '⚡×10', 'Lv.15+'], tagClasses:['dt-red','dt-orange','dt-red'],
+    staminaCost:10, monster:2
+  }
+];
+
+const DAILY_TASKS = [
+  { id:'battle',   icon:'⚔️', name:'击败怪物',  desc:'击败 3 只怪物',    reward:'🪙×30', target:3 },
+  { id:'correct',  icon:'✅', name:'答对题目',  desc:'答对 10 道英语题',  reward:'⭐×20', target:10 },
+  { id:'interact', icon:'🤝', name:'宠物互动',  desc:'与宠物互动 3 次',   reward:'🪙×10', target:3 },
+  { id:'levelup',  icon:'⬆️', name:'宠物升级',  desc:'宠物升一级',        reward:'🪙×50', target:1 }
+];
+
+const ACHIEVE_LIST = [
+  { icon:'🥇', name:'初次出发',  desc:'领养了第一只宠物',    unlock: p => p.petIndex >= 0 },
+  { icon:'⚔️', name:'初战告捷',  desc:'首次战斗胜利',        unlock: p => p.coins > 0 },
+  { icon:'📖', name:'词汇入门',  desc:'累计词汇量达 10',     unlock: p => p.vocab >= 10 },
+  { icon:'🔥', name:'连击狂人',  desc:'触发 FEVER 模式',     unlock: p => p.feverTriggered },
+  { icon:'🏆', name:'词汇大师',  desc:'累计词汇量达 100',    unlock: p => p.vocab >= 100 }
+];
+
+/* ══════════════════════════════════════════════════
+   词库
+══════════════════════════════════════════════════ */
+const WORDBANK = {
+  "1":{ words:[
+    {cn:"火",en:"Fire"},{cn:"水",en:"Water"},{cn:"草",en:"Grass"},{cn:"电",en:"Electric"},
+    {cn:"冰",en:"Ice"},{cn:"风",en:"Wind"},{cn:"土",en:"Earth"},{cn:"石",en:"Stone"},
+    {cn:"攻击",en:"Attack"},{cn:"防御",en:"Defend"},{cn:"治疗",en:"Heal"},{cn:"跑",en:"Run"},
+    {cn:"跳",en:"Jump"},{cn:"走",en:"Walk"},{cn:"吃",en:"Eat"},{cn:"喝",en:"Drink"},
+    {cn:"睡",en:"Sleep"},{cn:"看",en:"Look"},{cn:"大",en:"Big"},{cn:"小",en:"Small"},
+    {cn:"快",en:"Fast"},{cn:"慢",en:"Slow"},{cn:"好",en:"Good"},{cn:"坏",en:"Bad"},
+    {cn:"热",en:"Hot"},{cn:"冷",en:"Cold"},{cn:"红",en:"Red"},{cn:"蓝",en:"Blue"},
+    {cn:"绿",en:"Green"},{cn:"黄",en:"Yellow"},{cn:"狗",en:"Dog"},{cn:"猫",en:"Cat"},
+    {cn:"鸟",en:"Bird"},{cn:"鱼",en:"Fish"},{cn:"苹果",en:"Apple"},{cn:"香蕉",en:"Banana"},
+    {cn:"爸爸",en:"Father"},{cn:"妈妈",en:"Mother"},{cn:"哥哥",en:"Brother"},{cn:"姐姐",en:"Sister"}
+  ]},
+  "2":{ words:[
+    {cn:"力量",en:"Power"},{cn:"速度",en:"Speed"},{cn:"雷电",en:"Thunder"},{cn:"火焰",en:"Flame"},
+    {cn:"急冻",en:"Freeze"},{cn:"风暴",en:"Storm"},{cn:"治愈",en:"Cure"},{cn:"保护",en:"Protect"},
+    {cn:"猛击",en:"Smash"},{cn:"冲撞",en:"Crash"},{cn:"学习",en:"Learn"},{cn:"学校",en:"School"},
+    {cn:"朋友",en:"Friend"},{cn:"家庭",en:"Family"},{cn:"城市",en:"City"},{cn:"医生",en:"Doctor"},
+    {cn:"老师",en:"Teacher"},{cn:"学生",en:"Student"},{cn:"时间",en:"Time"},{cn:"今天",en:"Today"},
+    {cn:"明天",en:"Tomorrow"},{cn:"昨天",en:"Yesterday"},{cn:"非常",en:"Very"},{cn:"真的",en:"Really"},
+    {cn:"也许",en:"Maybe"},{cn:"必须",en:"Must"},{cn:"希望",en:"Hope"},{cn:"帮助",en:"Help"},
+    {cn:"太阳",en:"Sun"},{cn:"月亮",en:"Moon"},{cn:"星星",en:"Star"},{cn:"森林",en:"Forest"},
+    {cn:"沙漠",en:"Desert"},{cn:"天空",en:"Sky"},{cn:"海",en:"Sea"},{cn:"山",en:"Mountain"}
+  ]},
+  "3":{ words:[
+    {cn:"爆炸",en:"Explosion"},{cn:"毁灭",en:"Destruction"},{cn:"冲刺",en:"Sprint"},
+    {cn:"屏障",en:"Barrier"},{cn:"幻影",en:"Phantom"},{cn:"地震",en:"Earthquake"},
+    {cn:"火山",en:"Volcano"},{cn:"极光",en:"Aurora"},{cn:"流星",en:"Meteor"},
+    {cn:"决定",en:"Decide"},{cn:"理解",en:"Understand"},{cn:"记得",en:"Remember"},
+    {cn:"发现",en:"Discover"},{cn:"创造",en:"Create"},{cn:"改变",en:"Change"},
+    {cn:"成功",en:"Success"},{cn:"努力",en:"Effort"},{cn:"目标",en:"Goal"},
+    {cn:"选择",en:"Choice"},{cn:"勇气",en:"Courage"},{cn:"智慧",en:"Wisdom"},
+    {cn:"知识",en:"Knowledge"},{cn:"技能",en:"Skill"},{cn:"能力",en:"Ability"}
+  ]},
+  "4":{ words:[
+    {cn:"系统",en:"System"},{cn:"过程",en:"Process"},{cn:"方法",en:"Method"},
+    {cn:"原则",en:"Principle"},{cn:"分析",en:"Analysis"},{cn:"研究",en:"Research"},
+    {cn:"影响",en:"Influence"},{cn:"效果",en:"Effect"},{cn:"证据",en:"Evidence"},
+    {cn:"观点",en:"Perspective"},{cn:"技术",en:"Technology"},{cn:"信息",en:"Information"},
+    {cn:"网络",en:"Network"},{cn:"合作",en:"Cooperation"},{cn:"竞争",en:"Competition"},
+    {cn:"战略",en:"Strategy"},{cn:"质量",en:"Quality"},{cn:"效率",en:"Efficiency"},
+    {cn:"安全",en:"Security"},{cn:"挑战",en:"Challenge"},{cn:"机会",en:"Opportunity"}
+  ]}
+};
+
+/* ══════════════════════════════════════════════════
+   全局状态
+══════════════════════════════════════════════════ */
+const DEFAULT = {
+  petIndex:-1, petKey:'fire', petName:'', petType:'',
+  nickname:'训练家',      // 玩家昵称
+  level:1, exp:0, vocab:0, hp:100, maxHp:100,
+  coins:0, stamina:100, maxStamina:100,
+  evoStage:0,
+  feverTriggered:false,
+  hpRegenStart:0,   // 失败后HP开始恢复的时间戳（0=不需要恢复）
+  wrongWords:[],    // 答错过的单词列表（用于治疗复习）
+  settings:{ sound:true }
+};
+let gd = JSON.parse(JSON.stringify(DEFAULT));
+let tasks = [];
+let _hpRegenTimer = null; // HP 实时恢复计时器句柄
+
+/* HP 恢复速率（每秒恢复多少点）：目前固定值，后续可关联宠物属性 */
+function getHpRegenRate(){ return 1; } // 每秒 1 HP
+
+function saveGame(){ try{ localStorage.setItem('wg2_save', JSON.stringify({gd,tasks,lastSave:Date.now()})); }catch(e){} }
+function loadGame(){
+  try{
+    const r = localStorage.getItem('wg2_save');
+    if(r){
+      const d=JSON.parse(r);
+      if(d.gd)Object.assign(gd,d.gd);
+      if(d.tasks)tasks=d.tasks;
+      // 精力离线自动恢复：每5分钟恢复1点，最多恢复到满
+      if(d.lastSave && gd.stamina < gd.maxStamina){
+        const minsAway = Math.floor((Date.now()-d.lastSave)/60000);
+        const recovered = Math.min(Math.floor(minsAway/5), gd.maxStamina-gd.stamina);
+        if(recovered>0) gd.stamina=Math.min(gd.stamina+recovered, gd.maxStamina);
+      }
+      // HP 离线自动恢复：根据 hpRegenStart 计算离线期间恢复量
+      if(gd.hpRegenStart > 0 && gd.hp < gd.maxHp){
+        const secsAway = Math.floor((Date.now() - gd.hpRegenStart) / 1000);
+        const recovered = Math.min(Math.floor(secsAway * getHpRegenRate()), gd.maxHp - gd.hp);
+        if(recovered > 0){
+          gd.hp = Math.min(gd.hp + recovered, gd.maxHp);
+          gd.hpRegenStart = gd.hp >= gd.maxHp ? 0 : Date.now();
+        }
+      }
+    }
+  }catch(e){}
+}
+
+/* 启动 HP 实时恢复计时器（每 2 秒 tick 一次） */
+function startHpRegen(){
+  stopHpRegen();
+  if(gd.hp >= gd.maxHp) return;
+  _hpRegenTimer = setInterval(()=>{
+    if(gd.hp >= gd.maxHp){
+      gd.hp = gd.maxHp;
+      gd.hpRegenStart = 0;
+      stopHpRegen();
+      saveGame();
+      updateHomeUI();
+      return;
+    }
+    const rate = getHpRegenRate();
+    gd.hp = Math.min(gd.hp + rate * 2, gd.maxHp); // 每2s tick，恢复rate*2
+    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
+    saveGame();
+    updateHomeUI();
+  }, 2000);
+}
+function stopHpRegen(){
+  if(_hpRegenTimer){ clearInterval(_hpRegenTimer); _hpRegenTimer = null; }
+}
+function initTasks(){
+  if(!tasks.length) tasks = DAILY_TASKS.map(t=>({...t,progress:0,done:false}));
+}
+function taskProgress(id, delta){
+  const t = tasks.find(x=>x.id===id);
+  if(t&&!t.done){ t.progress=Math.min(t.progress+delta,t.target); if(t.progress>=t.target)t.done=true; }
+}
+
+/* ══════════════════════════════════════════════════
+   粒子特效
+══════════════════════════════════════════════════ */
+(function initParticles(){
+  const cvs = document.getElementById('particles-canvas');
+  const ctx = cvs.getContext('2d');
+  let W,H,particles=[];
+  function resize(){
+    const app = document.getElementById('app');
+    W = cvs.width = app.offsetWidth;
+    H = cvs.height = window.innerHeight;
+  }
+  function mkParticle(){
+    return { x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*1.5+.5, vx:(Math.random()-.5)*.3, vy:-Math.random()*.4-.1,
+      alpha:Math.random()*.5+.1, hue:Math.random()*60+250 };
+  }
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    while(particles.length<60) particles.push(mkParticle());
+    particles.forEach((p,i)=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.y<-5){ particles[i]=mkParticle(); particles[i].y=H+5; return; }
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${p.hue},80%,75%,${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+  resize(); window.addEventListener('resize',resize); tick();
+})();
+
+/* ══════════════════════════════════════════════════
+   导航
+══════════════════════════════════════════════════ */
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function tab(name){
+  const map={home:'home-page',dungeon:'dungeon-page',dex:'dex-page',mine:'mine-page'};
+  go(map[name]);
+  document.querySelectorAll('.tab-bar').forEach(bar=>{
+    bar.querySelectorAll('.tab-item').forEach((item,i)=>{
+      item.classList.toggle('active',['home','dungeon','dex','mine'][i]===name);
+    });
+  });
+  if(name==='home') updateHomeUI();
+  if(name==='dungeon') buildDungeonList();
+  if(name==='dex') buildDexPage();
+  if(name==='mine') updateMineUI();
+}
+
+/* ══════════════════════════════════════════════════
+   SVG 助手
+══════════════════════════════════════════════════ */
+let _svgUid = 0;
+// 将SVG字符串中所有 id="xxx" 和 url(#xxx) / href="#xxx" 替换为带uid的唯一版本，防止多SVG并存时gradient冲突
+function _uniquifySvg(svgStr, uid){
+  // 收集所有 id 值
+  const ids = [];
+  svgStr.replace(/\bid="([^"]+)"/g, (_,id)=>{ ids.push(id); });
+  let s = svgStr;
+  ids.forEach(id=>{
+    const newId = id + '_u' + uid;
+    // 替换 id="xxx"
+    s = s.replace(new RegExp(`\\bid="${id}"`, 'g'), `id="${newId}"`);
+    // 替换 url(#xxx)
+    s = s.replace(new RegExp(`url\\(#${id}\\)`, 'g'), `url(#${newId})`);
+    // 替换 href="#xxx"
+    s = s.replace(new RegExp(`href="#${id}"`, 'g'), `href="#${newId}"`);
+  });
+  return s;
+}
+function setPetSvg(el, key){
+  if(!el) return;
+  const raw = SVG_PETS[key] || SVG_PETS.fire;
+  el.innerHTML = _uniquifySvg(raw, ++_svgUid);
+}
+function setMonsterSvg(el, key){
+  if(!el) return;
+  const raw = SVG_MONSTERS[key] || SVG_MONSTERS.slime;
+  el.innerHTML = _uniquifySvg(raw, ++_svgUid);
+}
+
+/* ══════════════════════════════════════════════════
+   领养页
+══════════════════════════════════════════════════ */
+let selectedPet = -1;
+/* ══════════════════════════════════════════════════
+   宠物图鉴系统
+══════════════════════════════════════════════════ */
+function showPetDex(){
+  // 如果还没有宠物（首次进入），显示选蛋页面
+  if(gd.petIndex < 0){
+    tab('select');
+    buildFirstSelectPage();
+  } else {
+    // 有宠物：显示图鉴
+    buildDexPage();
+    tab('select');
+  }
+}
+function buildFirstSelectPage(){
+  // 首次选蛋（保持原有逻辑）
+  const eggKeyMap = {fire:'egg_fire', shield:'egg_shield', thunder:'egg_thunder'};
+  const list = document.getElementById('pet-list');
+  list.innerHTML = PET_CONFIGS.map((p,i)=>`
+    <div class="dex-pet-card" onclick="hatchFirstPet(${i})">
+      <div class="dex-pet-art">
+        <svg class="dex-pet-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[eggKeyMap[p.key]]||SVG_PETS[p.key], ++_svgUid)}</svg>
+      </div>
+      <div class="dex-pet-name">${p.name}</div>
+      <div class="dex-pet-badge dex-badge-locked">未解锁</div>
+      <div class="dex-pet-desc">${p.desc}</div>
+    </div>`).join('');
+}
+function buildDexPage(){
+  // 宠物图鉴页面
+  const unlocked = gd.pets || [];
+  const totalCount = PET_CONFIGS.length;
+  document.getElementById('dex-count').textContent = `${unlocked.length}/${totalCount}`;
+
+  const list = document.getElementById('pet-list');
+  list.innerHTML = PET_CONFIGS.map((p,i)=>{
+    const isUnlocked = unlocked.some(u => u.petKey === p.key);
+    const isCurrent = gd.petIndex >= 0 && gd.petKey === p.key;
+    const artKey = p.key;
+
+    return `
+    <div class="dex-pet-card ${isCurrent?'current':''} ${!isUnlocked?'locked':''}" onclick="${isUnlocked?`switchCurrentPet('${p.key}')`:`showUnlockCondition(${i})`}">
+      <div class="dex-pet-art">
+        <svg class="dex-pet-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[artKey]||'', ++_svgUid)}</svg>
+      </div>
+      <div class="dex-pet-name">${p.name}</div>
+      <div class="dex-pet-badge ${isCurrent?'dex-badge-current':isUnlocked?'dex-badge-unlocked':'dex-badge-locked'}">
+        ${isCurrent?'当前使用':isUnlocked?'已解锁':'未解锁'}
+      </div>
+      <div class="dex-pet-desc">${isUnlocked?p.desc:`解锁条件：达到 Lv.${p.unlockLv||10}`}</div>
+    </div>`;
+  }).join('');
+}
+function hatchFirstPet(idx){
+  selectedPet=idx;
+  const cfg = PET_CONFIGS[idx];
+  // 孵化逻辑复用原有 hatchEgg
+  tab('home');
+  updateHomeUI();
+  setTimeout(()=>hatchEgg(cfg, idx), 300);
+}
+function switchCurrentPet(petKey){
+  // 切换到已解锁的宠物
+  if(petKey === gd.petKey) return;
+  const newIdx = PET_CONFIGS.findIndex(p => p.key === petKey);
+  if(newIdx < 0) return;
+
+  // 切换宠物：保留等级/经验/错题等数据（按宠物类型分别存储）
+  if(!gd.pets) gd.pets = [];
+  const currentPetData = gd.pets.find(p => p.petKey === gd.petKey) || {};
+  // 保存当前宠物的进度
+  if(gd.petKey && Object.keys(currentPetData).length > 0){
+    // 更新或添加当前宠物数据
+    const existingIdx = gd.pets.findIndex(p => p.petKey === gd.petKey);
+    const saveData = {
+      petKey: gd.petKey,
+      level: gd.level,
+      exp: gd.exp,
+      hp: gd.hp,
+      maxHp: gd.maxHp,
+      evoStage: gd.evoStage
+    };
+    if(existingIdx >= 0){
+      gd.pets[existingIdx] = saveData;
+    } else {
+      gd.pets.push(saveData);
+    }
+  }
+
+  // 加载新宠物数据
+  const newPetData = gd.pets.find(p => p.petKey === petKey);
+  const cfg = PET_CONFIGS[newIdx];
+  if(newPetData){
+    // 有历史数据：恢复进度
+    gd.petKey = cfg.key;
+    gd.petName = cfg.name;
+    gd.petType = cfg.type;
+    gd.petIndex = newIdx;
+    gd.level = newPetData.level || 1;
+    gd.exp = newPetData.exp || 0;
+    gd.hp = newPetData.hp || cfg.maxHp;
+    gd.maxHp = newPetData.maxHp || cfg.maxHp;
+    gd.evoStage = newPetData.evoStage || 0;
+  } else {
+    // 无历史数据：初始值
+    gd.petKey = cfg.key;
+    gd.petName = cfg.name;
+    gd.petType = cfg.type;
+    gd.petIndex = newIdx;
+    gd.level = 1;
+    gd.exp = 0;
+    gd.hp = cfg.maxHp;
+    gd.maxHp = cfg.maxHp;
+    gd.evoStage = 0;
+  }
+  saveGame();
+  updateHomeUI();
+  buildDexPage();
+  showModal('🎉','切换成功',`已切换为 ${cfg.name}！`);
+}
+function showUnlockCondition(idx){
+  const p = PET_CONFIGS[idx];
+  const unlockLv = p.unlockLv || 10;
+  const msg = `解锁 ${p.name} 需要：\n• 达到 Lv.${unlockLv}`;
+  showModal('🔒','宠物未解锁',msg);
+}
+function selectPet(idx){
+  selectedPet=idx;
+  document.querySelectorAll('.pet-card').forEach((c,i)=>c.classList.toggle('selected',i===idx));
+  document.getElementById('start-btn').disabled=false;
+  const p=PET_CONFIGS[idx];
+  document.getElementById('sel-chosen').textContent=`🥚 选择了：${p.type}系宠物蛋`;
+}
+function startAdventure(){
+  if(selectedPet<0) return;
+  const cfg=PET_CONFIGS[selectedPet];
+  // 孵化动画：先进主页显示蛋的状态（petIndex还是-1），再做破壳动画
+  tab('home');
+  updateHomeUI(); // 此时 petIndex=-1，显示神秘蛋
+  // 稍后执行孵化动画
+  setTimeout(()=>hatchEgg(cfg, selectedPet), 300);
+}
+function hatchEgg(cfg, petIdx){
+  // 找到主页蛋的 SVG 容器
+  const wrap = document.getElementById('pet-main-wrap');
+  const svg = document.getElementById('pet-main-svg');
+  // 孵化动画：摇晃 → 放大闪光 → 切换宠物
+  wrap.style.transition = 'transform .15s';
+  let shakes = 0;
+  const shakeTimer = setInterval(()=>{
+    shakes++;
+    wrap.style.transform = shakes%2===0 ? 'translateX(-8px) rotate(-5deg)' : 'translateX(8px) rotate(5deg)';
+    if(shakes>=8){
+      clearInterval(shakeTimer);
+      wrap.style.transform = '';
+      // 白色爆光
+      const flash = document.createElement('div');
+      flash.style.cssText='position:fixed;inset:0;background:#fff;opacity:0;z-index:500;pointer-events:none;transition:opacity .12s';
+      document.body.appendChild(flash);
+      requestAnimationFrame(()=>{ flash.style.opacity='1'; });
+      setTimeout(()=>{
+        flash.style.opacity='0';
+        // 设置宠物数据
+        gd.petIndex=petIdx; gd.petKey=cfg.key;
+        gd.petName=cfg.name; gd.petType=cfg.type;
+        gd.maxHp=cfg.maxHp; gd.hp=cfg.maxHp;
+        gd.evoStage=0;
+        saveGame(); updateHomeUI();
+        // 孵化成功弹出文字
+        setTimeout(()=>{
+          flash.remove();
+          showHatchToast(cfg.name);
+        }, 120);
+      }, 150);
+    }
+  }, 100);
+}
+function showHatchToast(petName){
+  const toast = document.createElement('div');
+  toast.style.cssText=`
+    position:fixed;left:50%;top:30%;transform:translate(-50%,-50%);
+    font-family:'Fredoka One','Noto Sans SC',cursive;
+    font-size:26px;font-weight:900;color:#fff;
+    text-shadow:0 0 20px rgba(167,139,250,0.8);
+    pointer-events:none;z-index:600;white-space:nowrap;
+    animation:hatchPop .6s cubic-bezier(.175,.885,.32,1.275) forwards;
+  `;
+  toast.textContent = `🎉 ${petName} 孵化成功！`;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 2200);
+}
+
+/* ══════════════════════════════════════════════════
+   主页
+══════════════════════════════════════════════════ */
+function updateHomeUI(){
+  const p=gd;
+  document.getElementById('h-level').textContent=`Lv.${p.level}`;
+  document.getElementById('h-vocab').textContent=`词汇量 ${p.vocab}`;
+  document.getElementById('h-coins-num').textContent=p.coins;
+  // 精力：图标+数字显示，不用进度条
+  document.getElementById('h-stamina').textContent=`${p.stamina}/${p.maxStamina}`;
+  // 精力颜色：低于30%时变红提示
+  const staminaTxt = document.getElementById('h-stamina');
+  if(staminaTxt) staminaTxt.style.color = (p.stamina/p.maxStamina < 0.3) ? '#f97316' : '';
+  const staminaTip = document.getElementById('h-stamina-tip');
+  if(staminaTip){
+    if(p.stamina < p.maxStamina) staminaTip.textContent = '(恢复中)';
+    else staminaTip.textContent = '';
+  }
+
+  // 当前进化阶段 SVG（未选宠物则显示神秘蛋）
+  if(gd.petIndex < 0){
+    const mainSvg = document.getElementById('pet-main-svg');
+    mainSvg.innerHTML = _uniquifySvg(SVG_PETS['egg_mystery'] || '', ++_svgUid);
+    document.getElementById('h-pet-name').textContent = '神秘宠物蛋';
+    document.getElementById('h-pet-type').textContent = '🥚 等待孵化…';
+    const aura0 = document.getElementById('pet-aura');
+    if(aura0){ aura0.className = 'pet-aura'; aura0.style.background = 'radial-gradient(circle,#7c3aed,transparent 70%)'; }
+  } else {
+    const curEvo = getCurrentEvoData();
+    setPetSvg(document.getElementById('pet-main-svg'), curEvo.key);
+    document.getElementById('h-pet-name').textContent=`${curEvo.name} · Lv.${p.level}`;
+    document.getElementById('h-pet-type').textContent=p.petType||'';
+    const aura=document.getElementById('pet-aura');
+    if(aura){ aura.className='pet-aura '+(PET_CONFIGS[p.petIndex]?.auraClass||'pet-aura-fire'); aura.style.background=''; }
+  }
+  const hpPct = p.maxHp>0 ? p.hp/p.maxHp*100 : 0;
+  setBar('h-hp-bar', p.hp, p.maxHp, hpPct<30?'bar-hp danger':hpPct<60?'bar-hp warning':'bar-hp');
+
+  // HP 文字：为零时显示恢复中提示
+  const hpTxtEl = document.getElementById('h-hp-text');
+  if(p.hp <= 0){
+    hpTxtEl.textContent = '😴 恢复中…';
+    hpTxtEl.style.color = '#f97316';
+  } else {
+    hpTxtEl.textContent = `${p.hp}/${p.maxHp}`;
+    hpTxtEl.style.color = '';
+  }
+
+  // 宠物外观状态类
+  const wrap = document.getElementById('pet-main-wrap');
+  if(wrap){
+    wrap.classList.remove('fainted','low-hp','full-hp');
+    if(p.hp <= 0)               wrap.classList.add('fainted');
+    else if(hpPct < 30)         wrap.classList.add('low-hp');
+    else if(hpPct >= 100)       wrap.classList.add('full-hp');
+  }
+
+  // interact-hint 文字随状态变化
+  const hint = document.querySelector('.interact-hint');
+  if(hint){
+    if(p.hp <= 0)         hint.textContent = '😴 宠物晕倒中… 点击鼓励加速恢复 HP！';
+    else if(hpPct < 30)   hint.textContent = '❤️‍🩹 HP 偏低，点击宠物互动 +10 HP';
+    else if(hpPct < 100)  hint.textContent = '💚 点击宠物互动加速 HP 恢复';
+    else                  hint.textContent = '✨ 宠物状态满格！点击互动撒个娇';
+  }
+
+  setBar('h-exp-bar', p.exp, 50, 'bar-exp');
+  document.getElementById('h-exp-text').textContent=`${p.exp}/50`;
+
+  // 进化提示 banner
+  checkEvoBanner();
+  buildTaskList();
+}
+
+// 获取当前进化阶段数据
+function getCurrentEvoData(){
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return {name:gd.petName||'??', key:gd.petKey||'fire'};
+  return cfg.evo[gd.evoStage||0] || cfg.evo[0];
+}
+
+// 检查并渲染进化提示 banner
+function checkEvoBanner(){
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return;
+  const stage = gd.evoStage||0;
+  const nextEvo = cfg.evo[stage+1];
+  // 移除旧 banner
+  const old = document.getElementById('evo-banner');
+  if(old) old.remove();
+  if(!nextEvo) return; // 已进化到最终形态
+  if(gd.level >= nextEvo.condLv){
+    // 插入 banner 到宠物区上方
+    const anchor = document.getElementById('pet-main-wrap').closest('.pet-stage');
+    const banner = document.createElement('div');
+    banner.id = 'evo-banner';
+    banner.className = 'evo-banner';
+    banner.innerHTML = `<div class="evo-banner-ico">✨</div>
+      <div class="evo-banner-txt">
+        <strong>${getCurrentEvoData().name} 可以进化了！</strong>
+        <span>点击查看进化 → ${nextEvo.name}</span>
+      </div>
+      <div class="evo-banner-arrow">›</div>`;
+    banner.onclick = () => showEvoPanel();
+    anchor.parentNode.insertBefore(banner, anchor);
+  }
+}
+function setBar(id, cur, max, cls){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.style.width=(max>0?Math.max(0,cur/max*100):0)+'%';
+  if(cls) el.className='bar-fill '+cls;
+}
+
+let taskOpen=false;
+function toggleTasks(){
+  taskOpen=!taskOpen;
+  document.getElementById('task-body').classList.toggle('open',taskOpen);
+  document.getElementById('task-arrow').classList.toggle('open',taskOpen);
+}
+function buildTaskList(){
+  const el=document.getElementById('task-body');
+  el.innerHTML=tasks.map(t=>`
+    <div class="task-row">
+      <div class="task-icon-bg">${t.icon}</div>
+      <div class="task-info">
+        <div class="task-name">${t.name}</div>
+        <div class="task-desc">${t.desc} · 奖励 ${t.reward}</div>
+      </div>
+      ${t.done
+        ? '<span class="task-done-badge">✓ 完成</span>'
+        : `<span class="task-prog">${t.progress}/${t.target}</span>`
+      }
+    </div>`).join('');
+}
+function interact(){
+  const wrap = document.getElementById('pet-main-wrap');
+  if(!wrap) return;
+
+  taskProgress('interact', 1);
+
+  // 互动不再直接回血；HP 低时给出治疗提示
+  if(gd.hp <= 0){
+    wrap.classList.remove('shake-anim');
+    void wrap.offsetWidth;
+    wrap.classList.add('shake-anim');
+    setTimeout(()=>wrap.classList.remove('shake-anim'), 420);
+    spawnEmote(wrap, '😵');
+    // 轻提示：去诊所
+    showDmg('去治疗!', wrap, 'heal');
+    saveGame(); updateHomeUI();
+    return;
+  }
+
+  if(gd.hp < gd.maxHp){
+    // 只显示提示气泡，不加血
+    spawnEmote(wrap, '💊');
+  }
+
+  saveGame(); updateHomeUI();
+
+  // 弹跳动画
+  wrap.classList.remove('bounce');
+  void wrap.offsetWidth;
+  wrap.classList.add('bounce');
+  setTimeout(()=>wrap.classList.remove('bounce'), 460);
+
+  // 表情气泡（根据 HP 状态显示不同心情）
+  const hpPct = gd.hp / gd.maxHp;
+  let emote = '😊';
+  if(hpPct >= 1)         emote = '🤩';
+  else if(hpPct < 0.3)   emote = '😰';
+  else if(hpPct > 0.7)   emote = '😄';
+  spawnEmote(wrap, emote);
+
+  // 爱心粒子（3~5颗，随机分散）
+  const rect = wrap.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  const count = 3 + Math.floor(Math.random()*3);
+  for(let i=0; i<count; i++){
+    setTimeout(()=>{
+      const h = document.createElement('div');
+      h.className = 'heart-particle';
+      h.textContent = ['❤️','💖','💗','💕'][Math.floor(Math.random()*4)];
+      h.style.left = (cx + (Math.random()-0.5)*60) + 'px';
+      h.style.top  = (cy - 10 + (Math.random()-0.5)*30) + 'px';
+      h.style.fontSize = (14 + Math.random()*12) + 'px';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 1050);
+    }, i * 80);
+  }
+
+  // 音效
+  playBeep(660, 0.06, 'sine');
+  setTimeout(()=>playBeep(880, 0.04, 'sine'), 100);
+}
+
+/* 生成宠物表情气泡 */
+function spawnEmote(wrap, emoji){
+  const old = wrap.querySelector('.pet-emote');
+  if(old) old.remove();
+  const e = document.createElement('div');
+  e.className = 'pet-emote';
+  e.textContent = emoji;
+  wrap.appendChild(e);
+  setTimeout(()=>e.remove(), 750);
+}
+
+/* ══════════════════════════════════════════════════
+   副本站
+══════════════════════════════════════════════════ */
+function buildDungeonList(){
+  // 更新治疗诊所入口
+  const healEntry = document.getElementById('heal-entry');
+  const healDesc  = document.getElementById('heal-entry-desc');
+  if(healEntry){
+    const wrongPending = (gd.wrongWords||[]).filter(w=>(w.masteredCount||0)<2);
+    const hpNotFull = gd.hp < gd.maxHp;
+    // HP 不满时始终显示治疗入口（即使没有错题，也有练习题可以刷）
+    healEntry.style.display = hpNotFull ? 'block' : 'none';
+    if(healDesc){
+      const cnt = wrongPending.length;
+      if(cnt > 0){
+        healDesc.textContent = `${cnt} 道错题待巩固 · 答对一题回 +${HEAL_HP_PER_Q} HP（当前 ${gd.hp}/${gd.maxHp}）`;
+      } else {
+        healDesc.textContent = `HP 未满，去诊所做练习题回血吧！（当前 ${gd.hp}/${gd.maxHp}）`;
+      }
+    }
+  }
+
+  const el=document.getElementById('dungeon-list');
+  el.innerHTML=DUNGEON_CONFIGS.map(d=>`
+    <div class="dg-card" onclick="enterDungeon('${d.id}')">
+      <div class="dg-banner">
+        <div class="dg-banner-grad" style="background:${d.grad}"></div>
+        <div class="dg-banner-overlay"></div>
+        <div class="dg-banner-emoji">${d.emoji}</div>
+        <div class="dg-banner-title">${d.name}</div>
+      </div>
+      <div class="dg-body">
+        <div class="dg-desc">${d.desc}</div>
+        <div class="dg-tags">
+          ${d.tags.map((t,i)=>`<span class="dg-tag ${d.tagClasses[i]}">${t}</span>`).join('')}
+          <button class="dg-enter">出发 →</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function enterDungeon(id){
+  const d=DUNGEON_CONFIGS.find(x=>x.id===id);
+  if(!d) return;
+  if(gd.petIndex<0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋，再出发冒险！'); return; }
+  if(gd.hp <= 0){
+    showModal('😴','宠物HP耗尽',`宠物正在恢复中（当前 HP: 0/${gd.maxHp}），回到主页与它互动可加速恢复！`);
+    return;
+  }
+  if(gd.stamina<d.staminaCost){
+    showModal('⚡','精力不足',`进入副本需要 ${d.staminaCost} 点精力，当前精力 ${gd.stamina}。`);
+    return;
+  }
+  gd.stamina-=d.staminaCost; saveGame();
+  enterMap(id);
+}
+
+/* ══════════════════════════════════════════════════
+   大地图探索系统
+══════════════════════════════════════════════════ */
+
+/* ── 地图数据 ── */
+// tile: 0=地面 1=树/墙（不可通行）
+const MAP_DATA = {
+  forest:{
+    name:'🌲 森林冒险', cols:16, rows:12,
+    tiles:[
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ],
+    playerStart:{x:2,y:2},
+    tileIcon:{ground:'', wall:'🌲'},
+    monsterPool:['slime','slime','goblin'],
+    monsterCount:5,
+    monsterEmoji:{slime:'🟢', goblin:'🪨'},
+    bgColor:'#091508',
+  },
+  cave:{
+    name:'⛰️ 洞穴探险', cols:16, rows:12,
+    tiles:[
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0],
+      [0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ],
+    playerStart:{x:2,y:2},
+    tileIcon:{ground:'', wall:'🪨'},
+    monsterPool:['goblin','goblin','dragon'],
+    monsterCount:6,
+    monsterEmoji:{goblin:'🪨', dragon:'🐲'},
+    bgColor:'#100808',
+  },
+  volcano:{
+    name:'🌋 火山试炼', cols:16, rows:12,
+    tiles:[
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ],
+    playerStart:{x:2,y:2},
+    tileIcon:{ground:'', wall:'🔥'},
+    monsterPool:['dragon','dragon','goblin'],
+    monsterCount:7,
+    monsterEmoji:{dragon:'🐲', goblin:'🪨'},
+    bgColor:'#150402',
+  }
+};
+
+/* ── 地图状态 ── */
+let ms = {
+  dungId:'', mapData:null,
+  // 玩家像素坐标（中心点）
+  px:0, py:0,
+  // 玩家速度（摇杆控制）
+  vx:0, vy:0,
+  monsters:[],     // [{id, px, py, vx, vy, key, emoji, el, defeated, dir, dirTimer}]
+  spawnTimer:null,
+  pendingBattle:null,
+  raf:null,        // requestAnimationFrame handle
+  lastTime:0,
+  // 地图像素尺寸（enterMap时算好）
+  mapW:0, mapH:0, cellSize:0,
+  // 摇杆状态
+  joystick:{ active:false, baseX:0, baseY:0, dx:0, dy:0 },
+  inBattle:false,
+};
+
+/* ── 进入地图 ── */
+function enterMap(dungId){
+  const md = MAP_DATA[dungId];
+  if(!md){ startBattle(dungId); return; } // 兜底
+
+  // 安全检查：清除玩家出生点及周边1格内的所有障碍，防止卡死
+  (function clearSpawnArea(mapData){
+    const sx = mapData.playerStart.x, sy = mapData.playerStart.y;
+    for(let dy=-1; dy<=1; dy++){
+      for(let dx=-1; dx<=1; dx++){
+        const cx=sx+dx, cy=sy+dy;
+        if(cy>=0 && cy<mapData.rows && cx>=0 && cx<mapData.cols){
+          mapData.tiles[cy][cx] = 0;
+        }
+      }
+    }
+  })(md);
+
+  ms.dungId = dungId;
+  ms.mapData = md;
+  ms.pendingBattle = null;
+  ms.inBattle = false;
+  ms.vx = 0; ms.vy = 0;
+
+  // 计算像素尺寸：canvas撑满arena
+  // 在go()之后arena才有尺寸，先go再算
+  go('map-page');
+
+  // 等一帧让 layout 生效
+  requestAnimationFrame(()=>{
+    const arena = document.getElementById('map-arena');
+    const W = arena.clientWidth  || 390;
+    const H = arena.clientHeight || 520;
+    const cs = Math.min(Math.floor(W / md.cols), Math.floor(H / md.rows));
+    ms.cellSize = cs;
+    ms.mapW = cs * md.cols;
+    ms.mapH = cs * md.rows;
+
+    // 起点像素（格中心）
+    ms.px = (md.playerStart.x + 0.5) * cs;
+    ms.py = (md.playerStart.y + 0.5) * cs;
+
+    // 更新顶部信息
+    document.getElementById('map-dungeon-name').textContent = md.name;
+    document.getElementById('map-hp-txt').textContent = gd.hp;
+    document.getElementById('map-page').style.background = md.bgColor;
+
+    // 初始化canvas
+    const canvas = document.getElementById('map-canvas');
+    canvas.width  = ms.mapW;
+    canvas.height = ms.mapH;
+    canvas.style.left = Math.round((W - ms.mapW)/2) + 'px';
+    canvas.style.top  = Math.round((H - ms.mapH)/2) + 'px';
+    canvas.style.width  = ms.mapW + 'px';
+    canvas.style.height = ms.mapH + 'px';
+
+    // 绘制静态地图背景（一次性）
+    drawMapBackground(canvas, md, cs);
+
+    // 初始化怪物
+    ms.monsters = spawnMonstersPixel(md, []);
+
+    // 渲染精灵层
+    renderSprites();
+
+    // 启动游戏循环
+    if(ms.raf) cancelAnimationFrame(ms.raf);
+    ms.lastTime = performance.now();
+    ms.raf = requestAnimationFrame(gameLoop);
+
+    // 绑定摇杆
+    bindJoystick();
+
+    // 启动怪物刷新
+    if(ms.spawnTimer) clearInterval(ms.spawnTimer);
+    ms.spawnTimer = setInterval(()=>respawnMonstersPixel(), 15000);
+  });
+}
+
+/* ── 绘制地图背景（canvas，一次性） ── */
+function drawMapBackground(canvas, md, cs){
+  const ctx = canvas.getContext('2d');
+  const COLORS = {
+    forest:{ ground:'#0f2010', wall:'#06100a', groundBorder:'rgba(34,197,94,0.12)' },
+    cave:  { ground:'#12080c', wall:'#080308', groundBorder:'rgba(180,100,100,0.12)' },
+    volcano:{ ground:'#150402', wall:'#0a0200', groundBorder:'rgba(239,100,40,0.12)' },
+  };
+  const theme = COLORS[ms.dungId] || COLORS.forest;
+  const wallIcon = md.tileIcon?.wall || '🌲';
+
+  for(let row=0; row<md.rows; row++){
+    for(let col=0; col<md.cols; col++){
+      const x = col*cs, y = row*cs;
+      const isWall = md.tiles[row][col]===1;
+      ctx.fillStyle = isWall ? theme.wall : theme.ground;
+      ctx.fillRect(x, y, cs, cs);
+      if(!isWall){
+        ctx.strokeStyle = theme.groundBorder;
+        ctx.strokeRect(x+.5, y+.5, cs-1, cs-1);
+      }
+      if(isWall){
+        // 绘制墙图标
+        ctx.font = `${Math.round(cs*0.52)}px serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.globalAlpha = 0.7;
+        ctx.fillText(wallIcon, x + cs/2, y + cs/2);
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+}
+
+/* ── 生成怪物（像素坐标） ── */
+function spawnMonstersPixel(md, existing){
+  const cs = ms.cellSize;
+  const occupied = new Set(existing.filter(m=>!m.defeated).map(m=>`${Math.floor(m.px/cs)},${Math.floor(m.py/cs)}`));
+  const empty = [];
+  for(let row=0; row<md.rows; row++){
+    for(let col=0; col<md.cols; col++){
+      const k = `${col},${row}`;
+      if(md.tiles[row][col]===0 && !occupied.has(k) &&
+         !(col===md.playerStart.x && row===md.playerStart.y)){
+        // 离玩家出生点至少3格
+        const dist = Math.abs(col-md.playerStart.x)+Math.abs(row-md.playerStart.y);
+        if(dist>=3) empty.push({x:col,y:row});
+      }
+    }
+  }
+  empty.sort(()=>Math.random()-.5);
+  const result = [...existing.filter(m=>!m.defeated)];
+  const need = md.monsterCount - result.length;
+  for(let i=0;i<need&&i<empty.length;i++){
+    const pool = md.monsterPool;
+    const key = pool[Math.floor(Math.random()*pool.length)];
+    const spd = 28 + Math.random()*18; // px/s
+    const angle = Math.random()*Math.PI*2;
+    result.push({
+      id: Date.now()+i+'_'+Math.random().toString(36).slice(2,6),
+      px: (empty[i].x + 0.5)*cs,
+      py: (empty[i].y + 0.5)*cs,
+      vx: Math.cos(angle)*spd,
+      vy: Math.sin(angle)*spd,
+      key, emoji: md.monsterEmoji[key]||'👾',
+      el: null,
+      defeated: false,
+      dirTimer: 1.5 + Math.random()*2, // 下次改变方向的秒数
+    });
+  }
+  return result;
+}
+
+/* ── 渲染精灵（DOM elements） ── */
+function renderSprites(){
+  const layer = document.getElementById('map-sprites');
+  const arena = document.getElementById('map-arena');
+  const W = arena.clientWidth  || 390;
+  const H = arena.clientHeight || 520;
+  const offX = Math.round((W - ms.mapW)/2);
+  const offY = Math.round((H - ms.mapH)/2);
+
+  // 玩家
+  const pl = document.getElementById('map-player');
+  pl.style.left = (offX + ms.px) + 'px';
+  pl.style.top  = (offY + ms.py) + 'px';
+
+  // 怪物：按需创建/更新/移除DOM
+  const existIds = new Set(ms.monsters.filter(m=>!m.defeated).map(m=>m.id));
+
+  // 移除已消灭怪物的DOM
+  layer.querySelectorAll('.map-monster').forEach(el=>{
+    if(!existIds.has(el.dataset.id)) el.remove();
+  });
+
+  // 更新/创建
+  ms.monsters.filter(m=>!m.defeated).forEach((m,i)=>{
+    let el = m.el;
+    if(!el || !el.parentNode){
+      el = document.createElement('div');
+      el.className = 'map-monster';
+      el.dataset.id = m.id;
+      el.textContent = m.emoji;
+      el.style.animationDelay = `${(i*0.37)%2.2}s`;
+      layer.appendChild(el);
+      m.el = el;
+    }
+    el.style.left = (offX + m.px) + 'px';
+    el.style.top  = (offY + m.py) + 'px';
+  });
+}
+
+/* ── 游戏主循环 ── */
+function gameLoop(now){
+  if(ms.inBattle){ ms.raf=null; return; }
+  const dt = Math.min((now - ms.lastTime)/1000, 0.05); // 最多50ms，防跳帧
+  ms.lastTime = now;
+
+  const md = ms.mapData;
+  const cs = ms.cellSize;
+  const SPEED = 90; // 玩家速度 px/s
+  const PLAYER_R = cs * 0.35; // 玩家碰撞半径
+  const MON_R    = cs * 0.38; // 怪物碰撞半径
+  const ENCOUNTER_DIST = cs * 0.55; // 触发遭遇距离
+
+  // 摇杆输入
+  const joy = ms.joystick;
+  if(joy.active && (joy.dx!==0 || joy.dy!==0)){
+    const len = Math.sqrt(joy.dx*joy.dx + joy.dy*joy.dy);
+    const nx = joy.dx/len, ny = joy.dy/len;
+    ms.vx = nx * SPEED;
+    ms.vy = ny * SPEED;
+  } else {
+    ms.vx = 0; ms.vy = 0;
+  }
+
+  // 移动玩家
+  let npx = ms.px + ms.vx * dt;
+  let npy = ms.py + ms.vy * dt;
+  npx = clampAndSlide(ms.px, ms.py, npx, npy, PLAYER_R, md, cs).x;
+  npy = clampAndSlide(ms.px, ms.py, npx, npy, PLAYER_R, md, cs).y;
+  ms.px = npx; ms.py = npy;
+
+  // 移动怪物（随机游走）
+  ms.monsters.filter(m=>!m.defeated).forEach(m=>{
+    m.dirTimer -= dt;
+    if(m.dirTimer <= 0){
+      // 随机换方向
+      const spd = 28 + Math.random()*18;
+      const angle = Math.random()*Math.PI*2;
+      m.vx = Math.cos(angle)*spd;
+      m.vy = Math.sin(angle)*spd;
+      m.dirTimer = 1.5 + Math.random()*2.5;
+    }
+    let nmx = m.px + m.vx * dt;
+    let nmy = m.py + m.vy * dt;
+    const res = clampAndSlide(m.px, m.py, nmx, nmy, MON_R, md, cs);
+    if(res.hitX){ m.vx = -m.vx * 0.5; m.dirTimer=0; }
+    if(res.hitY){ m.vy = -m.vy * 0.5; m.dirTimer=0; }
+    m.px = res.x; m.py = res.y;
+  });
+
+  // 检测遭遇
+  if(!ms.pendingBattle){
+    for(const mon of ms.monsters){
+      if(mon.defeated) continue;
+      const dx = ms.px - mon.px, dy = ms.py - mon.py;
+      if(Math.sqrt(dx*dx+dy*dy) < ENCOUNTER_DIST){
+        triggerEncounter(mon);
+        break;
+      }
+    }
+  }
+
+  // 更新精灵位置
+  renderSprites();
+
+  ms.raf = requestAnimationFrame(gameLoop);
+}
+
+/* ── 碰撞：移动+滑动 ── 返回{x,y,hitX,hitY} */
+function clampAndSlide(ox, oy, nx, ny, r, md, cs){
+  // 先尝试完整移动
+  let hitX=false, hitY=false;
+  // X轴
+  if(!rectCollide(nx, oy, r, md, cs)){
+    // X ok
+  } else {
+    nx = ox; hitX=true;
+  }
+  // Y轴
+  if(!rectCollide(nx, ny, r, md, cs)){
+    // Y ok
+  } else {
+    ny = oy; hitY=true;
+  }
+  // 边界夹紧
+  nx = Math.max(r, Math.min(ms.mapW-r, nx));
+  ny = Math.max(r, Math.min(ms.mapH-r, ny));
+  return {x:nx, y:ny, hitX, hitY};
+}
+
+/* ── 圆形与tile碰撞检测 ── */
+function rectCollide(px, py, r, md, cs){
+  // 检查圆心周围可能重叠的格子
+  const minCol = Math.floor((px-r)/cs);
+  const maxCol = Math.floor((px+r)/cs);
+  const minRow = Math.floor((py-r)/cs);
+  const maxRow = Math.floor((py+r)/cs);
+  for(let row=minRow; row<=maxRow; row++){
+    for(let col=minCol; col<=maxCol; col++){
+      if(row<0||col<0||row>=md.rows||col>=md.cols) return true; // 出界视为碰墙
+      if(md.tiles[row][col]===1){
+        // 圆与矩形碰撞（AABB vs circle）
+        const rx1=col*cs, ry1=row*cs, rx2=rx1+cs, ry2=ry1+cs;
+        const cx=Math.max(rx1,Math.min(px,rx2));
+        const cy=Math.max(ry1,Math.min(py,ry2));
+        const dx=px-cx, dy=py-cy;
+        if(dx*dx+dy*dy < r*r) return true;
+      }
+    }
+  }
+  return false;
+}
+
+/* ── 绑定虚拟摇杆 ── */
+function bindJoystick(){
+  const base  = document.getElementById('map-joystick-base');
+  const knob  = document.getElementById('map-joystick-knob');
+  const joy   = ms.joystick;
+  const MAX_R = 35; // 摇杆最大偏移半径
+
+  function onStart(e){
+    e.preventDefault();
+    joy.active = true;
+    const touch = e.touches ? e.touches[0] : e;
+    const rect = base.getBoundingClientRect();
+    joy.baseX = rect.left + rect.width/2;
+    joy.baseY = rect.top  + rect.height/2;
+    onMove(e);
+  }
+  function onMove(e){
+    if(!joy.active) return;
+    e.preventDefault();
+    const touch = e.touches ? e.touches[0] : e;
+    let dx = touch.clientX - joy.baseX;
+    let dy = touch.clientY - joy.baseY;
+    const len = Math.sqrt(dx*dx+dy*dy);
+    if(len > MAX_R){ dx=dx/len*MAX_R; dy=dy/len*MAX_R; }
+    joy.dx = dx; joy.dy = dy;
+    knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+  }
+  function onEnd(e){
+    joy.active=false; joy.dx=0; joy.dy=0;
+    knob.style.transform = 'translate(-50%,-50%)';
+  }
+
+  // 清旧监听
+  base._cleanup && base._cleanup();
+  base.addEventListener('touchstart', onStart, {passive:false});
+  base.addEventListener('touchmove',  onMove,  {passive:false});
+  base.addEventListener('touchend',   onEnd,   {passive:false});
+  base.addEventListener('mousedown',  onStart);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup',   onEnd);
+  base._cleanup = ()=>{
+    base.removeEventListener('touchstart', onStart);
+    base.removeEventListener('touchmove',  onMove);
+    base.removeEventListener('touchend',   onEnd);
+    base.removeEventListener('mousedown',  onStart);
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup',   onEnd);
+  };
+}
+
+/* ── 定时刷新怪物 ── */
+function respawnMonstersPixel(){
+  if(!document.getElementById('map-page').classList.contains('active')) return;
+  const md = ms.mapData;
+  // 清理已消灭怪物记录
+  ms.monsters = ms.monsters.filter(m=>{
+    if(m.defeated){
+      if(m.el && m.el.parentNode) m.el.parentNode.removeChild(m.el);
+      return false;
+    }
+    return true;
+  });
+  const before = ms.monsters.length;
+  if(before >= md.monsterCount) return; // 已满，不刷新
+  ms.monsters = spawnMonstersPixel(md, ms.monsters);
+  const after = ms.monsters.filter(m=>!m.defeated).length;
+  if(after > before){
+    const pop = document.createElement('div');
+    pop.className = 'mon-spawn-pop';
+    pop.textContent = `👾 新的怪物出现了！`;
+    document.body.appendChild(pop);
+    setTimeout(()=>pop.remove(), 2000);
+  }
+}
+
+/* ── 触发遭遇战 ── */
+function triggerEncounter(mon){
+  if(ms.inBattle) return;
+  ms.inBattle = true;
+  ms.pendingBattle = mon;
+  ms.vx = 0; ms.vy = 0;
+  ms.joystick.active=false; ms.joystick.dx=0; ms.joystick.dy=0;
+  const knob = document.getElementById('map-joystick-knob');
+  if(knob) knob.style.transform='translate(-50%,-50%)';
+
+  const overlay = document.getElementById('encounter-overlay');
+  document.getElementById('encounter-mon').textContent = mon.emoji;
+  document.getElementById('encounter-txt').textContent =
+    `野生 ${MONSTER_CONFIGS.find(m=>m.key===mon.key)?.name||'怪物'} 出现了！`;
+  overlay.classList.add('on');
+  setTimeout(()=>{
+    overlay.classList.remove('on');
+    startBattle(ms.dungId, mon.key);
+  }, 900);
+}
+
+/* ── 战斗结束回到地图 ── */
+function returnToMap(win, exp, coins, correctCount){
+  const mon = ms.pendingBattle;
+  if(mon){
+    mon.defeated = true;
+    if(mon.el && mon.el.parentNode) mon.el.parentNode.removeChild(mon.el);
+    ms.pendingBattle = null;
+  }
+  ms.inBattle = false;
+  document.getElementById('map-hp-txt').textContent = gd.hp > 0 ? gd.hp : '😴';
+  go('map-page');
+  // 立即补充被消灭的怪物（延迟5s，避免玩家刚回来就被触发）
+  setTimeout(()=>respawnMonstersPixel(), 5000);
+
+  // 重启游戏循环
+  if(ms.raf) cancelAnimationFrame(ms.raf);
+  ms.lastTime = performance.now();
+  ms.raf = requestAnimationFrame(gameLoop);
+
+  // 显示结算 toast
+  const toast = document.getElementById('map-result-toast');
+  const emoji = document.getElementById('map-rt-emoji');
+  const title = document.getElementById('map-rt-title');
+  const stats = document.getElementById('map-rt-stats');
+  if(win){
+    emoji.textContent = '🏆';
+    title.textContent = '胜利！'; title.className = 'map-rt-title win';
+    stats.innerHTML = `答对 <span>${correctCount}</span> 题 &nbsp;·&nbsp; +<span>${exp}</span> EXP &nbsp;·&nbsp; +<span>${coins}</span> 🪙 &nbsp;·&nbsp; ❤️ 剩余 <span>${gd.hp}/${gd.maxHp}</span>`;
+  } else {
+    emoji.textContent = '💔';
+    title.textContent = '失败…'; title.className = 'map-rt-title lose';
+    stats.innerHTML = `HP 归零，宠物正在缓慢恢复中…<br><span style="font-size:11px;opacity:0.7">回到主页与宠物互动可加速 HP 恢复！</span>`;
+  }
+  toast.classList.add('show');
+}
+
+function closeMapResult(){
+  document.getElementById('map-result-toast').classList.remove('show');
+}
+
+/* ── 离开地图 ── */
+function exitMap(){
+  if(ms.raf){ cancelAnimationFrame(ms.raf); ms.raf=null; }
+  if(ms.spawnTimer){ clearInterval(ms.spawnTimer); ms.spawnTimer=null; }
+  // 清理摇杆监听
+  const base = document.getElementById('map-joystick-base');
+  if(base && base._cleanup){ base._cleanup(); base._cleanup=null; }
+  // 清理怪物DOM
+  const layer = document.getElementById('map-sprites');
+  layer.querySelectorAll('.map-monster').forEach(el=>el.remove());
+  ms.monsters = [];
+  ms.inBattle = false;
+  tab('dungeon');
+}
+
+
+const BC={ NORMAL_DMG:12, COMBO_BONUS:0.15, WRONG_PEN:15,
+  FEVER_TRIG:3, FEVER_DUR:12, FEVER_DMG:15, FEVER_MULT:1.2,
+  FEVER_PAIRS:4,
+  // FEVER模式下怪物攻击间隔乘以此系数（>1 = 变慢，玩家喘息空间）
+  FEVER_ATK_SLOW:2.0
+};
+
+let bs={};
+let btimer=null;
+let wLevel=1;
+let curQ=null, curOpts=[], answering=false;
+
+function getWLevel(){ return Math.min(4, Math.floor(gd.level/10)+1); }
+function getWords(lv, cnt){
+  const pool=(WORDBANK[String(lv)]||WORDBANK['1']).words;
+  return [...pool].sort(()=>Math.random()-.5).slice(0,cnt);
+}
+function genQ(lv){
+  const pool=(WORDBANK[String(lv)]||WORDBANK['1']).words;
+  const correct=pool[Math.floor(Math.random()*pool.length)];
+  const dis=pool.filter(w=>w.en!==correct.en).sort(()=>Math.random()-.5).slice(0,3);
+  return { correct, opts:[...dis,correct].sort(()=>Math.random()-.5) };
+}
+
+function startBattle(dungId, monsterKeyOverride){
+  const dc=DUNGEON_CONFIGS.find(d=>d.id===dungId)||DUNGEON_CONFIGS[0];
+  // 地图遭遇时用具体怪物；否则用副本默认怪物
+  const mc = (monsterKeyOverride
+    ? MONSTER_CONFIGS.find(m=>m.key===monsterKeyOverride)
+    : null) || MONSTER_CONFIGS[dc.monster] || MONSTER_CONFIGS[0];
+  wLevel=getWLevel();
+  // 雷系天赋：答题后怪物蓄力延迟额外+1s
+  const petCfg = PET_CONFIGS[gd.petIndex];
+  const isThunder = petCfg?.key==='thunder';
+  bs={
+    phase:'normal', dungId, monsterKey:mc.key, monsterName:mc.name,
+    monsterHp:mc.hp, monsterMaxHp:mc.hp,
+    monsterAtk:mc.atk, monsterDef:mc.def,
+    monsterAtkInterval:mc.atkInterval + (isThunder ? 1.0 : 0), // 雷系天赋：攻击间隔直接+1s
+    playerHp:gd.hp, playerMaxHp:gd.maxHp,
+    combo:0, correctCount:0,
+    // DPS 系统：蓄力进度 0~1（全程连续，不被答题打断）
+    atkProgress:0,      // 当前蓄力进度（0=刚开始，1=即将攻击）
+    atkPaused:true,     // 仅在加载中暂停
+    feverTimeLeft:BC.FEVER_DUR,
+    feverTotalMatched:0,
+    feverPairs:[], feverRight:[],
+    fL:new Array(BC.FEVER_PAIRS).fill(false), fR:new Array(BC.FEVER_PAIRS).fill(false),
+    selLeft:-1, isOver:false, win:false
+  };
+  const curEvo = getCurrentEvoData();
+  setMonsterSvg(document.getElementById('monster-svg'), mc.key);
+  document.getElementById('monster-name').textContent=mc.name;
+  setPetSvg(document.getElementById('player-mini-svg'), curEvo.key);
+  document.getElementById('player-name-txt').textContent=`${curEvo.name} Lv.${gd.level}`;
+  document.getElementById('battle-loading').style.display='flex';
+  document.getElementById('normal-panel').style.display='none';
+  document.getElementById('fever-panel').className='';
+  document.getElementById('combo-badge').textContent='';
+  updateBattleUI();
+  go('battle-page');
+  setTimeout(()=>{
+    document.getElementById('battle-loading').style.display='none';
+    nextQ(); startBTimer();
+  }, 700);
+}
+function updateBattleUI(){
+  const mPct=bs.monsterMaxHp>0?bs.monsterHp/bs.monsterMaxHp*100:0;
+  document.getElementById('monster-hp-bar').style.width=mPct+'%';
+  document.getElementById('monster-hp-txt').textContent=`${bs.monsterHp}/${bs.monsterMaxHp}`;
+  const pPct=bs.playerMaxHp>0?bs.playerHp/bs.playerMaxHp*100:0;
+  const pFill=document.getElementById('player-hp-fill');
+  pFill.style.width=pPct+'%';
+  pFill.className='hud-hp-fill player-fill'+(pPct<30?' danger':'');
+  document.getElementById('player-hp-num').textContent=`${bs.playerHp}/${bs.playerMaxHp}`;
+  document.getElementById('combo-badge').textContent=bs.combo>1?`🔥 ${bs.combo} 连击!`:'';
+}
+function nextQ(){
+  if(bs.isOver||bs.phase!=='normal') return;
+  document.getElementById('normal-panel').style.display='flex';
+  document.getElementById('fever-panel').className='';
+  const q=genQ(wLevel);
+  curQ=q.correct; curOpts=q.opts; answering=false;
+  document.getElementById('q-cn').textContent=q.correct.cn;
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('opt'+i);
+    b.textContent=q.opts[i]?.en||''; b.disabled=false; b.className='opt-btn';
+  }
+  // 蓄力条不重置，持续推进（去掉打断机制后进度连贯）
+  bs.atkPaused=false;
+  updateAtkChargeUI();
+}
+function selectOption(idx){
+  if(answering||bs.isOver||bs.phase!=='normal') return;
+  answering=true;
+  // 怪物蓄力不受答题打断，持续推进
+
+  const chosen=curOpts[idx];
+  const ok=chosen.en===curQ.en;
+  const petCfg = PET_CONFIGS[gd.petIndex];
+  for(let i=0;i<4;i++) document.getElementById('opt'+i).disabled=true;
+  if(ok){
+    document.getElementById('opt'+idx).classList.add('correct');
+    bs.combo++; bs.correctCount++;
+    // 玩家伤害受怪物DEF减免
+    let dmg=Math.max(1, Math.floor(BC.NORMAL_DMG*(1+BC.COMBO_BONUS*bs.combo)) - (bs.monsterDef||0));
+    // 四维差异化：火系暴击 20% 概率 1.5x
+    let critHit = false;
+    if(petCfg?.key==='fire' && Math.random()<0.2){ dmg=Math.floor(dmg*1.5); critHit=true; }
+    bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
+    flashHit('correct');
+    monsterHitAnim();
+    spawnSparks(document.getElementById('opt'+idx));
+    if(bs.combo>1) showComboBurst(bs.combo);
+    showDmg((critHit?'💥 暴击 -':'-')+dmg, document.getElementById('enemy-sprite'));
+    taskProgress('correct',1);
+    playBeep(660, 0.08, 'square');
+    if(bs.combo>=3) setTimeout(()=>playBeep(880,0.06,'sine'),80);
+    if(critHit) setTimeout(()=>playBeep(1100,0.1,'sine'),40);
+  } else {
+    document.getElementById('opt'+idx).classList.add('wrong');
+    for(let i=0;i<4;i++) if(curOpts[i].en===curQ.en) document.getElementById('opt'+i).classList.add('correct');
+    bs.combo=0;
+    // 答错：记录到错题本（去重，最多保留 100 条）
+    if(!gd.wrongWords) gd.wrongWords=[];
+    if(!gd.wrongWords.find(w=>w.en===curQ.en)){
+      gd.wrongWords.push({en:curQ.en, cn:curQ.cn});
+      if(gd.wrongWords.length>100) gd.wrongWords.shift(); // 超出上限移除最旧的
+    }
+    // 答错立即受到一次怪物攻击（额外惩罚，不受减伤）
+    const petDef = getCurrentEvoData()?.def || 5;
+    let wrongPen = Math.max(1, (bs.monsterAtk||10) - petDef);
+    // 水系减伤 30%
+    if(petCfg?.key==='shield') wrongPen = Math.max(1, Math.floor(wrongPen*0.7));
+    bs.playerHp=Math.max(0,bs.playerHp-wrongPen);
+    flashHit('wrong');
+    showDmg('-'+wrongPen, document.getElementById('player-sprite'));
+    playBeep(150, 0.12, 'sawtooth');
+  }
+  updateBattleUI();
+  if(bs.monsterHp<=0){ setTimeout(()=>endBattle(true),600); return; }
+  if(bs.playerHp<=0){ setTimeout(()=>endBattle(false),600); return; }
+  if(bs.combo>=BC.FEVER_TRIG){ bs.combo=0; setTimeout(()=>enterFever(),500); }
+  else setTimeout(()=>nextQ(),500);
+}
+
+/* ── DPS 计时器：每 50ms tick，怪物蓄力条推进 ── */
+function startBTimer(){
+  if(btimer) clearInterval(btimer);
+  const TICK = 50; // ms
+  btimer=setInterval(()=>{
+    if(bs.isOver){ clearInterval(btimer); return; }
+
+    if(bs.phase==='normal'){
+      if(!bs.atkPaused){
+        const interval = bs.monsterAtkInterval || 3;
+        bs.atkProgress += TICK / (interval * 1000);
+        if(bs.atkProgress >= 1){
+          // 怪物攻击！
+          bs.atkProgress = 0;
+          const petDef = getCurrentEvoData()?.def || 5;
+          let dmg = Math.max(1, (bs.monsterAtk||10) - petDef);
+          // 水系：受怪物攻击减伤30%
+          const petCfg = PET_CONFIGS[gd.petIndex];
+          if(petCfg?.key==='shield') dmg = Math.max(1, Math.floor(dmg*0.7));
+          bs.playerHp = Math.max(0, bs.playerHp - dmg);
+          updateBattleUI();
+          // 攻击动画：图标抖动 + 进度条闪烁
+          const icon = document.getElementById('atk-charge-icon');
+          const row  = document.getElementById('atk-charge-row');
+          if(icon){ icon.classList.add('shake'); setTimeout(()=>icon.classList.remove('shake'),250); }
+          if(row){  row.classList.add('hit-flash-bar'); setTimeout(()=>row.classList.remove('hit-flash-bar'),300); }
+          showDmg('-'+dmg, document.getElementById('player-sprite'));
+          flashHit('wrong');
+          playBeep(150, 0.08, 'sawtooth');
+          if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
+        }
+        updateAtkChargeUI();
+      }
+    } else if(bs.phase==='fever'){
+      // FEVER 计时（保留秒级）
+      bs._feverTick = (bs._feverTick||0) + TICK;
+      if(bs._feverTick >= 1000){
+        bs._feverTick -= 1000;
+        bs.feverTimeLeft--;
+        if(bs.feverTimeLeft<=0){
+          bs.phase='normal';
+          bs._feverTick = 0;
+          document.getElementById('fever-overlay').classList.remove('on');
+          document.getElementById('battle-wrap').classList.remove('fever-mode');
+          // 离开FEVER，重置蓄力
+          bs.atkProgress=0; bs.atkPaused=false;
+          setTimeout(()=>nextQ(),300);
+        }
+      }
+      // FEVER期间蓄力条持续推进（降缓，不受答题打断）
+      {
+        const interval = (bs.monsterAtkInterval||3) * BC.FEVER_ATK_SLOW;
+        bs.atkProgress += TICK / (interval * 1000);
+        if(bs.atkProgress >= 1){
+          bs.atkProgress = 0;
+          const petDef = getCurrentEvoData()?.def || 5;
+          let dmg = Math.max(1, Math.floor((bs.monsterAtk||10) * 1.5) - petDef);
+          const petCfg = PET_CONFIGS[gd.petIndex];
+          if(petCfg?.key==='shield') dmg = Math.max(1, Math.floor(dmg*0.7));
+          bs.playerHp = Math.max(0, bs.playerHp - dmg);
+          updateBattleUI();
+          showDmg('-'+dmg, document.getElementById('player-sprite'));
+          if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
+        }
+        updateAtkChargeUI();
+      }
+    }
+  }, TICK);
+}
+
+/* ── 更新怪物蓄力条 UI ── */
+function updateAtkChargeUI(){
+  const fill  = document.getElementById('atk-charge-fill');
+  const icon  = document.getElementById('atk-charge-icon');
+  if(!fill) return;
+  const raw = bs.atkProgress || 0;
+  const pct = Math.min(100, Math.max(0, raw * 100)); // 负值视为0
+  fill.style.width = pct + '%';
+  // 颜色分三段
+  fill.className = 'atk-charge-fill' +
+    (bs.phase==='fever' ? ' fever' : pct >= 75 ? ' danger' : pct >= 40 ? ' mid' : '');
+  // 图标随蓄力危险度变化（文字label已隐藏，靠图标辅助提示）
+  if(icon){
+    if(bs.phase==='fever')      icon.textContent = '🔥';
+    else if(pct >= 75)          icon.textContent = '💢';
+    else if(pct >= 40)          icon.textContent = '⚡';
+    else                        icon.textContent = '⚔️';
+  }
+}
+
+/* ── 进入FEVER时重置蓄力状态 ── */
+function updateTimerUI(){ updateAtkChargeUI(); } // 兼容旧引用
+
+
+function enterFever(){
+  if(bs.isOver) return;
+  bs.phase='fever'; bs.feverTimeLeft=BC.FEVER_DUR;
+  bs._feverTick=0;
+  bs.atkProgress=0; bs.atkPaused=false; // FEVER开始时蓄力条重置并开始
+  gd.feverTriggered=true;
+  document.getElementById('normal-panel').style.display='none';
+  document.getElementById('fever-panel').className='on';
+  // 全屏氛围效果
+  document.getElementById('fever-overlay').classList.add('on');
+  document.getElementById('battle-wrap').classList.add('fever-mode');
+  // 更新蓄力条为FEVER样式
+  updateAtkChargeUI();
+  // FEVER 入场爆字
+  const pop=document.createElement('div');
+  pop.className='fever-combo-pop'; pop.textContent='🔥 FEVER!';
+  document.getElementById('battle-wrap').appendChild(pop);
+  setTimeout(()=>pop.remove(),520);
+  // 震屏动画
+  const wrap=document.getElementById('battle-wrap');
+  wrap.style.animation='battleShake .35s ease';
+  setTimeout(()=>{ wrap.style.animation=''; },360);
+  loadFeverPairs();
+}
+function loadFeverPairs(){
+  bs.feverPairs=getWords(wLevel,BC.FEVER_PAIRS);
+  bs.feverRight=[...bs.feverPairs].sort(()=>Math.random()-.5);
+  bs.fL=new Array(BC.FEVER_PAIRS).fill(false);
+  bs.fR=new Array(BC.FEVER_PAIRS).fill(false);
+  bs.selLeft=-1;
+  for(let i=0;i<BC.FEVER_PAIRS;i++){
+    const l=document.getElementById('fl'+i), r=document.getElementById('fr'+i);
+    l.textContent=bs.feverPairs[i]?.cn||''; l.className='fever-item'; l.style.opacity='';
+    r.textContent=bs.feverRight[i]?.en||''; r.className='fever-item'; r.style.opacity='';
+  }
+  document.getElementById('fever-title-txt').textContent='⚡ FEVER! 快速配对消除!';
+}
+function selectFeverLeft(idx){
+  if(bs.phase!=='fever'||bs.fL[idx]) return;
+  bs.selLeft=idx;
+  for(let i=0;i<BC.FEVER_PAIRS;i++){
+    if(!bs.fL[i]) document.getElementById('fl'+i).className='fever-item'+(i===idx?' sel':'');
+  }
+}
+function selectFeverRight(idx){
+  if(bs.phase!=='fever'||bs.fR[idx]) return;
+  if(bs.selLeft<0){
+    const e=document.getElementById('fr'+idx); e.classList.add('err');
+    setTimeout(()=>e.classList.remove('err'),400); return;
+  }
+  const lw=bs.feverPairs[bs.selLeft], rw=bs.feverRight[idx];
+  const ok=lw&&rw&&lw.en===rw.en;
+  if(ok){
+    const li=bs.selLeft, ri=idx;
+    document.getElementById('fl'+li).classList.add('matched');
+    document.getElementById('fr'+ri).classList.add('matched');
+    bs.selLeft=-1;
+    bs.feverTotalMatched++;
+    const dmg=Math.floor(BC.FEVER_DMG*Math.pow(BC.FEVER_MULT,bs.feverTotalMatched));
+    bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
+    // 消除成功：重置蓄力条
+    bs.atkProgress=0; updateAtkChargeUI();
+    document.getElementById('fever-title-txt').textContent=`⚡ FEVER! -${dmg}💥 已消除 ${bs.feverTotalMatched} 对`;
+
+    // ── FEVER 强打击感 ──
+    feverElimBurst(dmg, bs.feverTotalMatched);
+
+    updateBattleUI();
+    setTimeout(()=>{
+      document.getElementById('fl'+li).className='fever-item gone';
+      document.getElementById('fr'+ri).className='fever-item gone';
+      bs.fL[li]=true; bs.fR[ri]=true;
+      if(bs.monsterHp<=0){ endBattle(true); return; }
+      if(bs.fL.every(v=>v)) setTimeout(()=>loadFeverPairs(),200);
+    },350);
+  } else {
+    document.getElementById('fr'+idx).classList.add('err');
+    setTimeout(()=>document.getElementById('fr'+idx).classList.remove('err'),400);
+    bs.selLeft=-1;
+    for(let i=0;i<BC.FEVER_PAIRS;i++) if(!bs.fL[i]) document.getElementById('fl'+i).className='fever-item';
+  }
+}
+/* FEVER 消除强打击感 */
+function feverElimBurst(dmg, combo){
+  const wrap = document.getElementById('battle-wrap');
+  const enemyEl = document.getElementById('enemy-sprite');
+
+  // 1. 怪物震动（比普通更猛）
+  enemyEl.classList.remove('hit');
+  void enemyEl.offsetWidth;
+  enemyEl.classList.add('hit');
+  setTimeout(()=>enemyEl.classList.remove('hit'),360);
+
+  // 2. 全屏橙红强闪（叠加一个独立元素，比普通 correct-flash 强 3 倍）
+  const flash = document.createElement('div');
+  flash.style.cssText=`
+    position:fixed;inset:0;pointer-events:none;z-index:300;
+    background:radial-gradient(ellipse at 50% 30%,rgba(249,115,22,0.55) 0%,rgba(239,68,68,0.3) 40%,transparent 70%);
+    animation:feverBigFlash .35s ease forwards;
+  `;
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(),370);
+
+  // 3. 战场边框发光脉冲（连消越多越亮）
+  const intensity = Math.min(combo * 0.08, 0.45);
+  wrap.style.boxShadow=`0 0 ${30+combo*8}px rgba(249,115,22,${intensity}) inset`;
+  setTimeout(()=>{ wrap.style.boxShadow=''; },400);
+
+  // 4. 超大伤害数字（居中弹出，带缩放）
+  const bigDmg = document.createElement('div');
+  bigDmg.style.cssText=`
+    position:fixed;left:50%;top:35%;transform:translate(-50%,-50%);
+    font-family:'Fredoka One','Noto Sans SC',cursive;
+    font-size:${Math.min(52+combo*4,80)}px;font-weight:900;
+    background:linear-gradient(135deg,#fbbf24,#ef4444);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 16px rgba(249,115,22,0.9));
+    pointer-events:none;z-index:400;white-space:nowrap;
+    animation:feverDmgPop .55s cubic-bezier(.175,.885,.32,1.275) forwards;
+  `;
+  bigDmg.textContent = `-${dmg}`;
+  document.body.appendChild(bigDmg);
+  setTimeout(()=>bigDmg.remove(),580);
+
+  // 5. 全屏爆裂粒子（从怪物位置中心喷射）
+  const r = enemyEl.getBoundingClientRect();
+  const cx = r.left + r.width/2, cy = r.top + r.height/2;
+  const colors = ['#f97316','#ef4444','#fbbf24','#a78bfa','#38bdf8','#4ade80'];
+  const count = 14 + combo * 2;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    const angle=(i/count)*Math.PI*2 + Math.random()*0.4;
+    const dist = 60 + Math.random()*80;
+    const size = 6 + Math.random()*6;
+    el.style.cssText=`
+      position:fixed;left:${cx-size/2}px;top:${cy-size/2}px;
+      width:${size}px;height:${size}px;border-radius:50%;
+      background:${colors[i%colors.length]};
+      pointer-events:none;z-index:350;
+      --sx:${Math.cos(angle)*dist}px;--sy:${Math.sin(angle)*dist}px;
+      animation:feverSpark .6s ease forwards;
+    `;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),640);
+  }
+
+  // 6. 震屏
+  wrap.style.animation='battleShake .3s ease';
+  setTimeout(()=>{ wrap.style.animation=''; },320);
+
+  // 7. 冲击音效（低频撞击 + 高频爽感）
+  playFeverImpact(combo);
+}
+
+function playFeverImpact(combo){
+  try{
+    const ctx=getAudioCtx(); if(!ctx) return;
+    const t=ctx.currentTime;
+    // 低频冲击（咚）
+    const o1=ctx.createOscillator(), g1=ctx.createGain();
+    o1.type='sine'; o1.frequency.setValueAtTime(120,t); o1.frequency.exponentialRampToValueAtTime(40,t+0.15);
+    g1.gain.setValueAtTime(0.5,t); g1.gain.exponentialRampToValueAtTime(0.001,t+0.18);
+    o1.connect(g1); g1.connect(ctx.destination); o1.start(t); o1.stop(t+0.2);
+    // 中频打击（啪）
+    const o2=ctx.createOscillator(), g2=ctx.createGain();
+    o2.type='square'; o2.frequency.setValueAtTime(300,t+0.02); o2.frequency.exponentialRampToValueAtTime(80,t+0.1);
+    g2.gain.setValueAtTime(0.3,t+0.02); g2.gain.exponentialRampToValueAtTime(0.001,t+0.12);
+    o2.connect(g2); g2.connect(ctx.destination); o2.start(t+0.02); o2.stop(t+0.15);
+    // 连消越多高频越亮（叮）
+    if(combo>=2){
+      const o3=ctx.createOscillator(), g3=ctx.createGain();
+      o3.type='sine'; o3.frequency.value=440+combo*80;
+      g3.gain.setValueAtTime(0.15,t+0.05); g3.gain.exponentialRampToValueAtTime(0.001,t+0.2);
+      o3.connect(g3); g3.connect(ctx.destination); o3.start(t+0.05); o3.stop(t+0.22);
+    }
+  }catch(e){}
+}
+
+function exitBattle(){
+  if(btimer) clearInterval(btimer);
+  bs.isOver=true;
+  // 清理 FEVER 特效
+  document.getElementById('fever-overlay').classList.remove('on');
+  document.getElementById('battle-wrap').classList.remove('fever-mode');
+  bs.atkPaused=true; updateAtkChargeUI();
+  gd.hp=bs.playerHp||gd.hp;
+  saveGame();
+  if(ms.dungId){
+    // 逃跑：销毁触发遭遇的怪物，回到地图
+    if(ms.pendingBattle){
+      ms.pendingBattle.defeated = true;
+      // 移除其DOM元素
+      if(ms.pendingBattle.el && ms.pendingBattle.el.parentNode)
+        ms.pendingBattle.el.parentNode.removeChild(ms.pendingBattle.el);
+      ms.pendingBattle = null;
+    }
+    ms.inBattle = false;
+    document.getElementById('map-hp-txt').textContent = gd.hp;
+    go('map-page');
+    // 重启游戏循环
+    if(ms.raf) cancelAnimationFrame(ms.raf);
+    ms.lastTime = performance.now();
+    ms.raf = requestAnimationFrame(gameLoop);
+  } else {
+    updateHomeUI(); tab('dungeon');
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   结算
+══════════════════════════════════════════════════ */
+function endBattle(win){
+  if(btimer) clearInterval(btimer);
+  bs.isOver=true; bs.win=win;
+  // 清理 FEVER 特效
+  document.getElementById('fever-overlay').classList.remove('on');
+  document.getElementById('battle-wrap').classList.remove('fever-mode');
+  bs.atkPaused=true; updateAtkChargeUI();
+  let exp=0, coins=0;
+  if(win){
+    exp=20+bs.correctCount*5; coins=15+bs.correctCount*3;
+    gd.exp+=exp; gd.coins+=coins; gd.vocab+=bs.correctCount;
+    taskProgress('battle',1);
+    let leveled=false;
+    while(gd.exp>=50){ gd.exp-=50; gd.level++; gd.maxHp+=10; gd.hp=gd.maxHp; taskProgress('levelup',1); leveled=true; }
+    if(leveled) showLevelUpToast();
+    // 胜利：保留战斗结束时的实际HP，不自动满血
+    gd.hp = bs.playerHp;
+    // 若HP未满，启动缓慢恢复（鼓励玩家去治疗复习）
+    if(gd.hp < gd.maxHp){
+      if(!gd.hpRegenStart) gd.hpRegenStart = Date.now();
+      startHpRegen();
+    } else {
+      stopHpRegen();
+    }
+  } else {
+    // 失败：HP 归零，开始缓慢恢复计时
+    gd.hp = 0;
+    gd.hpRegenStart = Date.now(); // 记录开始恢复的时间戳
+    startHpRegen();               // 启动实时恢复计时器
+  }
+  saveGame();
+  // 从地图进入战斗 → 返回地图，用小 toast 结算
+  if(ms.dungId){
+    setTimeout(()=>returnToMap(win, exp, coins, bs.correctCount), 400);
+    return;
+  }
+  // 非地图直接战斗（兜底）→ 原 result-page
+  document.getElementById('res-burst').textContent=win?'🏆':'💔';
+  document.getElementById('res-heading').textContent=win?'胜利!':'失败…';
+  document.getElementById('res-heading').className='res-heading '+(win?'win':'lose');
+  document.getElementById('res-sub').textContent=win?'太棒了！继续加油！':'再努力一下，你可以的！';
+  document.getElementById('res-correct').textContent=bs.correctCount+' 题';
+  document.getElementById('res-exp').textContent=win?`+${exp} EXP`:'—';
+  document.getElementById('res-coins').textContent=win?`+${coins}`:'—';
+  document.getElementById('res-vocab').textContent=win?`+${bs.correctCount}`:'—';
+  setTimeout(()=>go('result-page'),500);
+}
+function backToHome(){ updateHomeUI(); tab('home'); }
+
+/* ══════════════════════════════════════════════════
+   治疗系统（诊所 heal-page）
+══════════════════════════════════════════════════ */
+const HEAL_HP_PER_Q = 15; // 每题答对恢复HP量
+let healQ = null;         // 当前治疗题目
+let healOpts = [];        // 当前治疗选项
+let healAnswering = false;
+
+function enterHeal(){
+  if(gd.petIndex < 0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋！'); return; }
+  // 初始化界面
+  const curEvo = getCurrentEvoData();
+  setPetSvg(document.getElementById('heal-pet-svg'), curEvo.key);
+  // 确保 wrongWords 里每项都有 masteredCount 字段（兼容旧存档）
+  if(gd.wrongWords) gd.wrongWords = gd.wrongWords.map(w=>({en:w.en,cn:w.cn,masteredCount:w.masteredCount||0}));
+  updateHealUI();
+  // 无论有没有错题，始终显示答题区（有错题优先错题，否则用备用题池）
+  document.getElementById('heal-quiz-area').style.display = 'flex';
+  document.getElementById('heal-empty-area').style.display = 'none';
+  nextHealQ();
+  go('heal-page');
+}
+
+function leaveHeal(){
+  saveGame();
+  buildDungeonList();
+  tab('dungeon');
+}
+
+function updateHealUI(){
+  const hp = gd.hp, maxHp = gd.maxHp;
+  const pct = maxHp > 0 ? Math.min(100, Math.round(hp/maxHp*100)) : 0;
+  document.getElementById('heal-hp-badge').textContent = `❤️ ${hp}/${maxHp}`;
+  document.getElementById('heal-hp-bar').style.width = pct + '%';
+  document.getElementById('heal-hp-txt').textContent  = `${hp}/${maxHp}`;
+  if(hp >= maxHp){
+    document.getElementById('heal-hint').innerHTML = '🌟 HP 已满！宠物精神满满，可以出发冒险了！';
+  } else {
+    document.getElementById('heal-hint').innerHTML = `💊 每答对一题恢复 <strong>+${HEAL_HP_PER_Q} HP</strong>`;
+  }
+}
+
+// 当前治疗题的来源（'wrong' | 'normal'），用于结果展示差异化
+let healQSource = 'normal';
+
+function nextHealQ(){
+  healAnswering = false;
+  const wrongPool = (gd.wrongWords || []).filter(w => (w.masteredCount||0) < 2); // masteredCount<2 的才出现
+  const allWords  = Object.values(WORDBANK).flatMap(b=>b.words);
+
+  let correct;
+  if(wrongPool.length > 0){
+    // 优先从未完全掌握的错题里随机选
+    correct = wrongPool[Math.floor(Math.random() * wrongPool.length)];
+    healQSource = 'wrong';
+    document.getElementById('heal-q-sub').textContent = '🔴 错题复习 · 选出正确英文单词';
+  } else {
+    // 备用题池：从所有单词随机出一题（与战斗一样的逻辑）
+    const fallback = allWords.filter(w => w.en && w.cn);
+    if(fallback.length === 0) return; // 词库空（不可能，安全兜底）
+    correct = fallback[Math.floor(Math.random() * fallback.length)];
+    healQSource = 'normal';
+    document.getElementById('heal-q-sub').textContent = '✅ 练习题 · 选出正确英文单词';
+  }
+
+  // 干扰项：从所有单词库里取不同的词
+  const distractors = allWords
+    .filter(w => w.en !== correct.en)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
+  healOpts = [...distractors, correct].sort(() => Math.random() - 0.5);
+  healQ = correct;
+
+  document.getElementById('heal-q-cn').textContent = correct.cn;
+  for(let i=0;i<4;i++){
+    const btn = document.getElementById('hopt'+i);
+    btn.textContent = healOpts[i].en;
+    btn.className = 'heal-opt-btn';
+    btn.disabled = false;
+  }
+}
+
+function selectHealOption(idx){
+  if(healAnswering || !healQ) return;
+  healAnswering = true;
+  for(let i=0;i<4;i++) document.getElementById('hopt'+i).disabled = true;
+
+  const chosen = healOpts[idx];
+  const ok = chosen.en === healQ.en;
+  if(ok){
+    document.getElementById('hopt'+idx).classList.add('correct');
+    // 答对：回血
+    const heal = Math.min(HEAL_HP_PER_Q, gd.maxHp - gd.hp);
+    if(heal > 0) gd.hp = Math.min(gd.hp + heal, gd.maxHp);
+    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
+
+    // 错题本处理：错题答对 → masteredCount+1；达到 2 次才移除（巩固记忆）
+    if(healQSource === 'wrong' && gd.wrongWords){
+      const entry = gd.wrongWords.find(w => w.en === healQ.en);
+      if(entry){
+        entry.masteredCount = (entry.masteredCount||0) + 1;
+        if(entry.masteredCount >= 2){
+          gd.wrongWords = gd.wrongWords.filter(w => w.en !== healQ.en);
+        }
+      }
+    }
+
+    // 闪光动画
+    const card = document.getElementById('heal-q-card');
+    card.classList.remove('heal-flash');
+    void card.offsetWidth;
+    card.classList.add('heal-flash');
+    playBeep(660, 0.08, 'square');
+    setTimeout(()=>playBeep(880, 0.06, 'sine'), 80);
+    saveGame();
+    updateHealUI();
+    setTimeout(()=>nextHealQ(), 800);
+  } else {
+    document.getElementById('hopt'+idx).classList.add('wrong');
+    // 答错：高亮正确答案；错题的 masteredCount 重置为 0（忘记了，重新来）
+    for(let i=0;i<4;i++) if(healOpts[i].en === healQ.en) document.getElementById('hopt'+i).classList.add('correct');
+    if(healQSource === 'wrong' && gd.wrongWords){
+      const entry = gd.wrongWords.find(w => w.en === healQ.en);
+      if(entry) entry.masteredCount = 0;
+    }
+    playBeep(220, 0.1, 'sawtooth');
+    // 不减血，换下一题继续
+    setTimeout(()=>nextHealQ(), 1000);
+  }
+}
+
+function showLevelUpToast(){
+  const t=document.createElement('div');
+  t.className='levelup-toast';
+  t.textContent=`🎉 升级！Lv.${gd.level}`;
+  document.getElementById('app').appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+/* ══════════════════════════════════════════════════
+   进化系统
+══════════════════════════════════════════════════ */
+function showEvoPanel(){
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return;
+  const stage = gd.evoStage||0;
+  const curEvo = cfg.evo[stage];
+  const nextEvo = cfg.evo[stage+1];
+  if(!nextEvo || gd.level < nextEvo.condLv) return;
+
+  const mask = document.createElement('div');
+  mask.className = 'evo-panel-mask';
+  mask.id = 'evo-panel-mask';
+  mask.innerHTML = `
+    <div class="evo-panel">
+      <div class="evo-panel-title">✨ 进化确认</div>
+      <div class="evo-panel-sub">${curEvo.name} → ${nextEvo.name}</div>
+      <div class="evo-compare">
+        <div class="evo-pet-box">
+          <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[curEvo.key]||'', ++_svgUid)}</svg>
+          <div class="evo-pet-lbl">当前</div>
+          <div class="evo-pet-name">${curEvo.name}</div>
+        </div>
+        <div class="evo-arrow-txt">→</div>
+        <div class="evo-pet-box">
+          <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[nextEvo.key]||'', ++_svgUid)}</svg>
+          <div class="evo-pet-lbl">进化后</div>
+          <div class="evo-pet-name">${nextEvo.name}</div>
+        </div>
+      </div>
+      <div class="evo-stats-diff">
+        <div class="evo-stat-row"><span class="evo-stat-lbl">❤️ HP 上限</span><span><span class="evo-stat-val">${nextEvo.maxHp}</span><span class="evo-stat-up">+${nextEvo.maxHp-curEvo.maxHp}</span></span></div>
+        <div class="evo-stat-row"><span class="evo-stat-lbl">⚔️ 攻击力</span><span><span class="evo-stat-val">${nextEvo.atk}</span><span class="evo-stat-up">+${nextEvo.atk-curEvo.atk}</span></span></div>
+        <div class="evo-stat-row"><span class="evo-stat-lbl">🛡️ 防御力</span><span><span class="evo-stat-val">${nextEvo.def}</span><span class="evo-stat-up">+${nextEvo.def-curEvo.def}</span></span></div>
+      </div>
+      <div class="evo-btn-row">
+        <button class="btn-evo-cancel" onclick="document.getElementById('evo-panel-mask').remove()">取消</button>
+        <button class="btn-evo-go" onclick="doEvolve()">⚡ 进化！</button>
+      </div>
+    </div>`;
+  document.getElementById('app').appendChild(mask);
+}
+
+function doEvolve(){
+  const mask = document.getElementById('evo-panel-mask');
+  if(mask) mask.remove();
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return;
+  const stage = gd.evoStage||0;
+  const nextEvo = cfg.evo[stage+1];
+  if(!nextEvo) return;
+  playEvoAnimation(nextEvo, ()=>{
+    // 进化完成：更新数据
+    gd.evoStage = stage+1;
+    gd.petKey = nextEvo.key;
+    gd.petName = nextEvo.name;
+    const hpRatio = gd.hp / gd.maxHp;
+    gd.maxHp = nextEvo.maxHp;
+    gd.hp = Math.floor(nextEvo.maxHp * hpRatio);
+    saveGame();
+    updateHomeUI();
+  });
+}
+
+function playEvoAnimation(nextEvo, onDone){
+  const layer = document.createElement('div');
+  layer.className = 'evo-anim-layer';
+  layer.id = 'evo-anim-layer';
+  const flash = document.createElement('div');
+  flash.className = 'evo-anim-flash';
+  flash.id = 'evo-anim-flash';
+
+  layer.innerHTML = `
+    <div class="evo-anim-pet" id="evo-anim-pet">
+      <div class="evo-anim-glow" id="evo-anim-glow"></div>
+      <svg viewBox="0 0 100 100" style="width:160px;height:160px" id="evo-svg"></svg>
+    </div>
+    <div class="evo-anim-name" id="evo-anim-name">${nextEvo.name}</div>
+    <div class="evo-anim-subtitle" id="evo-anim-sub">✨ 进化完成！</div>`;
+
+  document.getElementById('app').appendChild(layer);
+  document.getElementById('app').appendChild(flash);
+
+  // 播放进化音效
+  playBeep(440,0.1,'sine');
+  setTimeout(()=>playBeep(550,0.1,'sine'),200);
+  setTimeout(()=>playBeep(660,0.1,'sine'),400);
+  setTimeout(()=>playBeep(880,0.15,'sine'),600);
+
+  // 0ms: 旧形态 + 发光
+  const curEvo = PET_CONFIGS[gd.petIndex].evo[gd.evoStage||0];
+  document.getElementById('evo-svg').innerHTML = _uniquifySvg(SVG_PETS[curEvo.key]||'', ++_svgUid);
+
+  // 1500ms: 白光爆闪
+  setTimeout(()=>{
+    const f = document.getElementById('evo-anim-flash');
+    if(f){ f.style.transition='opacity 0.3s'; f.style.opacity='1'; }
+    playBeep(1100,0.2,'sine');
+  }, 1500);
+
+  // 2000ms: 切换新形态，闪光消散
+  setTimeout(()=>{
+    document.getElementById('evo-svg').innerHTML = _uniquifySvg(SVG_PETS[nextEvo.key]||'', ++_svgUid);
+    const f = document.getElementById('evo-anim-flash');
+    if(f){ f.style.transition='opacity 0.6s'; f.style.opacity='0'; }
+  }, 2000);
+
+  // 2400ms: 名称飞入
+  setTimeout(()=>{
+    const n = document.getElementById('evo-anim-name');
+    const s = document.getElementById('evo-anim-sub');
+    if(n){ n.style.opacity='1'; n.style.transform='translateY(0)'; }
+    if(s){ s.style.opacity='1'; }
+    // 属性飞入数字
+    ['❤️ HP +'+(nextEvo.maxHp-(curEvo.maxHp)),
+     '⚔️ ATK +'+(nextEvo.atk-(curEvo.atk)),
+     '🛡️ DEF +'+(nextEvo.def-(curEvo.def))
+    ].forEach((txt,i)=>{
+      setTimeout(()=>{
+        const el=document.createElement('div');
+        el.className='evo-stat-fly';
+        el.textContent=txt;
+        el.style.left=(30+i*28)+'%';
+        el.style.top='55%';
+        document.getElementById('app').appendChild(el);
+        setTimeout(()=>el.remove(),1300);
+      },i*200);
+    });
+  }, 2400);
+
+  // 4000ms: 结束
+  setTimeout(()=>{
+    const l=document.getElementById('evo-anim-layer');
+    const f=document.getElementById('evo-anim-flash');
+    if(l) l.remove(); if(f) f.remove();
+    onDone();
+  }, 4000);
+}
+
+/* ══════════════════════════════════════════════════
+   图鉴页
+══════════════════════════════════════════════════ */
+function buildDexPage(){
+  // 统计解锁数
+  let unlocked=0, total=0;
+  PET_CONFIGS.forEach(cfg=>{
+    cfg.evo.forEach((e,si)=>{ total++; if(isEvoUnlocked(cfg,si)) unlocked++; });
+  });
+  const pct = total>0 ? unlocked/total*100 : 0;
+  document.getElementById('dex-progress-fill').style.width=pct+'%';
+  document.getElementById('dex-progress-lbl').textContent=`${unlocked} / ${total} 形态已解锁`;
+
+  const list = document.getElementById('dex-pet-list');
+  list.innerHTML = PET_CONFIGS.map((cfg,ci)=>{
+    const myPet = gd.petIndex===ci;
+    const curStage = myPet ? (gd.evoStage||0) : 0;
+    const headEvo = cfg.evo[curStage];
+    return `
+    <div class="dex-pet-card" id="dex-card-${ci}">
+      <div class="dex-pet-head" onclick="toggleDexDetail(${ci})">
+        <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[headEvo.key]||'', ++_svgUid)}</svg>
+        <div class="dex-pet-head-info">
+          <div class="dex-pet-head-name">${headEvo.name}${myPet?'<span class="dex-new-badge">我的</span>':''}</div>
+          <div class="dex-pet-head-type"><span class="pet-type-badge ${cfg.typeClass}">${cfg.type}</span></div>
+          <div class="dex-pet-head-stage">${myPet
+            ? `当前 · Lv.${gd.level} · 第 ${curStage+1} 进化阶段`
+            : `点击查看详情`}</div>
+        </div>
+        <span style="color:rgba(241,240,255,0.3);font-size:20px;transition:transform .25s" id="dex-arrow-${ci}">›</span>
+      </div>
+      <div class="dex-detail" id="dex-detail-${ci}">
+        <!-- 天赋条 -->
+        <div class="dex-trait-bar">
+          <div class="dex-trait-icon">${cfg.trait.split(' ')[0]}</div>
+          <div>${cfg.trait.replace(/^[^ ]+ /,'')}</div>
+        </div>
+        <!-- 宠物简介 -->
+        <div class="dex-desc-txt">${cfg.desc}</div>
+        <!-- 进化链横排 -->
+        <div class="dex-evo-chain-wrap">
+          <div class="dex-evo-chain" id="dex-chain-${ci}">
+            ${cfg.evo.map((e,si)=>{
+              const locked = !isEvoUnlocked(cfg,si);
+              return `${si>0?'<div class="dex-evo-sep">›</div>':''}
+              <div class="dex-evo-node ${locked?'locked':''}" id="dex-node-${ci}-${si}" onclick="selectDexStage(${ci},${si})">
+                <svg viewBox="0 0 100 100">${locked
+                  ?'<rect width="100" height="100" fill="rgba(255,255,255,0.05)" rx="50"/><text x="50" y="58" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.18)">?</text>'
+                  :_uniquifySvg(SVG_PETS[e.key]||'', ++_svgUid)}</svg>
+                <div class="dex-evo-node-name">${locked?'???':e.name}</div>
+                <div class="dex-evo-node-cond">${si===0?'初始形态':`Lv.${e.condLv} 进化`}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <!-- 选中形态详情卡（默认展示当前/第0阶段） -->
+        <div id="dex-stage-detail-${ci}"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // 展开我的宠物，默认选中当前阶段
+  if(gd.petIndex>=0){
+    toggleDexDetail(gd.petIndex, false);
+    selectDexStage(gd.petIndex, gd.evoStage||0);
+  }
+}
+
+/* 展开/收起图鉴卡片 */
+function toggleDexDetail(ci, animate=true){
+  const detail = document.getElementById('dex-detail-'+ci);
+  const arrow  = document.getElementById('dex-arrow-'+ci);
+  if(!detail) return;
+  const open = detail.classList.toggle('open');
+  if(arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
+  // 展开时默认选中阶段0或当前阶段
+  if(open){
+    const myPet = gd.petIndex===ci;
+    const stage = myPet ? (gd.evoStage||0) : 0;
+    selectDexStage(ci, stage);
+  }
+}
+
+/* 点击进化链节点，展示该阶段属性详情 */
+function selectDexStage(ci, si){
+  const cfg = PET_CONFIGS[ci];
+  if(!cfg) return;
+  const e = cfg.evo[si];
+  const locked = !isEvoUnlocked(cfg, si);
+  const myPet = gd.petIndex===ci;
+  const isCurrent = myPet && (gd.evoStage||0)===si;
+  const prevE = si>0 ? cfg.evo[si-1] : null;
+
+  // 高亮选中节点
+  cfg.evo.forEach((_,idx)=>{
+    const node = document.getElementById(`dex-node-${ci}-${idx}`);
+    if(node) node.classList.toggle('selected', idx===si);
+  });
+
+  // 构建属性详情卡
+  const wrap = document.getElementById(`dex-stage-detail-${ci}`);
+  if(!wrap) return;
+
+  // 进化提升 chips（与上一阶段对比）
+  let diffHtml = '';
+  if(prevE && !locked){
+    const diffs = [
+      {lbl:'HP', diff: e.maxHp - prevE.maxHp},
+      {lbl:'ATK', diff: e.atk - prevE.atk},
+      {lbl:'DEF', diff: e.def - prevE.def},
+    ];
+    diffHtml = `<div class="dex-stage-diff">${
+      diffs.filter(d=>d.diff>0).map(d=>`<span class="dex-diff-chip">↑ ${d.lbl} +${d.diff}</span>`).join('')
+    }</div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="dex-stage-detail">
+      <div class="dex-stage-head">
+        <svg viewBox="0 0 100 100">${locked
+          ?'<rect width="100" height="100" fill="rgba(255,255,255,0.04)" rx="50"/><text x="50" y="60" text-anchor="middle" font-size="32" fill="rgba(255,255,255,0.15)">?</text>'
+          :_uniquifySvg(SVG_PETS[e.key]||'', ++_svgUid)}</svg>
+        <div class="dex-stage-head-info">
+          <div class="dex-stage-name">${locked?'???':e.name}</div>
+          <div class="dex-stage-cond">${si===0?'🐣 初始形态':'✨ Lv.'+e.condLv+' 进化'}</div>
+          ${isCurrent ? '<span class="dex-stage-tag current">▶ 当前形态</span>'
+            : locked   ? '<span class="dex-stage-tag locked">🔒 尚未解锁</span>'
+            :             '<span class="dex-stage-tag current" style="background:rgba(167,139,250,0.1);color:#a78bfa">✓ 已解锁</span>'}
+        </div>
+      </div>
+      <div class="dex-stage-stats">
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">❤️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.maxHp}</div>
+          <div class="dex-stat-lbl">HP 上限</div>
+        </div>
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">⚔️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.atk}</div>
+          <div class="dex-stat-lbl">攻击力</div>
+        </div>
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">🛡️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.def}</div>
+          <div class="dex-stat-lbl">防御力</div>
+        </div>
+      </div>
+      ${diffHtml}
+    </div>`;
+}
+
+function isEvoUnlocked(cfg, stage){
+  const idx = PET_CONFIGS.indexOf(cfg);
+  if(gd.petIndex===idx) return stage <= (gd.evoStage||0);
+  return false;
+}
+
+
+/* ══════════════════════════════════════════════════
+   我的页面
+══════════════════════════════════════════════════ */
+function updateMineUI(){
+  const curEvo = getCurrentEvoData();
+  setPetSvg(document.getElementById('mine-avatar-svg'), curEvo.key);
+  document.getElementById('mine-hero-name').textContent=curEvo.name||'冒险者';
+  document.getElementById('mine-hero-lv').textContent=`Lv.${gd.level} · ${gd.petType||'未知'}`;
+  document.getElementById('m-coins').textContent=gd.coins;
+  document.getElementById('m-vocab').textContent=gd.vocab;
+  document.getElementById('m-stamina').textContent=gd.stamina;
+  document.getElementById('sound-val').textContent=gd.settings.sound?'开启':'关闭';
+  updateNicknameVal();
+  
+  const el=document.getElementById('achieve-list');
+  el.innerHTML=ACHIEVE_LIST.map(a=>{
+    const ok=a.unlock(gd);
+    return `<div class="achieve-card ${ok?'':'achieve-locked'}">
+      <div class="achieve-ico">${a.icon}</div>
+      <div class="achieve-info">
+        <div class="achieve-name">${a.name}</div>
+        <div class="achieve-desc">${a.desc}</div>
+      </div>
+      <span class="achieve-status">${ok?'✅':'🔒'}</span>
+    </div>`;
+  }).join('');
+}
+function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
+function showAbout(){
+  showModal('🐾','WordPet v1.4.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.4.0 更新：\n• 新增宠物图鉴，支持多宠物切换与独立进度\n• 昵称系统：可在设置中自定义昵称\n• 社交分享：一键分享宠物状态到社交媒体\n\n✨ v1.3.x 更新：\n• 诊所治疗系统+错题巩固+HP不回满\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ HP 不满时去诊所做题回血。\n\n© 2026 WordPet');
+}
+
+/* ══════════════════════════════════════════════════
+   社交分享系统
+══════════════════════════════════════════════════ */
+function showSharePanel(){
+  if(gd.petIndex < 0){
+    showModal('📤','分享','请先孵化一只宠物！');
+    return;
+  }
+  const curEvo = getCurrentEvoData();
+  const nickname = gd.nickname || '训练家';
+  const lines = [
+    `🎮 我的宠物：${curEvo.name}`,
+    `⭐ 等级：Lv.${gd.level} · 词汇量：${gd.vocab}`,
+    `🪙 金币：${gd.coins}`,
+    '',
+    `用 WordPet 在玩单词对战游戏，一起来吧！`,
+    `https://joffywong.github.io/wordpet/`
+  ];
+  const shareText = lines.join('\n');
+  const shareData = {
+    title: '我在 WordPet 养了一只宠物！',
+    text: shareText
+  };
+  // 优先使用原生分享API
+  if(navigator.share){
+    navigator.share(shareData).catch(()=>showFallbackShare(shareText));
+  } else {
+    showFallbackShare(shareText);
+  }
+}
+function showFallbackShare(text){
+  // 创建一个可复制的文本区域
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.cssText='position:fixed;top:0;left:0;opacity:0;width:1px;height:1px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+  showModal('✅','分享','文案已复制到剪贴板！\n\n可直接粘贴到朋友圈/微博/微信等。');
+}
+
+/* ══════════════════════════════════════════════════
+   昵称设置
+══════════════════════════════════════════════════ */
+function showNicknameModal(){
+  const current = gd.nickname || '训练家';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = '输入你的昵称';
+  input.value = current;
+  input.maxLength = 12;
+  input.style.cssText='width:100%;padding:10px;border:1px solid rgba(255,255,255,0.2);border-radius:10px;background:rgba(0,0,0,0.3);color:#fff;font-size:15px;outline:none;box-sizing:border-box;font-family:"Noto Sans SC",-apple-system,sans-serif;';
+  input.focus();
+
+  const btns = document.createElement('div');
+  btns.innerHTML = `
+    <button class="btn btn-gold" style="flex:1;margin:0" onclick="saveNickname(this)">保存</button>
+  `;
+  btns.style.cssText='display:flex;gap:8px;margin-top:12px;';
+
+  const content = document.createElement('div');
+  content.style.cssText='min-width:240px;';
+  content.appendChild(input);
+  content.appendChild(btns);
+
+  showModal('👤','设置昵称', content);
+}
+function saveNickname(btn){
+  const input = btn.closest('div').previousElementSibling.previousElementSibling; // 找到 input
+  let val = input.value.trim();
+  if(!val){
+    showModal('⚠️','昵称不能为空','请输入1-12个字符的昵称');
+    return;
+  }
+  if(val.length > 12){
+    showModal('⚠️','昵称太长','最多支持12个字符');
+    return;
+  }
+  gd.nickname = val;
+  saveGame();
+  // 关闭模态框
+  const modal = document.getElementById('modal-mask');
+  if(modal) modal.remove();
+  // 更新UI
+  updateMineUI();
+  updateNicknameVal();
+}
+function updateNicknameVal(){
+  const el = document.getElementById('nickname-val');
+  if(el) el.textContent = gd.nickname || '训练家';
+}
+function confirmReset(){
+  if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
+}
+
+/* ══════════════════════════════════════════════════
+   弹窗
+══════════════════════════════════════════════════ */
+function showModal(ico,title,desc){
+  document.getElementById('modal-ico').textContent=ico;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-desc').textContent=desc;
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('on'); }
+
+/* ══════════════════════════════════════════════════
+   伤害飘字
+══════════════════════════════════════════════════ */
+function showDmg(txt, relEl, type){
+  const el=document.createElement('div');
+  el.className='dmg-float'+(type==='heal'?' heal':'');
+  el.textContent=txt;
+  if(relEl){
+    const r=relEl.getBoundingClientRect();
+    el.style.left=(r.left+r.width/2-24)+'px';
+    el.style.top=(r.top)+'px';
+  } else { el.style.left='50%'; el.style.top='40%'; }
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),950);
+}
+
+/* ══════════════════════════════════════════════════
+   打击感辅助函数
+══════════════════════════════════════════════════ */
+// 屏幕闪光
+function flashHit(type){
+  const el=document.getElementById('hit-flash');
+  el.className='';
+  void el.offsetWidth; // reflow
+  el.className=type==='correct'?'correct-flash':'wrong-flash';
+  setTimeout(()=>{ el.className=''; },350);
+}
+
+// 怪物受击抖动
+function monsterHitAnim(){
+  const art=document.getElementById('enemy-sprite');
+  art.classList.remove('hit');
+  void art.offsetWidth;
+  art.classList.add('hit');
+  setTimeout(()=>art.classList.remove('hit'),360);
+}
+
+// 答对粒子爆发
+function spawnSparks(btn){
+  if(!btn) return;
+  const r=btn.getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  const colors=['#34d399','#6ee7b7','#fbbf24','#a78bfa','#38bdf8'];
+  const count=10;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='opt-spark';
+    const angle=(i/count)*Math.PI*2;
+    const dist=50+Math.random()*40;
+    const sx=Math.cos(angle)*dist+'px';
+    const sy=Math.sin(angle)*dist+'px';
+    el.style.cssText=`left:${cx-4}px;top:${cy-4}px;background:${colors[i%colors.length]};--sx:${sx};--sy:${sy}`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),580);
+  }
+}
+
+// 连击爆字（在怪物区上方）
+function showComboBurst(combo){
+  const wrap=document.getElementById('battle-wrap');
+  const el=document.createElement('div');
+  el.className='combo-burst';
+  const labels=['','','双击!','三连!','四杀!','五连击!','超神!'];
+  el.textContent=(labels[combo]||`${combo}连击!`);
+  el.style.top='170px';
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(),520);
+}
+
+// Web Audio 音效（无需外部文件）
+let _audioCtx=null;
+function getAudioCtx(){
+  if(!_audioCtx){ try{ _audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  return _audioCtx;
+}
+function playBeep(freq, dur, type){
+  try{
+    const ctx=getAudioCtx(); if(!ctx) return;
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.type=type||'sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.18,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime+dur);
+  }catch(e){}
+}
+
+/* ══════════════════════════════════════════════════
+   初始化
+══════════════════════════════════════════════════ */
+function init(){
+  loadGame(); initTasks(); buildFirstSelectPage();
+  if(gd.petIndex>=0){
+    // 若HP未满（如上次战败），启动恢复计时器
+    if(gd.hp < gd.maxHp && gd.hpRegenStart > 0) startHpRegen();
+    updateHomeUI(); tab('home');
+  }
+  else go('select-page');
+}
+init();
+</script>
+<!-- 遭遇战斗过场遮罩 -->
+<div class="encounter-overlay" id="encounter-overlay">
+  <div class="encounter-mon" id="encounter-mon">👾</div>
+  <div class="encounter-txt" id="encounter-txt">野生怪物出现了！</div>
+</div>
+<!-- 地图内战斗结算 toast -->
+<div class="map-result-toast" id="map-result-toast">
+  <div class="map-rt-emoji" id="map-rt-emoji">🏆</div>
+  <div class="map-rt-title" id="map-rt-title">胜利!</div>
+  <div class="map-rt-stats" id="map-rt-stats"></div>
+  <button class="map-rt-btn" onclick="closeMapResult()">继续探索</button>
+</div>
+</div>
+</body>
+</html>

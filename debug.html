@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debug Elements</title>
+</head>
+<body>
+<script>
+// 模拟页面元素检查
+const elements = [
+  'h-level', 'h-vocab', 'h-stamina', 'h-stamina-tip',
+  'h-pet-name', 'h-pet-type', 'h-hp-text', 'h-exp-text',
+  'pet-aura', 'pet-main-wrap', 'pet-main-svg',
+  'h-exp-bar', 'h-hp-bar', 'task-body',
+  'evo-banner', 'interact-hint'
+];
+
+console.log('Checking elements...');
+elements.forEach(id => {
+  const el = document.getElementById(id);
+  console.log(`${id}: ${el ? 'EXISTS' : 'MISSING'}`);
+});
+
+// 检查querySelector
+const hint = document.querySelector('.interact-hint');
+console.log('.interact-hint (querySelector):', hint ? 'EXISTS' : 'MISSING');
+</script>
+</body>
+</html>

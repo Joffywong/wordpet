@@ -1,0 +1,2536 @@
+/* ══════════════════════════════════════════════════
+   SVG 宠物 / 怪物 插画库
+══════════════════════════════════════════════════ */
+// SVG_PETS 已移至 assets/pets.js（避免 gradient ID 冲突）
+
+const SVG_MONSTERS = {
+  slime: `
+    <defs><radialGradient id="slg" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#86efac"/><stop offset="100%" stop-color="#16a34a"/></radialGradient></defs>
+    <ellipse cx="50" cy="74" rx="28" ry="8" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 78 C22 78 15 60 15 50 C15 36 28 22 50 20 C72 22 85 36 85 50 C85 60 78 78 50 78Z" fill="url(#slg)"/>
+    <ellipse cx="38" cy="48" rx="7" ry="8" fill="#14532d"/>
+    <ellipse cx="62" cy="48" rx="7" ry="8" fill="#14532d"/>
+    <ellipse cx="39.5" cy="47" rx="3" ry="3.5" fill="#fff" opacity=".9"/>
+    <ellipse cx="63.5" cy="47" rx="3" ry="3.5" fill="#fff" opacity=".9"/>
+    <path d="M42 62 Q50 70 58 62" stroke="#14532d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M38 22 Q32 14 26 20" fill="#4ade80" stroke="none"/><path d="M50 18 Q50 10 54 14" fill="#4ade80"/><path d="M62 22 Q68 14 74 20" fill="#4ade80"/>`,
+
+  goblin: `
+    <defs><radialGradient id="gg" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#a8a29e"/><stop offset="100%" stop-color="#44403c"/></radialGradient></defs>
+    <ellipse cx="50" cy="78" rx="22" ry="6" fill="rgba(0,0,0,0.3)"/>
+    <rect x="34" y="45" width="32" height="30" rx="6" fill="#57534e"/>
+    <ellipse cx="50" cy="42" rx="20" ry="22" fill="url(#gg)"/>
+    <polygon points="32,28 26,14 38,24" fill="#78716c"/>
+    <polygon points="68,28 74,14 62,24" fill="#78716c"/>
+    <ellipse cx="41" cy="40" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="59" cy="40" rx="6" ry="7" fill="#1c1917"/>
+    <ellipse cx="42" cy="39" rx="2.5" ry="3" fill="#ef4444" opacity=".9"/>
+    <ellipse cx="60" cy="39" rx="2.5" ry="3" fill="#ef4444" opacity=".9"/>
+    <path d="M44 55 Q50 60 56 55" stroke="#1c1917" stroke-width="2" fill="none"/>
+    <rect x="22" y="48" width="10" height="4" rx="2" fill="#a8a29e"/>
+    <rect x="68" y="48" width="10" height="4" rx="2" fill="#a8a29e"/>`,
+
+  dragon: `
+    <defs><radialGradient id="dg" cx="50%" cy="35%" r="60%"><stop offset="0%" stop-color="#fca5a5"/><stop offset="60%" stop-color="#ef4444"/><stop offset="100%" stop-color="#7f1d1d"/></radialGradient></defs>
+    <ellipse cx="50" cy="78" rx="24" ry="7" fill="rgba(0,0,0,0.3)"/>
+    <path d="M50 80 C28 80 16 64 16 50 C16 34 28 16 50 12 C72 16 84 34 84 50 C84 64 72 80 50 80Z" fill="url(#dg)"/>
+    <path d="M28 28 L18 10 L36 24Z" fill="#fca5a5" opacity=".8"/>
+    <path d="M72 28 L82 10 L64 24Z" fill="#fca5a5" opacity=".8"/>
+    <path d="M28 35 L14 18 L32 30Z" fill="#fca5a5" opacity=".6"/>
+    <path d="M72 35 L86 18 L68 30Z" fill="#fca5a5" opacity=".6"/>
+    <ellipse cx="38" cy="48" rx="8" ry="9" fill="#7f1d1d"/>
+    <ellipse cx="62" cy="48" rx="8" ry="9" fill="#7f1d1d"/>
+    <ellipse cx="39.5" cy="47" rx="3.5" ry="4" fill="#fbbf24"/>
+    <ellipse cx="63.5" cy="47" rx="3.5" ry="4" fill="#fbbf24"/>
+    <path d="M43 64 Q50 72 57 64" stroke="#7f1d1d" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M43 64 L40 70 M53 68 L52 74 M57 64 L60 70" stroke="#7f1d1d" stroke-width="2" fill="none"/>`
+};
+
+/* ══════════════════════════════════════════════════
+   宠物 & 副本配置
+══════════════════════════════════════════════════ */
+const PET_CONFIGS = [
+  {
+    key:'fire', name:'小火球', type:'攻击型', typeClass:'type-atk',
+    desc:'焰心之子，高爆发输出。连击加成翻倍，适合速战速决。',
+    unlockLv:0,     // 初始即可解锁
+    maxHp:80, atk:15, def:5,
+    auraClass:'pet-aura-fire', artBgClass:'pet-art-bg-fire',
+    trait:'🔥 暴击天赋：答对时 20% 概率造成 1.5× 伤害',
+    evo:[
+      { stage:0, name:'小火球',   key:'fire',   lv:1,  maxHp:80,  atk:15, def:5,  condLv:0  },
+      { stage:1, name:'烈焰狐妖', key:'fire2',  lv:15, maxHp:115, atk:22, def:8,  condLv:15 },
+      { stage:2, name:'焰龙王',   key:'fire3',  lv:30, maxHp:160, atk:32, def:12, condLv:30 },
+    ]
+  },
+  {
+    key:'shield', name:'护盾龟', type:'防御型', typeClass:'type-def',
+    desc:'铁壁守护者，超高容错率。HP上限最高，适合稳扎稳打。',
+    unlockLv:0,     // 初始即可解锁
+    maxHp:130, atk:8, def:15,
+    auraClass:'pet-aura-shield', artBgClass:'pet-art-bg-shield',
+    trait:'💧 铁壁天赋：答错受到的HP惩罚减少 30%',
+    evo:[
+      { stage:0, name:'护盾龟',   key:'shield',  lv:1,  maxHp:130, atk:8,  def:15, condLv:0  },
+      { stage:1, name:'重甲古龟', key:'shield2', lv:15, maxHp:195, atk:12, def:24, condLv:15 },
+      { stage:2, name:'神盾玄武', key:'shield3', lv:30, maxHp:280, atk:18, def:36, condLv:30 },
+    ]
+  },
+  {
+    key:'thunder', name:'闪电狐', type:'速度型', typeClass:'type-spd',
+    desc:'雷鸣九天，极速斩击。FEVER触发更快，爆发力十足。',
+    unlockLv:0,     // 初始即可解锁
+    maxHp:100, atk:12, def:8,
+    auraClass:'pet-aura-thunder', artBgClass:'pet-art-bg-thunder',
+    trait:'⚡ 迅捷天赋：怪物攻击间隔额外延长 1 秒，让你有更充裕的时间作答',
+    evo:[
+      { stage:0, name:'闪电狐',   key:'thunder',  lv:1,  maxHp:100, atk:12, def:8,  condLv:0  },
+      { stage:1, name:'雷霆九尾', key:'thunder2', lv:15, maxHp:145, atk:18, def:13, condLv:15 },
+      { stage:2, name:'雷神天狐', key:'thunder3', lv:30, maxHp:200, atk:26, def:20, condLv:30 },
+    ]
+  }
+];
+
+const MONSTER_CONFIGS = [
+  { key:'slime',  name:'野生史莱姆', hp:150, atk:10, def:3,  atkInterval:3   },
+  { key:'goblin', name:'岩石哥布林', hp:180, atk:16, def:6,  atkInterval:2.5 },
+  { key:'dragon', name:'熔岩巨龙',   hp:220, atk:28, def:12, atkInterval:2   }
+];
+
+const DUNGEON_CONFIGS = [
+  {
+    id:'forest', name:'森林冒险', desc:'新手友好关卡，Lv.1~10',
+    grad:'linear-gradient(135deg,#14532d,#166534,#16a34a)',
+    emoji:'🌲', tags:['新手', '⚡×10', 'Lv.1~10'], tagClasses:['dt-green','dt-orange','dt-blue'],
+    staminaCost:10, monster:0
+  },
+  {
+    id:'cave', name:'洞穴探险', desc:'中等难度地下迷宫，Lv.5~20',
+    grad:'linear-gradient(135deg,#1c1917,#292524,#44403c)',
+    emoji:'⛰️', tags:['中等', '⚡×10', 'Lv.5~20'], tagClasses:['dt-blue','dt-orange','dt-blue'],
+    staminaCost:10, monster:1
+  },
+  {
+    id:'volcano', name:'火山试炼', desc:'极限高难度挑战，Lv.15+',
+    grad:'linear-gradient(135deg,#7f1d1d,#991b1b,#b91c1c)',
+    emoji:'🌋', tags:['高难', '⚡×10', 'Lv.15+'], tagClasses:['dt-red','dt-orange','dt-red'],
+    staminaCost:10, monster:2
+  }
+];
+
+const DAILY_TASKS = [
+  { id:'battle',   icon:'⚔️', name:'击败怪物',  desc:'击败 3 只怪物',    reward:'🪙×30', target:3 },
+  { id:'correct',  icon:'✅', name:'答对题目',  desc:'答对 10 道英语题',  reward:'⭐×20', target:10 },
+  { id:'interact', icon:'🤝', name:'宠物互动',  desc:'与宠物互动 3 次',   reward:'🪙×10', target:3 },
+  { id:'levelup',  icon:'⬆️', name:'宠物升级',  desc:'宠物升一级',        reward:'🪙×50', target:1 }
+];
+
+const ACHIEVE_LIST = [
+  { icon:'🥇', name:'初次出发',  desc:'领养了第一只宠物',    unlock: p => p.petIndex >= 0 },
+  { icon:'⚔️', name:'初战告捷',  desc:'首次战斗胜利',        unlock: p => p.coins > 0 },
+  { icon:'📖', name:'词汇入门',  desc:'累计词汇量达 10',     unlock: p => p.vocab >= 10 },
+  { icon:'🔥', name:'连击狂人',  desc:'触发 FEVER 模式',     unlock: p => p.feverTriggered },
+  { icon:'🏆', name:'词汇大师',  desc:'累计词汇量达 100',    unlock: p => p.vocab >= 100 }
+];
+
+/* ══════════════════════════════════════════════════
+   词库
+══════════════════════════════════════════════════ */
+const WORDBANK = {
+  "1":{ words:[
+    {cn:"火",en:"Fire"},{cn:"水",en:"Water"},{cn:"草",en:"Grass"},{cn:"电",en:"Electric"},
+    {cn:"冰",en:"Ice"},{cn:"风",en:"Wind"},{cn:"土",en:"Earth"},{cn:"石",en:"Stone"},
+    {cn:"攻击",en:"Attack"},{cn:"防御",en:"Defend"},{cn:"治疗",en:"Heal"},{cn:"跑",en:"Run"},
+    {cn:"跳",en:"Jump"},{cn:"走",en:"Walk"},{cn:"吃",en:"Eat"},{cn:"喝",en:"Drink"},
+    {cn:"睡",en:"Sleep"},{cn:"看",en:"Look"},{cn:"大",en:"Big"},{cn:"小",en:"Small"},
+    {cn:"快",en:"Fast"},{cn:"慢",en:"Slow"},{cn:"好",en:"Good"},{cn:"坏",en:"Bad"},
+    {cn:"热",en:"Hot"},{cn:"冷",en:"Cold"},{cn:"红",en:"Red"},{cn:"蓝",en:"Blue"},
+    {cn:"绿",en:"Green"},{cn:"黄",en:"Yellow"},{cn:"狗",en:"Dog"},{cn:"猫",en:"Cat"},
+    {cn:"鸟",en:"Bird"},{cn:"鱼",en:"Fish"},{cn:"苹果",en:"Apple"},{cn:"香蕉",en:"Banana"},
+    {cn:"爸爸",en:"Father"},{cn:"妈妈",en:"Mother"},{cn:"哥哥",en:"Brother"},{cn:"姐姐",en:"Sister"}
+  ]},
+  "2":{ words:[
+    {cn:"力量",en:"Power"},{cn:"速度",en:"Speed"},{cn:"雷电",en:"Thunder"},{cn:"火焰",en:"Flame"},
+    {cn:"急冻",en:"Freeze"},{cn:"风暴",en:"Storm"},{cn:"治愈",en:"Cure"},{cn:"保护",en:"Protect"},
+    {cn:"猛击",en:"Smash"},{cn:"冲撞",en:"Crash"},{cn:"学习",en:"Learn"},{cn:"学校",en:"School"},
+    {cn:"朋友",en:"Friend"},{cn:"家庭",en:"Family"},{cn:"城市",en:"City"},{cn:"医生",en:"Doctor"},
+    {cn:"老师",en:"Teacher"},{cn:"学生",en:"Student"},{cn:"时间",en:"Time"},{cn:"今天",en:"Today"},
+    {cn:"明天",en:"Tomorrow"},{cn:"昨天",en:"Yesterday"},{cn:"非常",en:"Very"},{cn:"真的",en:"Really"},
+    {cn:"也许",en:"Maybe"},{cn:"必须",en:"Must"},{cn:"希望",en:"Hope"},{cn:"帮助",en:"Help"},
+    {cn:"太阳",en:"Sun"},{cn:"月亮",en:"Moon"},{cn:"星星",en:"Star"},{cn:"森林",en:"Forest"},
+    {cn:"沙漠",en:"Desert"},{cn:"天空",en:"Sky"},{cn:"海",en:"Sea"},{cn:"山",en:"Mountain"}
+  ]},
+  "3":{ words:[
+    {cn:"爆炸",en:"Explosion"},{cn:"毁灭",en:"Destruction"},{cn:"冲刺",en:"Sprint"},
+    {cn:"屏障",en:"Barrier"},{cn:"幻影",en:"Phantom"},{cn:"地震",en:"Earthquake"},
+    {cn:"火山",en:"Volcano"},{cn:"极光",en:"Aurora"},{cn:"流星",en:"Meteor"},
+    {cn:"决定",en:"Decide"},{cn:"理解",en:"Understand"},{cn:"记得",en:"Remember"},
+    {cn:"发现",en:"Discover"},{cn:"创造",en:"Create"},{cn:"改变",en:"Change"},
+    {cn:"成功",en:"Success"},{cn:"努力",en:"Effort"},{cn:"目标",en:"Goal"},
+    {cn:"选择",en:"Choice"},{cn:"勇气",en:"Courage"},{cn:"智慧",en:"Wisdom"},
+    {cn:"知识",en:"Knowledge"},{cn:"技能",en:"Skill"},{cn:"能力",en:"Ability"}
+  ]},
+  "4":{ words:[
+    {cn:"系统",en:"System"},{cn:"过程",en:"Process"},{cn:"方法",en:"Method"},
+    {cn:"原则",en:"Principle"},{cn:"分析",en:"Analysis"},{cn:"研究",en:"Research"},
+    {cn:"影响",en:"Influence"},{cn:"效果",en:"Effect"},{cn:"证据",en:"Evidence"},
+    {cn:"观点",en:"Perspective"},{cn:"技术",en:"Technology"},{cn:"信息",en:"Information"},
+    {cn:"网络",en:"Network"},{cn:"合作",en:"Cooperation"},{cn:"竞争",en:"Competition"},
+    {cn:"战略",en:"Strategy"},{cn:"质量",en:"Quality"},{cn:"效率",en:"Efficiency"},
+    {cn:"安全",en:"Security"},{cn:"挑战",en:"Challenge"},{cn:"机会",en:"Opportunity"}
+  ]}
+};
+
+/* ══════════════════════════════════════════════════
+   全局状态
+══════════════════════════════════════════════════ */
+const DEFAULT = {
+  petIndex:-1, petKey:'fire', petName:'', petType:'',
+  nickname:'训练家',      // 玩家昵称
+  level:1, exp:0, vocab:0, hp:100, maxHp:100,
+  coins:0, stamina:100, maxStamina:100,
+  evoStage:0,
+  feverTriggered:false,
+  hpRegenStart:0,   // 失败后HP开始恢复的时间戳（0=不需要恢复）
+  wrongWords:[],    // 答错过的单词列表（用于治疗复习）
+  settings:{ sound:true }
+};
+let gd = JSON.parse(JSON.stringify(DEFAULT));
+let tasks = [];
+let _hpRegenTimer = null; // HP 实时恢复计时器句柄
+
+/* HP 恢复速率（每秒恢复多少点）：目前固定值，后续可关联宠物属性 */
+function getHpRegenRate(){ return 1; } // 每秒 1 HP
+
+function saveGame(){ try{ localStorage.setItem('wg2_save', JSON.stringify({gd,tasks,lastSave:Date.now()})); }catch(e){} }
+function loadGame(){
+  try{
+    const r = localStorage.getItem('wg2_save');
+    if(r){
+      const d=JSON.parse(r);
+      if(d.gd)Object.assign(gd,d.gd);
+      if(d.tasks)tasks=d.tasks;
+      // 精力离线自动恢复：每5分钟恢复1点，最多恢复到满
+      if(d.lastSave && gd.stamina < gd.maxStamina){
+        const minsAway = Math.floor((Date.now()-d.lastSave)/60000);
+        const recovered = Math.min(Math.floor(minsAway/5), gd.maxStamina-gd.stamina);
+        if(recovered>0) gd.stamina=Math.min(gd.stamina+recovered, gd.maxStamina);
+      }
+      // HP 离线自动恢复：根据 hpRegenStart 计算离线期间恢复量
+      if(gd.hpRegenStart > 0 && gd.hp < gd.maxHp){
+        const secsAway = Math.floor((Date.now() - gd.hpRegenStart) / 1000);
+        const recovered = Math.min(Math.floor(secsAway * getHpRegenRate()), gd.maxHp - gd.hp);
+        if(recovered > 0){
+          gd.hp = Math.min(gd.hp + recovered, gd.maxHp);
+          gd.hpRegenStart = gd.hp >= gd.maxHp ? 0 : Date.now();
+        }
+      }
+    }
+  }catch(e){}
+}
+
+/* 启动 HP 实时恢复计时器（每 2 秒 tick 一次） */
+function startHpRegen(){
+  stopHpRegen();
+  if(gd.hp >= gd.maxHp) return;
+  _hpRegenTimer = setInterval(()=>{
+    if(gd.hp >= gd.maxHp){
+      gd.hp = gd.maxHp;
+      gd.hpRegenStart = 0;
+      stopHpRegen();
+      saveGame();
+      updateHomeUI();
+      return;
+    }
+    const rate = getHpRegenRate();
+    gd.hp = Math.min(gd.hp + rate * 2, gd.maxHp); // 每2s tick，恢复rate*2
+    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
+    saveGame();
+    updateHomeUI();
+  }, 2000);
+}
+function stopHpRegen(){
+  if(_hpRegenTimer){ clearInterval(_hpRegenTimer); _hpRegenTimer = null; }
+}
+function initTasks(){
+  if(!tasks.length) tasks = DAILY_TASKS.map(t=>({...t,progress:0,done:false}));
+}
+function taskProgress(id, delta){
+  const t = tasks.find(x=>x.id===id);
+  if(t&&!t.done){ t.progress=Math.min(t.progress+delta,t.target); if(t.progress>=t.target)t.done=true; }
+}
+
+/* ══════════════════════════════════════════════════
+   粒子特效
+══════════════════════════════════════════════════ */
+(function initParticles(){
+  const cvs = document.getElementById('particles-canvas');
+  const ctx = cvs.getContext('2d');
+  let W,H,particles=[];
+  function resize(){
+    const app = document.getElementById('app');
+    W = cvs.width = app.offsetWidth;
+    H = cvs.height = window.innerHeight;
+  }
+  function mkParticle(){
+    return { x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*1.5+.5, vx:(Math.random()-.5)*.3, vy:-Math.random()*.4-.1,
+      alpha:Math.random()*.5+.1, hue:Math.random()*60+250 };
+  }
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    while(particles.length<60) particles.push(mkParticle());
+    particles.forEach((p,i)=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.y<-5){ particles[i]=mkParticle(); particles[i].y=H+5; return; }
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${p.hue},80%,75%,${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+  resize(); window.addEventListener('resize',resize); tick();
+})();
+
+/* ══════════════════════════════════════════════════
+   导航
+══════════════════════════════════════════════════ */
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function tab(name){
+  const map={home:'home-page',dungeon:'dungeon-page',dex:'dex-page',mine:'mine-page'};
+  go(map[name]);
+  document.querySelectorAll('.tab-bar').forEach(bar=>{
+    bar.querySelectorAll('.tab-item').forEach((item,i)=>{
+      item.classList.toggle('active',['home','dungeon','dex','mine'][i]===name);
+    });
+  });
+  if(name==='home') updateHomeUI();
+  if(name==='dungeon') buildDungeonList();
+  if(name==='dex') buildDexPage();
+  if(name==='mine') updateMineUI();
+}
+
+/* ══════════════════════════════════════════════════
+   SVG 助手
+══════════════════════════════════════════════════ */
+let _svgUid = 0;
+// 将SVG字符串中所有 id="xxx" 和 url(#xxx) / href="#xxx" 替换为带uid的唯一版本，防止多SVG并存时gradient冲突
+function _uniquifySvg(svgStr, uid){
+  // 收集所有 id 值
+  const ids = [];
+  svgStr.replace(/\bid="([^"]+)"/g, (_,id)=>{ ids.push(id); });
+  let s = svgStr;
+  ids.forEach(id=>{
+    const newId = id + '_u' + uid;
+    // 替换 id="xxx"
+    s = s.replace(new RegExp(`\\bid="${id}"`, 'g'), `id="${newId}"`);
+    // 替换 url(#xxx)
+    s = s.replace(new RegExp(`url\\(#${id}\\)`, 'g'), `url(#${newId})`);
+    // 替换 href="#xxx"
+    s = s.replace(new RegExp(`href="#${id}"`, 'g'), `href="#${newId}"`);
+  });
+  return s;
+}
+function setPetSvg(el, key){
+  if(!el) return;
+  const raw = SVG_PETS[key] || SVG_PETS.fire;
+  el.innerHTML = _uniquifySvg(raw, ++_svgUid);
+}
+function setMonsterSvg(el, key){
+  if(!el) return;
+  const raw = SVG_MONSTERS[key] || SVG_MONSTERS.slime;
+  el.innerHTML = _uniquifySvg(raw, ++_svgUid);
+}
+
+/* ══════════════════════════════════════════════════
+   领养页
+══════════════════════════════════════════════════ */
+let selectedPet = -1;
+/* ══════════════════════════════════════════════════
+   宠物图鉴系统
+══════════════════════════════════════════════════ */
+function showPetDex(){
+  // 如果还没有宠物（首次进入），显示选蛋页面
+  if(gd.petIndex < 0){
+    tab('select');
+    buildFirstSelectPage();
+  } else {
+    // 有宠物：显示图鉴
+    buildDexPage();
+    tab('select');
+  }
+}
+function buildFirstSelectPage(){
+  // 首次选蛋（保持原有逻辑）
+  const eggKeyMap = {fire:'egg_fire', shield:'egg_shield', thunder:'egg_thunder'};
+  const list = document.getElementById('pet-list');
+  list.innerHTML = PET_CONFIGS.map((p,i)=>`
+    <div class="dex-pet-card" onclick="hatchFirstPet(${i})">
+      <div class="dex-pet-art">
+        <svg class="dex-pet-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[eggKeyMap[p.key]]||SVG_PETS[p.key], ++_svgUid)}</svg>
+      </div>
+      <div class="dex-pet-name">${p.name}</div>
+      <div class="dex-pet-badge dex-badge-locked">未解锁</div>
+      <div class="dex-pet-desc">${p.desc}</div>
+    </div>`).join('');
+}
+function buildDexPage(){
+  // 宠物图鉴页面
+  const unlocked = gd.pets || [];
+  const totalCount = PET_CONFIGS.length;
+  document.getElementById('dex-count').textContent = `${unlocked.length}/${totalCount}`;
+
+  const list = document.getElementById('pet-list');
+  list.innerHTML = PET_CONFIGS.map((p,i)=>{
+    const isUnlocked = unlocked.some(u => u.petKey === p.key);
+    const isCurrent = gd.petIndex >= 0 && gd.petKey === p.key;
+    const artKey = p.key;
+
+    return `
+    <div class="dex-pet-card ${isCurrent?'current':''} ${!isUnlocked?'locked':''}" onclick="${isUnlocked?`switchCurrentPet('${p.key}')`:`showUnlockCondition(${i})`}">
+      <div class="dex-pet-art">
+        <svg class="dex-pet-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[artKey]||'', ++_svgUid)}</svg>
+      </div>
+      <div class="dex-pet-name">${p.name}</div>
+      <div class="dex-pet-badge ${isCurrent?'dex-badge-current':isUnlocked?'dex-badge-unlocked':'dex-badge-locked'}">
+        ${isCurrent?'当前使用':isUnlocked?'已解锁':'未解锁'}
+      </div>
+      <div class="dex-pet-desc">${isUnlocked?p.desc:`解锁条件：达到 Lv.${p.unlockLv||10}`}</div>
+    </div>`;
+  }).join('');
+}
+function hatchFirstPet(idx){
+  selectedPet=idx;
+  const cfg = PET_CONFIGS[idx];
+  // 孵化逻辑复用原有 hatchEgg
+  tab('home');
+  updateHomeUI();
+  setTimeout(()=>hatchEgg(cfg, idx), 300);
+}
+function switchCurrentPet(petKey){
+  // 切换到已解锁的宠物
+  if(petKey === gd.petKey) return;
+  const newIdx = PET_CONFIGS.findIndex(p => p.key === petKey);
+  if(newIdx < 0) return;
+
+  // 切换宠物：保留等级/经验/错题等数据（按宠物类型分别存储）
+  if(!gd.pets) gd.pets = [];
+  const currentPetData = gd.pets.find(p => p.petKey === gd.petKey) || {};
+  // 保存当前宠物的进度
+  if(gd.petKey && Object.keys(currentPetData).length > 0){
+    // 更新或添加当前宠物数据
+    const existingIdx = gd.pets.findIndex(p => p.petKey === gd.petKey);
+    const saveData = {
+      petKey: gd.petKey,
+      level: gd.level,
+      exp: gd.exp,
+      hp: gd.hp,
+      maxHp: gd.maxHp,
+      evoStage: gd.evoStage
+    };
+    if(existingIdx >= 0){
+      gd.pets[existingIdx] = saveData;
+    } else {
+      gd.pets.push(saveData);
+    }
+  }
+
+  // 加载新宠物数据
+  const newPetData = gd.pets.find(p => p.petKey === petKey);
+  const cfg = PET_CONFIGS[newIdx];
+  if(newPetData){
+    // 有历史数据：恢复进度
+    gd.petKey = cfg.key;
+    gd.petName = cfg.name;
+    gd.petType = cfg.type;
+    gd.petIndex = newIdx;
+    gd.level = newPetData.level || 1;
+    gd.exp = newPetData.exp || 0;
+    gd.hp = newPetData.hp || cfg.maxHp;
+    gd.maxHp = newPetData.maxHp || cfg.maxHp;
+    gd.evoStage = newPetData.evoStage || 0;
+  } else {
+    // 无历史数据：初始值
+    gd.petKey = cfg.key;
+    gd.petName = cfg.name;
+    gd.petType = cfg.type;
+    gd.petIndex = newIdx;
+    gd.level = 1;
+    gd.exp = 0;
+    gd.hp = cfg.maxHp;
+    gd.maxHp = cfg.maxHp;
+    gd.evoStage = 0;
+  }
+  saveGame();
+  updateHomeUI();
+  buildDexPage();
+  showModal('🎉','切换成功',`已切换为 ${cfg.name}！`);
+}
+function showUnlockCondition(idx){
+  const p = PET_CONFIGS[idx];
+  const unlockLv = p.unlockLv || 10;
+  const msg = `解锁 ${p.name} 需要：\n• 达到 Lv.${unlockLv}`;
+  showModal('🔒','宠物未解锁',msg);
+}
+function selectPet(idx){
+  selectedPet=idx;
+  document.querySelectorAll('.pet-card').forEach((c,i)=>c.classList.toggle('selected',i===idx));
+  document.getElementById('start-btn').disabled=false;
+  const p=PET_CONFIGS[idx];
+  document.getElementById('sel-chosen').textContent=`🥚 选择了：${p.type}系宠物蛋`;
+}
+function startAdventure(){
+  if(selectedPet<0) return;
+  const cfg=PET_CONFIGS[selectedPet];
+  // 孵化动画：先进主页显示蛋的状态（petIndex还是-1），再做破壳动画
+  tab('home');
+  updateHomeUI(); // 此时 petIndex=-1，显示神秘蛋
+  // 稍后执行孵化动画
+  setTimeout(()=>hatchEgg(cfg, selectedPet), 300);
+}
+function hatchEgg(cfg, petIdx){
+  // 找到主页蛋的 SVG 容器
+  const wrap = document.getElementById('pet-main-wrap');
+  const svg = document.getElementById('pet-main-svg');
+  // 孵化动画：摇晃 → 放大闪光 → 切换宠物
+  wrap.style.transition = 'transform .15s';
+  let shakes = 0;
+  const shakeTimer = setInterval(()=>{
+    shakes++;
+    wrap.style.transform = shakes%2===0 ? 'translateX(-8px) rotate(-5deg)' : 'translateX(8px) rotate(5deg)';
+    if(shakes>=8){
+      clearInterval(shakeTimer);
+      wrap.style.transform = '';
+      // 白色爆光
+      const flash = document.createElement('div');
+      flash.style.cssText='position:fixed;inset:0;background:#fff;opacity:0;z-index:500;pointer-events:none;transition:opacity .12s';
+      document.body.appendChild(flash);
+      requestAnimationFrame(()=>{ flash.style.opacity='1'; });
+      setTimeout(()=>{
+        flash.style.opacity='0';
+        // 设置宠物数据
+        gd.petIndex=petIdx; gd.petKey=cfg.key;
+        gd.petName=cfg.name; gd.petType=cfg.type;
+        gd.maxHp=cfg.maxHp; gd.hp=cfg.maxHp;
+        gd.evoStage=0;
+        saveGame(); updateHomeUI();
+        // 孵化成功弹出文字
+        setTimeout(()=>{
+          flash.remove();
+          showHatchToast(cfg.name);
+        }, 120);
+      }, 150);
+    }
+  }, 100);
+}
+function showHatchToast(petName){
+  const toast = document.createElement('div');
+  toast.style.cssText=`
+    position:fixed;left:50%;top:30%;transform:translate(-50%,-50%);
+    font-family:'Fredoka One','Noto Sans SC',cursive;
+    font-size:26px;font-weight:900;color:#fff;
+    text-shadow:0 0 20px rgba(167,139,250,0.8);
+    pointer-events:none;z-index:600;white-space:nowrap;
+    animation:hatchPop .6s cubic-bezier(.175,.885,.32,1.275) forwards;
+  `;
+  toast.textContent = `🎉 ${petName} 孵化成功！`;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 2200);
+}
+
+/* ══════════════════════════════════════════════════
+   主页
+══════════════════════════════════════════════════ */
+function updateHomeUI(){
+  const p=gd;
+  document.getElementById('h-level').textContent=`Lv.${p.level}`;
+  document.getElementById('h-vocab').textContent=`词汇量 ${p.vocab}`;
+  // 精力：图标+数字显示，不用进度条
+  document.getElementById('h-stamina').textContent=`${p.stamina}/${p.maxStamina}`;
+  // 精力颜色：低于30%时变红提示
+  const staminaTxt = document.getElementById('h-stamina');
+  if(staminaTxt) staminaTxt.style.color = (p.stamina/p.maxStamina < 0.3) ? '#f97316' : '';
+  const staminaTip = document.getElementById('h-stamina-tip');
+  if(staminaTip){
+    if(p.stamina < p.maxStamina) staminaTip.textContent = '(恢复中)';
+    else staminaTip.textContent = '';
+  }
+
+  // 当前进化阶段 SVG（未选宠物则显示神秘蛋）
+  if(gd.petIndex < 0){
+    const mainSvg = document.getElementById('pet-main-svg');
+    mainSvg.innerHTML = _uniquifySvg(SVG_PETS['egg_mystery'] || '', ++_svgUid);
+    document.getElementById('h-pet-name').textContent = '神秘宠物蛋';
+    document.getElementById('h-pet-type').textContent = '🥚 等待孵化…';
+    const aura0 = document.getElementById('pet-aura');
+    if(aura0){ aura0.className = 'pet-aura'; aura0.style.background = 'radial-gradient(circle,#7c3aed,transparent 70%)'; }
+  } else {
+    const curEvo = getCurrentEvoData();
+    setPetSvg(document.getElementById('pet-main-svg'), curEvo.key);
+    document.getElementById('h-pet-name').textContent=`${curEvo.name} · Lv.${p.level}`;
+    document.getElementById('h-pet-type').textContent=p.petType||'';
+    const aura=document.getElementById('pet-aura');
+    if(aura){ aura.className='pet-aura '+(PET_CONFIGS[p.petIndex]?.auraClass||'pet-aura-fire'); aura.style.background=''; }
+  }
+  const hpPct = p.maxHp>0 ? p.hp/p.maxHp*100 : 0;
+  setBar('h-hp-bar', p.hp, p.maxHp, hpPct<30?'bar-hp danger':hpPct<60?'bar-hp warning':'bar-hp');
+
+  // HP 文字：为零时显示恢复中提示
+  const hpTxtEl = document.getElementById('h-hp-text');
+  if(p.hp <= 0){
+    hpTxtEl.textContent = '😴 恢复中…';
+    hpTxtEl.style.color = '#f97316';
+  } else {
+    hpTxtEl.textContent = `${p.hp}/${p.maxHp}`;
+    hpTxtEl.style.color = '';
+  }
+
+  // 宠物外观状态类
+  const wrap = document.getElementById('pet-main-wrap');
+  if(wrap){
+    wrap.classList.remove('fainted','low-hp','full-hp');
+    if(p.hp <= 0)               wrap.classList.add('fainted');
+    else if(hpPct < 30)         wrap.classList.add('low-hp');
+    else if(hpPct >= 100)       wrap.classList.add('full-hp');
+  }
+
+  // interact-hint 文字随状态变化
+  const hint = document.querySelector('.interact-hint');
+  if(hint){
+    if(p.hp <= 0)         hint.textContent = '😴 宠物晕倒中… 点击鼓励加速恢复 HP！';
+    else if(hpPct < 30)   hint.textContent = '❤️‍🩹 HP 偏低，点击宠物互动 +10 HP';
+    else if(hpPct < 100)  hint.textContent = '💚 点击宠物互动加速 HP 恢复';
+    else                  hint.textContent = '✨ 宠物状态满格！点击互动撒个娇';
+  }
+
+  setBar('h-exp-bar', p.exp, 50, 'bar-exp');
+  document.getElementById('h-exp-text').textContent=`${p.exp}/50`;
+
+  // 进化提示 banner
+  checkEvoBanner();
+  buildTaskList();
+}
+
+// 获取当前进化阶段数据
+function getCurrentEvoData(){
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return {name:gd.petName||'??', key:gd.petKey||'fire'};
+  return cfg.evo[gd.evoStage||0] || cfg.evo[0];
+}
+
+// 检查并渲染进化提示 banner
+function checkEvoBanner(){
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return;
+  const stage = gd.evoStage||0;
+  const nextEvo = cfg.evo[stage+1];
+  // 移除旧 banner
+  const old = document.getElementById('evo-banner');
+  if(old) old.remove();
+  if(!nextEvo) return; // 已进化到最终形态
+  if(gd.level >= nextEvo.condLv){
+    // 插入 banner 到宠物区上方
+    const anchor = document.getElementById('pet-main-wrap').closest('.pet-stage');
+    const banner = document.createElement('div');
+    banner.id = 'evo-banner';
+    banner.className = 'evo-banner';
+    banner.innerHTML = `<div class="evo-banner-ico">✨</div>
+      <div class="evo-banner-txt">
+        <strong>${getCurrentEvoData().name} 可以进化了！</strong>
+        <span>点击查看进化 → ${nextEvo.name}</span>
+      </div>
+      <div class="evo-banner-arrow">›</div>`;
+    banner.onclick = () => showEvoPanel();
+    anchor.parentNode.insertBefore(banner, anchor);
+  }
+}
+function setBar(id, cur, max, cls){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.style.width=(max>0?Math.max(0,cur/max*100):0)+'%';
+  if(cls) el.className='bar-fill '+cls;
+}
+
+let taskOpen=false;
+function toggleTasks(){
+  taskOpen=!taskOpen;
+  document.getElementById('task-body').classList.toggle('open',taskOpen);
+  document.getElementById('task-arrow').classList.toggle('open',taskOpen);
+}
+function buildTaskList(){
+  const el=document.getElementById('task-body');
+  el.innerHTML=tasks.map(t=>`
+    <div class="task-row">
+      <div class="task-icon-bg">${t.icon}</div>
+      <div class="task-info">
+        <div class="task-name">${t.name}</div>
+        <div class="task-desc">${t.desc} · 奖励 ${t.reward}</div>
+      </div>
+      ${t.done
+        ? '<span class="task-done-badge">✓ 完成</span>'
+        : `<span class="task-prog">${t.progress}/${t.target}</span>`
+      }
+    </div>`).join('');
+}
+function interact(){
+  const wrap = document.getElementById('pet-main-wrap');
+  if(!wrap) return;
+
+  taskProgress('interact', 1);
+
+  // 互动不再直接回血；HP 低时给出治疗提示
+  if(gd.hp <= 0){
+    wrap.classList.remove('shake-anim');
+    void wrap.offsetWidth;
+    wrap.classList.add('shake-anim');
+    setTimeout(()=>wrap.classList.remove('shake-anim'), 420);
+    spawnEmote(wrap, '😵');
+    // 轻提示：去诊所
+    showDmg('去治疗!', wrap, 'heal');
+    saveGame(); updateHomeUI();
+    return;
+  }
+
+  if(gd.hp < gd.maxHp){
+    // 只显示提示气泡，不加血
+    spawnEmote(wrap, '💊');
+  }
+
+  saveGame(); updateHomeUI();
+
+  // 弹跳动画
+  wrap.classList.remove('bounce');
+  void wrap.offsetWidth;
+  wrap.classList.add('bounce');
+  setTimeout(()=>wrap.classList.remove('bounce'), 460);
+
+  // 表情气泡（根据 HP 状态显示不同心情）
+  const hpPct = gd.hp / gd.maxHp;
+  let emote = '😊';
+  if(hpPct >= 1)         emote = '🤩';
+  else if(hpPct < 0.3)   emote = '😰';
+  else if(hpPct > 0.7)   emote = '😄';
+  spawnEmote(wrap, emote);
+
+  // 爱心粒子（3~5颗，随机分散）
+  const rect = wrap.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  const count = 3 + Math.floor(Math.random()*3);
+  for(let i=0; i<count; i++){
+    setTimeout(()=>{
+      const h = document.createElement('div');
+      h.className = 'heart-particle';
+      h.textContent = ['❤️','💖','💗','💕'][Math.floor(Math.random()*4)];
+      h.style.left = (cx + (Math.random()-0.5)*60) + 'px';
+      h.style.top  = (cy - 10 + (Math.random()-0.5)*30) + 'px';
+      h.style.fontSize = (14 + Math.random()*12) + 'px';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 1050);
+    }, i * 80);
+  }
+
+  // 音效
+  playBeep(660, 0.06, 'sine');
+  setTimeout(()=>playBeep(880, 0.04, 'sine'), 100);
+}
+
+/* 生成宠物表情气泡 */
+function spawnEmote(wrap, emoji){
+  const old = wrap.querySelector('.pet-emote');
+  if(old) old.remove();
+  const e = document.createElement('div');
+  e.className = 'pet-emote';
+  e.textContent = emoji;
+  wrap.appendChild(e);
+  setTimeout(()=>e.remove(), 750);
+}
+
+/* ══════════════════════════════════════════════════
+   副本站
+══════════════════════════════════════════════════ */
+function buildDungeonList(){
+  // 更新治疗诊所入口
+  const healEntry = document.getElementById('heal-entry');
+  const healDesc  = document.getElementById('heal-entry-desc');
+  if(healEntry){
+    const wrongPending = (gd.wrongWords||[]).filter(w=>(w.masteredCount||0)<2);
+    const hpNotFull = gd.hp < gd.maxHp;
+    // HP 不满时始终显示治疗入口（即使没有错题，也有练习题可以刷）
+    healEntry.style.display = hpNotFull ? 'block' : 'none';
+    if(healDesc){
+      const cnt = wrongPending.length;
+      if(cnt > 0){
+        healDesc.textContent = `${cnt} 道错题待巩固 · 答对一题回 +${HEAL_HP_PER_Q} HP（当前 ${gd.hp}/${gd.maxHp}）`;
+      } else {
+        healDesc.textContent = `HP 未满，去诊所做练习题回血吧！（当前 ${gd.hp}/${gd.maxHp}）`;
+      }
+    }
+  }
+
+  const el=document.getElementById('dungeon-list');
+  el.innerHTML=DUNGEON_CONFIGS.map(d=>`
+    <div class="dg-card" onclick="enterDungeon('${d.id}')">
+      <div class="dg-banner">
+        <div class="dg-banner-grad" style="background:${d.grad}"></div>
+        <div class="dg-banner-overlay"></div>
+        <div class="dg-banner-emoji">${d.emoji}</div>
+        <div class="dg-banner-title">${d.name}</div>
+      </div>
+      <div class="dg-body">
+        <div class="dg-desc">${d.desc}</div>
+        <div class="dg-tags">
+          ${d.tags.map((t,i)=>`<span class="dg-tag ${d.tagClasses[i]}">${t}</span>`).join('')}
+          <button class="dg-enter">出发 →</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function enterDungeon(id){
+  const d=DUNGEON_CONFIGS.find(x=>x.id===id);
+  if(!d) return;
+  if(gd.petIndex<0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋，再出发冒险！'); return; }
+  if(gd.hp <= 0){
+    showModal('😴','宠物HP耗尽',`宠物正在恢复中（当前 HP: 0/${gd.maxHp}），回到主页与它互动可加速恢复！`);
+    return;
+  }
+  if(gd.stamina<d.staminaCost){
+    showModal('⚡','精力不足',`进入副本需要 ${d.staminaCost} 点精力，当前精力 ${gd.stamina}。`);
+    return;
+  }
+  gd.stamina-=d.staminaCost; saveGame();
+  enterMap(id);
+}
+
+/* ══════════════════════════════════════════════════
+   大地图探索系统
+══════════════════════════════════════════════════ */
+
+/* ── 地图数据 ── */
+// tile: 0=地面 1=树/墙（不可通行）
+const MAP_DATA = {
+  forest:{
+    name:'🌲 森林冒险', cols:16, rows:12,
+    tiles:[
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ],
+    playerStart:{x:2,y:2},
+    tileIcon:{ground:'', wall:'🌲'},
+    monsterPool:['slime','slime','goblin'],
+    monsterCount:5,
+    monsterEmoji:{slime:'🟢', goblin:'🪨'},
+    bgColor:'#091508',
+  },
+  cave:{
+    name:'⛰️ 洞穴探险', cols:16, rows:12,
+    tiles:[
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0],
+      [0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ],
+    playerStart:{x:2,y:2},
+    tileIcon:{ground:'', wall:'🪨'},
+    monsterPool:['goblin','goblin','dragon'],
+    monsterCount:6,
+    monsterEmoji:{goblin:'🪨', dragon:'🐲'},
+    bgColor:'#100808',
+  },
+  volcano:{
+    name:'🌋 火山试炼', cols:16, rows:12,
+    tiles:[
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+      [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+      [0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0],
+      [0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0],
+      [0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    ],
+    playerStart:{x:2,y:2},
+    tileIcon:{ground:'', wall:'🔥'},
+    monsterPool:['dragon','dragon','goblin'],
+    monsterCount:7,
+    monsterEmoji:{dragon:'🐲', goblin:'🪨'},
+    bgColor:'#150402',
+  }
+};
+
+/* ── 地图状态 ── */
+let ms = {
+  dungId:'', mapData:null,
+  // 玩家像素坐标（中心点）
+  px:0, py:0,
+  // 玩家速度（摇杆控制）
+  vx:0, vy:0,
+  monsters:[],     // [{id, px, py, vx, vy, key, emoji, el, defeated, dir, dirTimer}]
+  spawnTimer:null,
+  pendingBattle:null,
+  raf:null,        // requestAnimationFrame handle
+  lastTime:0,
+  // 地图像素尺寸（enterMap时算好）
+  mapW:0, mapH:0, cellSize:0,
+  // 摇杆状态
+  joystick:{ active:false, baseX:0, baseY:0, dx:0, dy:0 },
+  inBattle:false,
+};
+
+/* ── 进入地图 ── */
+function enterMap(dungId){
+  const md = MAP_DATA[dungId];
+  if(!md){ startBattle(dungId); return; } // 兜底
+
+  // 安全检查：清除玩家出生点及周边1格内的所有障碍，防止卡死
+  (function clearSpawnArea(mapData){
+    const sx = mapData.playerStart.x, sy = mapData.playerStart.y;
+    for(let dy=-1; dy<=1; dy++){
+      for(let dx=-1; dx<=1; dx++){
+        const cx=sx+dx, cy=sy+dy;
+        if(cy>=0 && cy<mapData.rows && cx>=0 && cx<mapData.cols){
+          mapData.tiles[cy][cx] = 0;
+        }
+      }
+    }
+  })(md);
+
+  ms.dungId = dungId;
+  ms.mapData = md;
+  ms.pendingBattle = null;
+  ms.inBattle = false;
+  ms.vx = 0; ms.vy = 0;
+
+  // 计算像素尺寸：canvas撑满arena
+  // 在go()之后arena才有尺寸，先go再算
+  go('map-page');
+
+  // 等一帧让 layout 生效
+  requestAnimationFrame(()=>{
+    const arena = document.getElementById('map-arena');
+    const W = arena.clientWidth  || 390;
+    const H = arena.clientHeight || 520;
+    const cs = Math.min(Math.floor(W / md.cols), Math.floor(H / md.rows));
+    ms.cellSize = cs;
+    ms.mapW = cs * md.cols;
+    ms.mapH = cs * md.rows;
+
+    // 起点像素（格中心）
+    ms.px = (md.playerStart.x + 0.5) * cs;
+    ms.py = (md.playerStart.y + 0.5) * cs;
+
+    // 更新顶部信息
+    document.getElementById('map-dungeon-name').textContent = md.name;
+    document.getElementById('map-hp-txt').textContent = gd.hp;
+    document.getElementById('map-page').style.background = md.bgColor;
+
+    // 初始化canvas
+    const canvas = document.getElementById('map-canvas');
+    canvas.width  = ms.mapW;
+    canvas.height = ms.mapH;
+    canvas.style.left = Math.round((W - ms.mapW)/2) + 'px';
+    canvas.style.top  = Math.round((H - ms.mapH)/2) + 'px';
+    canvas.style.width  = ms.mapW + 'px';
+    canvas.style.height = ms.mapH + 'px';
+
+    // 绘制静态地图背景（一次性）
+    drawMapBackground(canvas, md, cs);
+
+    // 初始化怪物
+    ms.monsters = spawnMonstersPixel(md, []);
+
+    // 渲染精灵层
+    renderSprites();
+
+    // 启动游戏循环
+    if(ms.raf) cancelAnimationFrame(ms.raf);
+    ms.lastTime = performance.now();
+    ms.raf = requestAnimationFrame(gameLoop);
+
+    // 绑定摇杆
+    bindJoystick();
+
+    // 启动怪物刷新
+    if(ms.spawnTimer) clearInterval(ms.spawnTimer);
+    ms.spawnTimer = setInterval(()=>respawnMonstersPixel(), 15000);
+  });
+}
+
+/* ── 绘制地图背景（canvas，一次性） ── */
+function drawMapBackground(canvas, md, cs){
+  const ctx = canvas.getContext('2d');
+  const COLORS = {
+    forest:{ ground:'#0f2010', wall:'#06100a', groundBorder:'rgba(34,197,94,0.12)' },
+    cave:  { ground:'#12080c', wall:'#080308', groundBorder:'rgba(180,100,100,0.12)' },
+    volcano:{ ground:'#150402', wall:'#0a0200', groundBorder:'rgba(239,100,40,0.12)' },
+  };
+  const theme = COLORS[ms.dungId] || COLORS.forest;
+  const wallIcon = md.tileIcon?.wall || '🌲';
+
+  for(let row=0; row<md.rows; row++){
+    for(let col=0; col<md.cols; col++){
+      const x = col*cs, y = row*cs;
+      const isWall = md.tiles[row][col]===1;
+      ctx.fillStyle = isWall ? theme.wall : theme.ground;
+      ctx.fillRect(x, y, cs, cs);
+      if(!isWall){
+        ctx.strokeStyle = theme.groundBorder;
+        ctx.strokeRect(x+.5, y+.5, cs-1, cs-1);
+      }
+      if(isWall){
+        // 绘制墙图标
+        ctx.font = `${Math.round(cs*0.52)}px serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.globalAlpha = 0.7;
+        ctx.fillText(wallIcon, x + cs/2, y + cs/2);
+        ctx.globalAlpha = 1;
+      }
+    }
+  }
+}
+
+/* ── 生成怪物（像素坐标） ── */
+function spawnMonstersPixel(md, existing){
+  const cs = ms.cellSize;
+  const occupied = new Set(existing.filter(m=>!m.defeated).map(m=>`${Math.floor(m.px/cs)},${Math.floor(m.py/cs)}`));
+  const empty = [];
+  for(let row=0; row<md.rows; row++){
+    for(let col=0; col<md.cols; col++){
+      const k = `${col},${row}`;
+      if(md.tiles[row][col]===0 && !occupied.has(k) &&
+         !(col===md.playerStart.x && row===md.playerStart.y)){
+        // 离玩家出生点至少3格
+        const dist = Math.abs(col-md.playerStart.x)+Math.abs(row-md.playerStart.y);
+        if(dist>=3) empty.push({x:col,y:row});
+      }
+    }
+  }
+  empty.sort(()=>Math.random()-.5);
+  const result = [...existing.filter(m=>!m.defeated)];
+  const need = md.monsterCount - result.length;
+  for(let i=0;i<need&&i<empty.length;i++){
+    const pool = md.monsterPool;
+    const key = pool[Math.floor(Math.random()*pool.length)];
+    const spd = 28 + Math.random()*18; // px/s
+    const angle = Math.random()*Math.PI*2;
+    result.push({
+      id: Date.now()+i+'_'+Math.random().toString(36).slice(2,6),
+      px: (empty[i].x + 0.5)*cs,
+      py: (empty[i].y + 0.5)*cs,
+      vx: Math.cos(angle)*spd,
+      vy: Math.sin(angle)*spd,
+      key, emoji: md.monsterEmoji[key]||'👾',
+      el: null,
+      defeated: false,
+      dirTimer: 1.5 + Math.random()*2, // 下次改变方向的秒数
+    });
+  }
+  return result;
+}
+
+/* ── 渲染精灵（DOM elements） ── */
+function renderSprites(){
+  const layer = document.getElementById('map-sprites');
+  const arena = document.getElementById('map-arena');
+  const W = arena.clientWidth  || 390;
+  const H = arena.clientHeight || 520;
+  const offX = Math.round((W - ms.mapW)/2);
+  const offY = Math.round((H - ms.mapH)/2);
+
+  // 玩家
+  const pl = document.getElementById('map-player');
+  pl.style.left = (offX + ms.px) + 'px';
+  pl.style.top  = (offY + ms.py) + 'px';
+
+  // 怪物：按需创建/更新/移除DOM
+  const existIds = new Set(ms.monsters.filter(m=>!m.defeated).map(m=>m.id));
+
+  // 移除已消灭怪物的DOM
+  layer.querySelectorAll('.map-monster').forEach(el=>{
+    if(!existIds.has(el.dataset.id)) el.remove();
+  });
+
+  // 更新/创建
+  ms.monsters.filter(m=>!m.defeated).forEach((m,i)=>{
+    let el = m.el;
+    if(!el || !el.parentNode){
+      el = document.createElement('div');
+      el.className = 'map-monster';
+      el.dataset.id = m.id;
+      el.textContent = m.emoji;
+      el.style.animationDelay = `${(i*0.37)%2.2}s`;
+      layer.appendChild(el);
+      m.el = el;
+    }
+    el.style.left = (offX + m.px) + 'px';
+    el.style.top  = (offY + m.py) + 'px';
+  });
+}
+
+/* ── 游戏主循环 ── */
+function gameLoop(now){
+  if(ms.inBattle){ ms.raf=null; return; }
+  const dt = Math.min((now - ms.lastTime)/1000, 0.05); // 最多50ms，防跳帧
+  ms.lastTime = now;
+
+  const md = ms.mapData;
+  const cs = ms.cellSize;
+  const SPEED = 90; // 玩家速度 px/s
+  const PLAYER_R = cs * 0.35; // 玩家碰撞半径
+  const MON_R    = cs * 0.38; // 怪物碰撞半径
+  const ENCOUNTER_DIST = cs * 0.55; // 触发遭遇距离
+
+  // 摇杆输入
+  const joy = ms.joystick;
+  if(joy.active && (joy.dx!==0 || joy.dy!==0)){
+    const len = Math.sqrt(joy.dx*joy.dx + joy.dy*joy.dy);
+    const nx = joy.dx/len, ny = joy.dy/len;
+    ms.vx = nx * SPEED;
+    ms.vy = ny * SPEED;
+  } else {
+    ms.vx = 0; ms.vy = 0;
+  }
+
+  // 移动玩家
+  let npx = ms.px + ms.vx * dt;
+  let npy = ms.py + ms.vy * dt;
+  npx = clampAndSlide(ms.px, ms.py, npx, npy, PLAYER_R, md, cs).x;
+  npy = clampAndSlide(ms.px, ms.py, npx, npy, PLAYER_R, md, cs).y;
+  ms.px = npx; ms.py = npy;
+
+  // 移动怪物（随机游走）
+  ms.monsters.filter(m=>!m.defeated).forEach(m=>{
+    m.dirTimer -= dt;
+    if(m.dirTimer <= 0){
+      // 随机换方向
+      const spd = 28 + Math.random()*18;
+      const angle = Math.random()*Math.PI*2;
+      m.vx = Math.cos(angle)*spd;
+      m.vy = Math.sin(angle)*spd;
+      m.dirTimer = 1.5 + Math.random()*2.5;
+    }
+    let nmx = m.px + m.vx * dt;
+    let nmy = m.py + m.vy * dt;
+    const res = clampAndSlide(m.px, m.py, nmx, nmy, MON_R, md, cs);
+    if(res.hitX){ m.vx = -m.vx * 0.5; m.dirTimer=0; }
+    if(res.hitY){ m.vy = -m.vy * 0.5; m.dirTimer=0; }
+    m.px = res.x; m.py = res.y;
+  });
+
+  // 检测遭遇
+  if(!ms.pendingBattle){
+    for(const mon of ms.monsters){
+      if(mon.defeated) continue;
+      const dx = ms.px - mon.px, dy = ms.py - mon.py;
+      if(Math.sqrt(dx*dx+dy*dy) < ENCOUNTER_DIST){
+        triggerEncounter(mon);
+        break;
+      }
+    }
+  }
+
+  // 更新精灵位置
+  renderSprites();
+
+  ms.raf = requestAnimationFrame(gameLoop);
+}
+
+/* ── 碰撞：移动+滑动 ── 返回{x,y,hitX,hitY} */
+function clampAndSlide(ox, oy, nx, ny, r, md, cs){
+  // 先尝试完整移动
+  let hitX=false, hitY=false;
+  // X轴
+  if(!rectCollide(nx, oy, r, md, cs)){
+    // X ok
+  } else {
+    nx = ox; hitX=true;
+  }
+  // Y轴
+  if(!rectCollide(nx, ny, r, md, cs)){
+    // Y ok
+  } else {
+    ny = oy; hitY=true;
+  }
+  // 边界夹紧
+  nx = Math.max(r, Math.min(ms.mapW-r, nx));
+  ny = Math.max(r, Math.min(ms.mapH-r, ny));
+  return {x:nx, y:ny, hitX, hitY};
+}
+
+/* ── 圆形与tile碰撞检测 ── */
+function rectCollide(px, py, r, md, cs){
+  // 检查圆心周围可能重叠的格子
+  const minCol = Math.floor((px-r)/cs);
+  const maxCol = Math.floor((px+r)/cs);
+  const minRow = Math.floor((py-r)/cs);
+  const maxRow = Math.floor((py+r)/cs);
+  for(let row=minRow; row<=maxRow; row++){
+    for(let col=minCol; col<=maxCol; col++){
+      if(row<0||col<0||row>=md.rows||col>=md.cols) return true; // 出界视为碰墙
+      if(md.tiles[row][col]===1){
+        // 圆与矩形碰撞（AABB vs circle）
+        const rx1=col*cs, ry1=row*cs, rx2=rx1+cs, ry2=ry1+cs;
+        const cx=Math.max(rx1,Math.min(px,rx2));
+        const cy=Math.max(ry1,Math.min(py,ry2));
+        const dx=px-cx, dy=py-cy;
+        if(dx*dx+dy*dy < r*r) return true;
+      }
+    }
+  }
+  return false;
+}
+
+/* ── 绑定虚拟摇杆 ── */
+function bindJoystick(){
+  const base  = document.getElementById('map-joystick-base');
+  const knob  = document.getElementById('map-joystick-knob');
+  const joy   = ms.joystick;
+  const MAX_R = 35; // 摇杆最大偏移半径
+
+  function onStart(e){
+    e.preventDefault();
+    joy.active = true;
+    const touch = e.touches ? e.touches[0] : e;
+    const rect = base.getBoundingClientRect();
+    joy.baseX = rect.left + rect.width/2;
+    joy.baseY = rect.top  + rect.height/2;
+    onMove(e);
+  }
+  function onMove(e){
+    if(!joy.active) return;
+    e.preventDefault();
+    const touch = e.touches ? e.touches[0] : e;
+    let dx = touch.clientX - joy.baseX;
+    let dy = touch.clientY - joy.baseY;
+    const len = Math.sqrt(dx*dx+dy*dy);
+    if(len > MAX_R){ dx=dx/len*MAX_R; dy=dy/len*MAX_R; }
+    joy.dx = dx; joy.dy = dy;
+    knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+  }
+  function onEnd(e){
+    joy.active=false; joy.dx=0; joy.dy=0;
+    knob.style.transform = 'translate(-50%,-50%)';
+  }
+
+  // 清旧监听
+  base._cleanup && base._cleanup();
+  base.addEventListener('touchstart', onStart, {passive:false});
+  base.addEventListener('touchmove',  onMove,  {passive:false});
+  base.addEventListener('touchend',   onEnd,   {passive:false});
+  base.addEventListener('mousedown',  onStart);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup',   onEnd);
+  base._cleanup = ()=>{
+    base.removeEventListener('touchstart', onStart);
+    base.removeEventListener('touchmove',  onMove);
+    base.removeEventListener('touchend',   onEnd);
+    base.removeEventListener('mousedown',  onStart);
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup',   onEnd);
+  };
+}
+
+/* ── 定时刷新怪物 ── */
+function respawnMonstersPixel(){
+  if(!document.getElementById('map-page').classList.contains('active')) return;
+  const md = ms.mapData;
+  // 清理已消灭怪物记录
+  ms.monsters = ms.monsters.filter(m=>{
+    if(m.defeated){
+      if(m.el && m.el.parentNode) m.el.parentNode.removeChild(m.el);
+      return false;
+    }
+    return true;
+  });
+  const before = ms.monsters.length;
+  if(before >= md.monsterCount) return; // 已满，不刷新
+  ms.monsters = spawnMonstersPixel(md, ms.monsters);
+  const after = ms.monsters.filter(m=>!m.defeated).length;
+  if(after > before){
+    const pop = document.createElement('div');
+    pop.className = 'mon-spawn-pop';
+    pop.textContent = `👾 新的怪物出现了！`;
+    document.body.appendChild(pop);
+    setTimeout(()=>pop.remove(), 2000);
+  }
+}
+
+/* ── 触发遭遇战 ── */
+function triggerEncounter(mon){
+  if(ms.inBattle) return;
+  ms.inBattle = true;
+  ms.pendingBattle = mon;
+  ms.vx = 0; ms.vy = 0;
+  ms.joystick.active=false; ms.joystick.dx=0; ms.joystick.dy=0;
+  const knob = document.getElementById('map-joystick-knob');
+  if(knob) knob.style.transform='translate(-50%,-50%)';
+
+  const overlay = document.getElementById('encounter-overlay');
+  document.getElementById('encounter-mon').textContent = mon.emoji;
+  document.getElementById('encounter-txt').textContent =
+    `野生 ${MONSTER_CONFIGS.find(m=>m.key===mon.key)?.name||'怪物'} 出现了！`;
+  overlay.classList.add('on');
+  setTimeout(()=>{
+    overlay.classList.remove('on');
+    startBattle(ms.dungId, mon.key);
+  }, 900);
+}
+
+/* ── 战斗结束回到地图 ── */
+function returnToMap(win, exp, coins, correctCount){
+  const mon = ms.pendingBattle;
+  if(mon){
+    mon.defeated = true;
+    if(mon.el && mon.el.parentNode) mon.el.parentNode.removeChild(mon.el);
+    ms.pendingBattle = null;
+  }
+  ms.inBattle = false;
+  document.getElementById('map-hp-txt').textContent = gd.hp > 0 ? gd.hp : '😴';
+  go('map-page');
+  // 立即补充被消灭的怪物（延迟5s，避免玩家刚回来就被触发）
+  setTimeout(()=>respawnMonstersPixel(), 5000);
+
+  // 重启游戏循环
+  if(ms.raf) cancelAnimationFrame(ms.raf);
+  ms.lastTime = performance.now();
+  ms.raf = requestAnimationFrame(gameLoop);
+
+  // 显示结算 toast
+  const toast = document.getElementById('map-result-toast');
+  const emoji = document.getElementById('map-rt-emoji');
+  const title = document.getElementById('map-rt-title');
+  const stats = document.getElementById('map-rt-stats');
+  if(win){
+    emoji.textContent = '🏆';
+    title.textContent = '胜利！'; title.className = 'map-rt-title win';
+    stats.innerHTML = `答对 <span>${correctCount}</span> 题 &nbsp;·&nbsp; +<span>${exp}</span> EXP &nbsp;·&nbsp; +<span>${coins}</span> 🪙 &nbsp;·&nbsp; ❤️ 剩余 <span>${gd.hp}/${gd.maxHp}</span>`;
+  } else {
+    emoji.textContent = '💔';
+    title.textContent = '失败…'; title.className = 'map-rt-title lose';
+    stats.innerHTML = `HP 归零，宠物正在缓慢恢复中…<br><span style="font-size:11px;opacity:0.7">回到主页与宠物互动可加速 HP 恢复！</span>`;
+  }
+  toast.classList.add('show');
+}
+
+function closeMapResult(){
+  document.getElementById('map-result-toast').classList.remove('show');
+}
+
+/* ── 离开地图 ── */
+function exitMap(){
+  if(ms.raf){ cancelAnimationFrame(ms.raf); ms.raf=null; }
+  if(ms.spawnTimer){ clearInterval(ms.spawnTimer); ms.spawnTimer=null; }
+  // 清理摇杆监听
+  const base = document.getElementById('map-joystick-base');
+  if(base && base._cleanup){ base._cleanup(); base._cleanup=null; }
+  // 清理怪物DOM
+  const layer = document.getElementById('map-sprites');
+  layer.querySelectorAll('.map-monster').forEach(el=>el.remove());
+  ms.monsters = [];
+  ms.inBattle = false;
+  tab('dungeon');
+}
+
+
+const BC={ NORMAL_DMG:12, COMBO_BONUS:0.15, WRONG_PEN:15,
+  FEVER_TRIG:3, FEVER_DUR:12, FEVER_DMG:15, FEVER_MULT:1.2,
+  FEVER_PAIRS:4,
+  // FEVER模式下怪物攻击间隔乘以此系数（>1 = 变慢，玩家喘息空间）
+  FEVER_ATK_SLOW:2.0
+};
+
+let bs={};
+let btimer=null;
+let wLevel=1;
+let curQ=null, curOpts=[], answering=false;
+
+function getWLevel(){ return Math.min(4, Math.floor(gd.level/10)+1); }
+function getWords(lv, cnt){
+  const pool=(WORDBANK[String(lv)]||WORDBANK['1']).words;
+  return [...pool].sort(()=>Math.random()-.5).slice(0,cnt);
+}
+function genQ(lv){
+  const pool=(WORDBANK[String(lv)]||WORDBANK['1']).words;
+  const correct=pool[Math.floor(Math.random()*pool.length)];
+  const dis=pool.filter(w=>w.en!==correct.en).sort(()=>Math.random()-.5).slice(0,3);
+  return { correct, opts:[...dis,correct].sort(()=>Math.random()-.5) };
+}
+
+function startBattle(dungId, monsterKeyOverride){
+  const dc=DUNGEON_CONFIGS.find(d=>d.id===dungId)||DUNGEON_CONFIGS[0];
+  // 地图遭遇时用具体怪物；否则用副本默认怪物
+  const mc = (monsterKeyOverride
+    ? MONSTER_CONFIGS.find(m=>m.key===monsterKeyOverride)
+    : null) || MONSTER_CONFIGS[dc.monster] || MONSTER_CONFIGS[0];
+  wLevel=getWLevel();
+  // 雷系天赋：答题后怪物蓄力延迟额外+1s
+  const petCfg = PET_CONFIGS[gd.petIndex];
+  const isThunder = petCfg?.key==='thunder';
+  bs={
+    phase:'normal', dungId, monsterKey:mc.key, monsterName:mc.name,
+    monsterHp:mc.hp, monsterMaxHp:mc.hp,
+    monsterAtk:mc.atk, monsterDef:mc.def,
+    monsterAtkInterval:mc.atkInterval + (isThunder ? 1.0 : 0), // 雷系天赋：攻击间隔直接+1s
+    playerHp:gd.hp, playerMaxHp:gd.maxHp,
+    combo:0, correctCount:0,
+    // DPS 系统：蓄力进度 0~1（全程连续，不被答题打断）
+    atkProgress:0,      // 当前蓄力进度（0=刚开始，1=即将攻击）
+    atkPaused:true,     // 仅在加载中暂停
+    feverTimeLeft:BC.FEVER_DUR,
+    feverTotalMatched:0,
+    feverPairs:[], feverRight:[],
+    fL:new Array(BC.FEVER_PAIRS).fill(false), fR:new Array(BC.FEVER_PAIRS).fill(false),
+    selLeft:-1, isOver:false, win:false
+  };
+  const curEvo = getCurrentEvoData();
+  setMonsterSvg(document.getElementById('monster-svg'), mc.key);
+  document.getElementById('monster-name').textContent=mc.name;
+  setPetSvg(document.getElementById('player-mini-svg'), curEvo.key);
+  document.getElementById('player-name-txt').textContent=`${curEvo.name} Lv.${gd.level}`;
+  document.getElementById('battle-loading').style.display='flex';
+  document.getElementById('normal-panel').style.display='none';
+  document.getElementById('fever-panel').className='';
+  document.getElementById('combo-badge').textContent='';
+  updateBattleUI();
+  go('battle-page');
+  setTimeout(()=>{
+    document.getElementById('battle-loading').style.display='none';
+    nextQ(); startBTimer();
+  }, 700);
+}
+function updateBattleUI(){
+  const mPct=bs.monsterMaxHp>0?bs.monsterHp/bs.monsterMaxHp*100:0;
+  document.getElementById('monster-hp-bar').style.width=mPct+'%';
+  document.getElementById('monster-hp-txt').textContent=`${bs.monsterHp}/${bs.monsterMaxHp}`;
+  const pPct=bs.playerMaxHp>0?bs.playerHp/bs.playerMaxHp*100:0;
+  const pFill=document.getElementById('player-hp-fill');
+  pFill.style.width=pPct+'%';
+  pFill.className='hud-hp-fill player-fill'+(pPct<30?' danger':'');
+  document.getElementById('player-hp-num').textContent=`${bs.playerHp}/${bs.playerMaxHp}`;
+  document.getElementById('combo-badge').textContent=bs.combo>1?`🔥 ${bs.combo} 连击!`:'';
+}
+function nextQ(){
+  if(bs.isOver||bs.phase!=='normal') return;
+  document.getElementById('normal-panel').style.display='flex';
+  document.getElementById('fever-panel').className='';
+  const q=genQ(wLevel);
+  curQ=q.correct; curOpts=q.opts; answering=false;
+  document.getElementById('q-cn').textContent=q.correct.cn;
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('opt'+i);
+    b.textContent=q.opts[i]?.en||''; b.disabled=false; b.className='opt-btn';
+  }
+  // 蓄力条不重置，持续推进（去掉打断机制后进度连贯）
+  bs.atkPaused=false;
+  updateAtkChargeUI();
+}
+function selectOption(idx){
+  if(answering||bs.isOver||bs.phase!=='normal') return;
+  answering=true;
+  // 怪物蓄力不受答题打断，持续推进
+
+  const chosen=curOpts[idx];
+  const ok=chosen.en===curQ.en;
+  const petCfg = PET_CONFIGS[gd.petIndex];
+  for(let i=0;i<4;i++) document.getElementById('opt'+i).disabled=true;
+  if(ok){
+    document.getElementById('opt'+idx).classList.add('correct');
+    bs.combo++; bs.correctCount++;
+    // 玩家伤害受怪物DEF减免
+    let dmg=Math.max(1, Math.floor(BC.NORMAL_DMG*(1+BC.COMBO_BONUS*bs.combo)) - (bs.monsterDef||0));
+    // 四维差异化：火系暴击 20% 概率 1.5x
+    let critHit = false;
+    if(petCfg?.key==='fire' && Math.random()<0.2){ dmg=Math.floor(dmg*1.5); critHit=true; }
+    bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
+    flashHit('correct');
+    monsterHitAnim();
+    spawnSparks(document.getElementById('opt'+idx));
+    if(bs.combo>1) showComboBurst(bs.combo);
+    showDmg((critHit?'💥 暴击 -':'-')+dmg, document.getElementById('enemy-sprite'));
+    taskProgress('correct',1);
+    playBeep(660, 0.08, 'square');
+    if(bs.combo>=3) setTimeout(()=>playBeep(880,0.06,'sine'),80);
+    if(critHit) setTimeout(()=>playBeep(1100,0.1,'sine'),40);
+  } else {
+    document.getElementById('opt'+idx).classList.add('wrong');
+    for(let i=0;i<4;i++) if(curOpts[i].en===curQ.en) document.getElementById('opt'+i).classList.add('correct');
+    bs.combo=0;
+    // 答错：记录到错题本（去重，最多保留 100 条）
+    if(!gd.wrongWords) gd.wrongWords=[];
+    if(!gd.wrongWords.find(w=>w.en===curQ.en)){
+      gd.wrongWords.push({en:curQ.en, cn:curQ.cn});
+      if(gd.wrongWords.length>100) gd.wrongWords.shift(); // 超出上限移除最旧的
+    }
+    // 答错立即受到一次怪物攻击（额外惩罚，不受减伤）
+    const petDef = getCurrentEvoData()?.def || 5;
+    let wrongPen = Math.max(1, (bs.monsterAtk||10) - petDef);
+    // 水系减伤 30%
+    if(petCfg?.key==='shield') wrongPen = Math.max(1, Math.floor(wrongPen*0.7));
+    bs.playerHp=Math.max(0,bs.playerHp-wrongPen);
+    flashHit('wrong');
+    showDmg('-'+wrongPen, document.getElementById('player-sprite'));
+    playBeep(150, 0.12, 'sawtooth');
+  }
+  updateBattleUI();
+  if(bs.monsterHp<=0){ setTimeout(()=>endBattle(true),600); return; }
+  if(bs.playerHp<=0){ setTimeout(()=>endBattle(false),600); return; }
+  if(bs.combo>=BC.FEVER_TRIG){ bs.combo=0; setTimeout(()=>enterFever(),500); }
+  else setTimeout(()=>nextQ(),500);
+}
+
+/* ── DPS 计时器：每 50ms tick，怪物蓄力条推进 ── */
+function startBTimer(){
+  if(btimer) clearInterval(btimer);
+  const TICK = 50; // ms
+  btimer=setInterval(()=>{
+    if(bs.isOver){ clearInterval(btimer); return; }
+
+    if(bs.phase==='normal'){
+      if(!bs.atkPaused){
+        const interval = bs.monsterAtkInterval || 3;
+        bs.atkProgress += TICK / (interval * 1000);
+        if(bs.atkProgress >= 1){
+          // 怪物攻击！
+          bs.atkProgress = 0;
+          const petDef = getCurrentEvoData()?.def || 5;
+          let dmg = Math.max(1, (bs.monsterAtk||10) - petDef);
+          // 水系：受怪物攻击减伤30%
+          const petCfg = PET_CONFIGS[gd.petIndex];
+          if(petCfg?.key==='shield') dmg = Math.max(1, Math.floor(dmg*0.7));
+          bs.playerHp = Math.max(0, bs.playerHp - dmg);
+          updateBattleUI();
+          // 攻击动画：图标抖动 + 进度条闪烁
+          const icon = document.getElementById('atk-charge-icon');
+          const row  = document.getElementById('atk-charge-row');
+          if(icon){ icon.classList.add('shake'); setTimeout(()=>icon.classList.remove('shake'),250); }
+          if(row){  row.classList.add('hit-flash-bar'); setTimeout(()=>row.classList.remove('hit-flash-bar'),300); }
+          showDmg('-'+dmg, document.getElementById('player-sprite'));
+          flashHit('wrong');
+          playBeep(150, 0.08, 'sawtooth');
+          if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
+        }
+        updateAtkChargeUI();
+      }
+    } else if(bs.phase==='fever'){
+      // FEVER 计时（保留秒级）
+      bs._feverTick = (bs._feverTick||0) + TICK;
+      if(bs._feverTick >= 1000){
+        bs._feverTick -= 1000;
+        bs.feverTimeLeft--;
+        if(bs.feverTimeLeft<=0){
+          bs.phase='normal';
+          bs._feverTick = 0;
+          document.getElementById('fever-overlay').classList.remove('on');
+          document.getElementById('battle-wrap').classList.remove('fever-mode');
+          // 离开FEVER，重置蓄力
+          bs.atkProgress=0; bs.atkPaused=false;
+          setTimeout(()=>nextQ(),300);
+        }
+      }
+      // FEVER期间蓄力条持续推进（降缓，不受答题打断）
+      {
+        const interval = (bs.monsterAtkInterval||3) * BC.FEVER_ATK_SLOW;
+        bs.atkProgress += TICK / (interval * 1000);
+        if(bs.atkProgress >= 1){
+          bs.atkProgress = 0;
+          const petDef = getCurrentEvoData()?.def || 5;
+          let dmg = Math.max(1, Math.floor((bs.monsterAtk||10) * 1.5) - petDef);
+          const petCfg = PET_CONFIGS[gd.petIndex];
+          if(petCfg?.key==='shield') dmg = Math.max(1, Math.floor(dmg*0.7));
+          bs.playerHp = Math.max(0, bs.playerHp - dmg);
+          updateBattleUI();
+          showDmg('-'+dmg, document.getElementById('player-sprite'));
+          if(bs.playerHp<=0){ clearInterval(btimer); endBattle(false); return; }
+        }
+        updateAtkChargeUI();
+      }
+    }
+  }, TICK);
+}
+
+/* ── 更新怪物蓄力条 UI ── */
+function updateAtkChargeUI(){
+  const fill  = document.getElementById('atk-charge-fill');
+  const icon  = document.getElementById('atk-charge-icon');
+  if(!fill) return;
+  const raw = bs.atkProgress || 0;
+  const pct = Math.min(100, Math.max(0, raw * 100)); // 负值视为0
+  fill.style.width = pct + '%';
+  // 颜色分三段
+  fill.className = 'atk-charge-fill' +
+    (bs.phase==='fever' ? ' fever' : pct >= 75 ? ' danger' : pct >= 40 ? ' mid' : '');
+  // 图标随蓄力危险度变化（文字label已隐藏，靠图标辅助提示）
+  if(icon){
+    if(bs.phase==='fever')      icon.textContent = '🔥';
+    else if(pct >= 75)          icon.textContent = '💢';
+    else if(pct >= 40)          icon.textContent = '⚡';
+    else                        icon.textContent = '⚔️';
+  }
+}
+
+/* ── 进入FEVER时重置蓄力状态 ── */
+function updateTimerUI(){ updateAtkChargeUI(); } // 兼容旧引用
+
+
+function enterFever(){
+  if(bs.isOver) return;
+  bs.phase='fever'; bs.feverTimeLeft=BC.FEVER_DUR;
+  bs._feverTick=0;
+  bs.atkProgress=0; bs.atkPaused=false; // FEVER开始时蓄力条重置并开始
+  gd.feverTriggered=true;
+  document.getElementById('normal-panel').style.display='none';
+  document.getElementById('fever-panel').className='on';
+  // 全屏氛围效果
+  document.getElementById('fever-overlay').classList.add('on');
+  document.getElementById('battle-wrap').classList.add('fever-mode');
+  // 更新蓄力条为FEVER样式
+  updateAtkChargeUI();
+  // FEVER 入场爆字
+  const pop=document.createElement('div');
+  pop.className='fever-combo-pop'; pop.textContent='🔥 FEVER!';
+  document.getElementById('battle-wrap').appendChild(pop);
+  setTimeout(()=>pop.remove(),520);
+  // 震屏动画
+  const wrap=document.getElementById('battle-wrap');
+  wrap.style.animation='battleShake .35s ease';
+  setTimeout(()=>{ wrap.style.animation=''; },360);
+  loadFeverPairs();
+}
+function loadFeverPairs(){
+  bs.feverPairs=getWords(wLevel,BC.FEVER_PAIRS);
+  bs.feverRight=[...bs.feverPairs].sort(()=>Math.random()-.5);
+  bs.fL=new Array(BC.FEVER_PAIRS).fill(false);
+  bs.fR=new Array(BC.FEVER_PAIRS).fill(false);
+  bs.selLeft=-1;
+  for(let i=0;i<BC.FEVER_PAIRS;i++){
+    const l=document.getElementById('fl'+i), r=document.getElementById('fr'+i);
+    l.textContent=bs.feverPairs[i]?.cn||''; l.className='fever-item'; l.style.opacity='';
+    r.textContent=bs.feverRight[i]?.en||''; r.className='fever-item'; r.style.opacity='';
+  }
+  document.getElementById('fever-title-txt').textContent='⚡ FEVER! 快速配对消除!';
+}
+function selectFeverLeft(idx){
+  if(bs.phase!=='fever'||bs.fL[idx]) return;
+  bs.selLeft=idx;
+  for(let i=0;i<BC.FEVER_PAIRS;i++){
+    if(!bs.fL[i]) document.getElementById('fl'+i).className='fever-item'+(i===idx?' sel':'');
+  }
+}
+function selectFeverRight(idx){
+  if(bs.phase!=='fever'||bs.fR[idx]) return;
+  if(bs.selLeft<0){
+    const e=document.getElementById('fr'+idx); e.classList.add('err');
+    setTimeout(()=>e.classList.remove('err'),400); return;
+  }
+  const lw=bs.feverPairs[bs.selLeft], rw=bs.feverRight[idx];
+  const ok=lw&&rw&&lw.en===rw.en;
+  if(ok){
+    const li=bs.selLeft, ri=idx;
+    document.getElementById('fl'+li).classList.add('matched');
+    document.getElementById('fr'+ri).classList.add('matched');
+    bs.selLeft=-1;
+    bs.feverTotalMatched++;
+    const dmg=Math.floor(BC.FEVER_DMG*Math.pow(BC.FEVER_MULT,bs.feverTotalMatched));
+    bs.monsterHp=Math.max(0,bs.monsterHp-dmg);
+    // 消除成功：重置蓄力条
+    bs.atkProgress=0; updateAtkChargeUI();
+    document.getElementById('fever-title-txt').textContent=`⚡ FEVER! -${dmg}💥 已消除 ${bs.feverTotalMatched} 对`;
+
+    // ── FEVER 强打击感 ──
+    feverElimBurst(dmg, bs.feverTotalMatched);
+
+    updateBattleUI();
+    setTimeout(()=>{
+      document.getElementById('fl'+li).className='fever-item gone';
+      document.getElementById('fr'+ri).className='fever-item gone';
+      bs.fL[li]=true; bs.fR[ri]=true;
+      if(bs.monsterHp<=0){ endBattle(true); return; }
+      if(bs.fL.every(v=>v)) setTimeout(()=>loadFeverPairs(),200);
+    },350);
+  } else {
+    document.getElementById('fr'+idx).classList.add('err');
+    setTimeout(()=>document.getElementById('fr'+idx).classList.remove('err'),400);
+    bs.selLeft=-1;
+    for(let i=0;i<BC.FEVER_PAIRS;i++) if(!bs.fL[i]) document.getElementById('fl'+i).className='fever-item';
+  }
+}
+/* FEVER 消除强打击感 */
+function feverElimBurst(dmg, combo){
+  const wrap = document.getElementById('battle-wrap');
+  const enemyEl = document.getElementById('enemy-sprite');
+
+  // 1. 怪物震动（比普通更猛）
+  enemyEl.classList.remove('hit');
+  void enemyEl.offsetWidth;
+  enemyEl.classList.add('hit');
+  setTimeout(()=>enemyEl.classList.remove('hit'),360);
+
+  // 2. 全屏橙红强闪（叠加一个独立元素，比普通 correct-flash 强 3 倍）
+  const flash = document.createElement('div');
+  flash.style.cssText=`
+    position:fixed;inset:0;pointer-events:none;z-index:300;
+    background:radial-gradient(ellipse at 50% 30%,rgba(249,115,22,0.55) 0%,rgba(239,68,68,0.3) 40%,transparent 70%);
+    animation:feverBigFlash .35s ease forwards;
+  `;
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(),370);
+
+  // 3. 战场边框发光脉冲（连消越多越亮）
+  const intensity = Math.min(combo * 0.08, 0.45);
+  wrap.style.boxShadow=`0 0 ${30+combo*8}px rgba(249,115,22,${intensity}) inset`;
+  setTimeout(()=>{ wrap.style.boxShadow=''; },400);
+
+  // 4. 超大伤害数字（居中弹出，带缩放）
+  const bigDmg = document.createElement('div');
+  bigDmg.style.cssText=`
+    position:fixed;left:50%;top:35%;transform:translate(-50%,-50%);
+    font-family:'Fredoka One','Noto Sans SC',cursive;
+    font-size:${Math.min(52+combo*4,80)}px;font-weight:900;
+    background:linear-gradient(135deg,#fbbf24,#ef4444);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 16px rgba(249,115,22,0.9));
+    pointer-events:none;z-index:400;white-space:nowrap;
+    animation:feverDmgPop .55s cubic-bezier(.175,.885,.32,1.275) forwards;
+  `;
+  bigDmg.textContent = `-${dmg}`;
+  document.body.appendChild(bigDmg);
+  setTimeout(()=>bigDmg.remove(),580);
+
+  // 5. 全屏爆裂粒子（从怪物位置中心喷射）
+  const r = enemyEl.getBoundingClientRect();
+  const cx = r.left + r.width/2, cy = r.top + r.height/2;
+  const colors = ['#f97316','#ef4444','#fbbf24','#a78bfa','#38bdf8','#4ade80'];
+  const count = 14 + combo * 2;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    const angle=(i/count)*Math.PI*2 + Math.random()*0.4;
+    const dist = 60 + Math.random()*80;
+    const size = 6 + Math.random()*6;
+    el.style.cssText=`
+      position:fixed;left:${cx-size/2}px;top:${cy-size/2}px;
+      width:${size}px;height:${size}px;border-radius:50%;
+      background:${colors[i%colors.length]};
+      pointer-events:none;z-index:350;
+      --sx:${Math.cos(angle)*dist}px;--sy:${Math.sin(angle)*dist}px;
+      animation:feverSpark .6s ease forwards;
+    `;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),640);
+  }
+
+  // 6. 震屏
+  wrap.style.animation='battleShake .3s ease';
+  setTimeout(()=>{ wrap.style.animation=''; },320);
+
+  // 7. 冲击音效（低频撞击 + 高频爽感）
+  playFeverImpact(combo);
+}
+
+function playFeverImpact(combo){
+  try{
+    const ctx=getAudioCtx(); if(!ctx) return;
+    const t=ctx.currentTime;
+    // 低频冲击（咚）
+    const o1=ctx.createOscillator(), g1=ctx.createGain();
+    o1.type='sine'; o1.frequency.setValueAtTime(120,t); o1.frequency.exponentialRampToValueAtTime(40,t+0.15);
+    g1.gain.setValueAtTime(0.5,t); g1.gain.exponentialRampToValueAtTime(0.001,t+0.18);
+    o1.connect(g1); g1.connect(ctx.destination); o1.start(t); o1.stop(t+0.2);
+    // 中频打击（啪）
+    const o2=ctx.createOscillator(), g2=ctx.createGain();
+    o2.type='square'; o2.frequency.setValueAtTime(300,t+0.02); o2.frequency.exponentialRampToValueAtTime(80,t+0.1);
+    g2.gain.setValueAtTime(0.3,t+0.02); g2.gain.exponentialRampToValueAtTime(0.001,t+0.12);
+    o2.connect(g2); g2.connect(ctx.destination); o2.start(t+0.02); o2.stop(t+0.15);
+    // 连消越多高频越亮（叮）
+    if(combo>=2){
+      const o3=ctx.createOscillator(), g3=ctx.createGain();
+      o3.type='sine'; o3.frequency.value=440+combo*80;
+      g3.gain.setValueAtTime(0.15,t+0.05); g3.gain.exponentialRampToValueAtTime(0.001,t+0.2);
+      o3.connect(g3); g3.connect(ctx.destination); o3.start(t+0.05); o3.stop(t+0.22);
+    }
+  }catch(e){}
+}
+
+function exitBattle(){
+  if(btimer) clearInterval(btimer);
+  bs.isOver=true;
+  // 清理 FEVER 特效
+  document.getElementById('fever-overlay').classList.remove('on');
+  document.getElementById('battle-wrap').classList.remove('fever-mode');
+  bs.atkPaused=true; updateAtkChargeUI();
+  gd.hp=bs.playerHp||gd.hp;
+  saveGame();
+  if(ms.dungId){
+    // 逃跑：销毁触发遭遇的怪物，回到地图
+    if(ms.pendingBattle){
+      ms.pendingBattle.defeated = true;
+      // 移除其DOM元素
+      if(ms.pendingBattle.el && ms.pendingBattle.el.parentNode)
+        ms.pendingBattle.el.parentNode.removeChild(ms.pendingBattle.el);
+      ms.pendingBattle = null;
+    }
+    ms.inBattle = false;
+    document.getElementById('map-hp-txt').textContent = gd.hp;
+    go('map-page');
+    // 重启游戏循环
+    if(ms.raf) cancelAnimationFrame(ms.raf);
+    ms.lastTime = performance.now();
+    ms.raf = requestAnimationFrame(gameLoop);
+  } else {
+    updateHomeUI(); tab('dungeon');
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   结算
+══════════════════════════════════════════════════ */
+function endBattle(win){
+  if(btimer) clearInterval(btimer);
+  bs.isOver=true; bs.win=win;
+  // 清理 FEVER 特效
+  document.getElementById('fever-overlay').classList.remove('on');
+  document.getElementById('battle-wrap').classList.remove('fever-mode');
+  bs.atkPaused=true; updateAtkChargeUI();
+  let exp=0, coins=0;
+  if(win){
+    exp=20+bs.correctCount*5; coins=15+bs.correctCount*3;
+    gd.exp+=exp; gd.coins+=coins; gd.vocab+=bs.correctCount;
+    taskProgress('battle',1);
+    let leveled=false;
+    while(gd.exp>=50){ gd.exp-=50; gd.level++; gd.maxHp+=10; gd.hp=gd.maxHp; taskProgress('levelup',1); leveled=true; }
+    if(leveled) showLevelUpToast();
+    // 胜利：保留战斗结束时的实际HP，不自动满血
+    gd.hp = bs.playerHp;
+    // 若HP未满，启动缓慢恢复（鼓励玩家去治疗复习）
+    if(gd.hp < gd.maxHp){
+      if(!gd.hpRegenStart) gd.hpRegenStart = Date.now();
+      startHpRegen();
+    } else {
+      stopHpRegen();
+    }
+  } else {
+    // 失败：HP 归零，开始缓慢恢复计时
+    gd.hp = 0;
+    gd.hpRegenStart = Date.now(); // 记录开始恢复的时间戳
+    startHpRegen();               // 启动实时恢复计时器
+  }
+  saveGame();
+  // 从地图进入战斗 → 返回地图，用小 toast 结算
+  if(ms.dungId){
+    setTimeout(()=>returnToMap(win, exp, coins, bs.correctCount), 400);
+    return;
+  }
+  // 非地图直接战斗（兜底）→ 原 result-page
+  document.getElementById('res-burst').textContent=win?'🏆':'💔';
+  document.getElementById('res-heading').textContent=win?'胜利!':'失败…';
+  document.getElementById('res-heading').className='res-heading '+(win?'win':'lose');
+  document.getElementById('res-sub').textContent=win?'太棒了！继续加油！':'再努力一下，你可以的！';
+  document.getElementById('res-correct').textContent=bs.correctCount+' 题';
+  document.getElementById('res-exp').textContent=win?`+${exp} EXP`:'—';
+  document.getElementById('res-coins').textContent=win?`+${coins}`:'—';
+  document.getElementById('res-vocab').textContent=win?`+${bs.correctCount}`:'—';
+  setTimeout(()=>go('result-page'),500);
+}
+function backToHome(){ updateHomeUI(); tab('home'); }
+
+/* ══════════════════════════════════════════════════
+   治疗系统（诊所 heal-page）
+══════════════════════════════════════════════════ */
+const HEAL_HP_PER_Q = 15; // 每题答对恢复HP量
+let healQ = null;         // 当前治疗题目
+let healOpts = [];        // 当前治疗选项
+let healAnswering = false;
+
+function enterHeal(){
+  if(gd.petIndex < 0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋！'); return; }
+  // 初始化界面
+  const curEvo = getCurrentEvoData();
+  setPetSvg(document.getElementById('heal-pet-svg'), curEvo.key);
+  // 确保 wrongWords 里每项都有 masteredCount 字段（兼容旧存档）
+  if(gd.wrongWords) gd.wrongWords = gd.wrongWords.map(w=>({en:w.en,cn:w.cn,masteredCount:w.masteredCount||0}));
+  updateHealUI();
+  // 无论有没有错题，始终显示答题区（有错题优先错题，否则用备用题池）
+  document.getElementById('heal-quiz-area').style.display = 'flex';
+  document.getElementById('heal-empty-area').style.display = 'none';
+  nextHealQ();
+  go('heal-page');
+}
+
+function leaveHeal(){
+  saveGame();
+  buildDungeonList();
+  tab('dungeon');
+}
+
+function updateHealUI(){
+  const hp = gd.hp, maxHp = gd.maxHp;
+  const pct = maxHp > 0 ? Math.min(100, Math.round(hp/maxHp*100)) : 0;
+  document.getElementById('heal-hp-badge').textContent = `❤️ ${hp}/${maxHp}`;
+  document.getElementById('heal-hp-bar').style.width = pct + '%';
+  document.getElementById('heal-hp-txt').textContent  = `${hp}/${maxHp}`;
+  if(hp >= maxHp){
+    document.getElementById('heal-hint').innerHTML = '🌟 HP 已满！宠物精神满满，可以出发冒险了！';
+  } else {
+    document.getElementById('heal-hint').innerHTML = `💊 每答对一题恢复 <strong>+${HEAL_HP_PER_Q} HP</strong>`;
+  }
+}
+
+// 当前治疗题的来源（'wrong' | 'normal'），用于结果展示差异化
+let healQSource = 'normal';
+
+function nextHealQ(){
+  healAnswering = false;
+  const wrongPool = (gd.wrongWords || []).filter(w => (w.masteredCount||0) < 2); // masteredCount<2 的才出现
+  const allWords  = Object.values(WORDBANK).flatMap(b=>b.words);
+
+  let correct;
+  if(wrongPool.length > 0){
+    // 优先从未完全掌握的错题里随机选
+    correct = wrongPool[Math.floor(Math.random() * wrongPool.length)];
+    healQSource = 'wrong';
+    document.getElementById('heal-q-sub').textContent = '🔴 错题复习 · 选出正确英文单词';
+  } else {
+    // 备用题池：从所有单词随机出一题（与战斗一样的逻辑）
+    const fallback = allWords.filter(w => w.en && w.cn);
+    if(fallback.length === 0) return; // 词库空（不可能，安全兜底）
+    correct = fallback[Math.floor(Math.random() * fallback.length)];
+    healQSource = 'normal';
+    document.getElementById('heal-q-sub').textContent = '✅ 练习题 · 选出正确英文单词';
+  }
+
+  // 干扰项：从所有单词库里取不同的词
+  const distractors = allWords
+    .filter(w => w.en !== correct.en)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
+  healOpts = [...distractors, correct].sort(() => Math.random() - 0.5);
+  healQ = correct;
+
+  document.getElementById('heal-q-cn').textContent = correct.cn;
+  for(let i=0;i<4;i++){
+    const btn = document.getElementById('hopt'+i);
+    btn.textContent = healOpts[i].en;
+    btn.className = 'heal-opt-btn';
+    btn.disabled = false;
+  }
+}
+
+function selectHealOption(idx){
+  if(healAnswering || !healQ) return;
+  healAnswering = true;
+  for(let i=0;i<4;i++) document.getElementById('hopt'+i).disabled = true;
+
+  const chosen = healOpts[idx];
+  const ok = chosen.en === healQ.en;
+  if(ok){
+    document.getElementById('hopt'+idx).classList.add('correct');
+    // 答对：回血
+    const heal = Math.min(HEAL_HP_PER_Q, gd.maxHp - gd.hp);
+    if(heal > 0) gd.hp = Math.min(gd.hp + heal, gd.maxHp);
+    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
+
+    // 错题本处理：错题答对 → masteredCount+1；达到 2 次才移除（巩固记忆）
+    if(healQSource === 'wrong' && gd.wrongWords){
+      const entry = gd.wrongWords.find(w => w.en === healQ.en);
+      if(entry){
+        entry.masteredCount = (entry.masteredCount||0) + 1;
+        if(entry.masteredCount >= 2){
+          gd.wrongWords = gd.wrongWords.filter(w => w.en !== healQ.en);
+        }
+      }
+    }
+
+    // 闪光动画
+    const card = document.getElementById('heal-q-card');
+    card.classList.remove('heal-flash');
+    void card.offsetWidth;
+    card.classList.add('heal-flash');
+    playBeep(660, 0.08, 'square');
+    setTimeout(()=>playBeep(880, 0.06, 'sine'), 80);
+    saveGame();
+    updateHealUI();
+    setTimeout(()=>nextHealQ(), 800);
+  } else {
+    document.getElementById('hopt'+idx).classList.add('wrong');
+    // 答错：高亮正确答案；错题的 masteredCount 重置为 0（忘记了，重新来）
+    for(let i=0;i<4;i++) if(healOpts[i].en === healQ.en) document.getElementById('hopt'+i).classList.add('correct');
+    if(healQSource === 'wrong' && gd.wrongWords){
+      const entry = gd.wrongWords.find(w => w.en === healQ.en);
+      if(entry) entry.masteredCount = 0;
+    }
+    playBeep(220, 0.1, 'sawtooth');
+    // 不减血，换下一题继续
+    setTimeout(()=>nextHealQ(), 1000);
+  }
+}
+
+function showLevelUpToast(){
+  const t=document.createElement('div');
+  t.className='levelup-toast';
+  t.textContent=`🎉 升级！Lv.${gd.level}`;
+  document.getElementById('app').appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+
+/* ══════════════════════════════════════════════════
+   进化系统
+══════════════════════════════════════════════════ */
+function showEvoPanel(){
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return;
+  const stage = gd.evoStage||0;
+  const curEvo = cfg.evo[stage];
+  const nextEvo = cfg.evo[stage+1];
+  if(!nextEvo || gd.level < nextEvo.condLv) return;
+
+  const mask = document.createElement('div');
+  mask.className = 'evo-panel-mask';
+  mask.id = 'evo-panel-mask';
+  mask.innerHTML = `
+    <div class="evo-panel">
+      <div class="evo-panel-title">✨ 进化确认</div>
+      <div class="evo-panel-sub">${curEvo.name} → ${nextEvo.name}</div>
+      <div class="evo-compare">
+        <div class="evo-pet-box">
+          <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[curEvo.key]||'', ++_svgUid)}</svg>
+          <div class="evo-pet-lbl">当前</div>
+          <div class="evo-pet-name">${curEvo.name}</div>
+        </div>
+        <div class="evo-arrow-txt">→</div>
+        <div class="evo-pet-box">
+          <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[nextEvo.key]||'', ++_svgUid)}</svg>
+          <div class="evo-pet-lbl">进化后</div>
+          <div class="evo-pet-name">${nextEvo.name}</div>
+        </div>
+      </div>
+      <div class="evo-stats-diff">
+        <div class="evo-stat-row"><span class="evo-stat-lbl">❤️ HP 上限</span><span><span class="evo-stat-val">${nextEvo.maxHp}</span><span class="evo-stat-up">+${nextEvo.maxHp-curEvo.maxHp}</span></span></div>
+        <div class="evo-stat-row"><span class="evo-stat-lbl">⚔️ 攻击力</span><span><span class="evo-stat-val">${nextEvo.atk}</span><span class="evo-stat-up">+${nextEvo.atk-curEvo.atk}</span></span></div>
+        <div class="evo-stat-row"><span class="evo-stat-lbl">🛡️ 防御力</span><span><span class="evo-stat-val">${nextEvo.def}</span><span class="evo-stat-up">+${nextEvo.def-curEvo.def}</span></span></div>
+      </div>
+      <div class="evo-btn-row">
+        <button class="btn-evo-cancel" onclick="document.getElementById('evo-panel-mask').remove()">取消</button>
+        <button class="btn-evo-go" onclick="doEvolve()">⚡ 进化！</button>
+      </div>
+    </div>`;
+  document.getElementById('app').appendChild(mask);
+}
+
+function doEvolve(){
+  const mask = document.getElementById('evo-panel-mask');
+  if(mask) mask.remove();
+  const cfg = PET_CONFIGS[gd.petIndex];
+  if(!cfg) return;
+  const stage = gd.evoStage||0;
+  const nextEvo = cfg.evo[stage+1];
+  if(!nextEvo) return;
+  playEvoAnimation(nextEvo, ()=>{
+    // 进化完成：更新数据
+    gd.evoStage = stage+1;
+    gd.petKey = nextEvo.key;
+    gd.petName = nextEvo.name;
+    const hpRatio = gd.hp / gd.maxHp;
+    gd.maxHp = nextEvo.maxHp;
+    gd.hp = Math.floor(nextEvo.maxHp * hpRatio);
+    saveGame();
+    updateHomeUI();
+  });
+}
+
+function playEvoAnimation(nextEvo, onDone){
+  const layer = document.createElement('div');
+  layer.className = 'evo-anim-layer';
+  layer.id = 'evo-anim-layer';
+  const flash = document.createElement('div');
+  flash.className = 'evo-anim-flash';
+  flash.id = 'evo-anim-flash';
+
+  layer.innerHTML = `
+    <div class="evo-anim-pet" id="evo-anim-pet">
+      <div class="evo-anim-glow" id="evo-anim-glow"></div>
+      <svg viewBox="0 0 100 100" style="width:160px;height:160px" id="evo-svg"></svg>
+    </div>
+    <div class="evo-anim-name" id="evo-anim-name">${nextEvo.name}</div>
+    <div class="evo-anim-subtitle" id="evo-anim-sub">✨ 进化完成！</div>`;
+
+  document.getElementById('app').appendChild(layer);
+  document.getElementById('app').appendChild(flash);
+
+  // 播放进化音效
+  playBeep(440,0.1,'sine');
+  setTimeout(()=>playBeep(550,0.1,'sine'),200);
+  setTimeout(()=>playBeep(660,0.1,'sine'),400);
+  setTimeout(()=>playBeep(880,0.15,'sine'),600);
+
+  // 0ms: 旧形态 + 发光
+  const curEvo = PET_CONFIGS[gd.petIndex].evo[gd.evoStage||0];
+  document.getElementById('evo-svg').innerHTML = _uniquifySvg(SVG_PETS[curEvo.key]||'', ++_svgUid);
+
+  // 1500ms: 白光爆闪
+  setTimeout(()=>{
+    const f = document.getElementById('evo-anim-flash');
+    if(f){ f.style.transition='opacity 0.3s'; f.style.opacity='1'; }
+    playBeep(1100,0.2,'sine');
+  }, 1500);
+
+  // 2000ms: 切换新形态，闪光消散
+  setTimeout(()=>{
+    document.getElementById('evo-svg').innerHTML = _uniquifySvg(SVG_PETS[nextEvo.key]||'', ++_svgUid);
+    const f = document.getElementById('evo-anim-flash');
+    if(f){ f.style.transition='opacity 0.6s'; f.style.opacity='0'; }
+  }, 2000);
+
+  // 2400ms: 名称飞入
+  setTimeout(()=>{
+    const n = document.getElementById('evo-anim-name');
+    const s = document.getElementById('evo-anim-sub');
+    if(n){ n.style.opacity='1'; n.style.transform='translateY(0)'; }
+    if(s){ s.style.opacity='1'; }
+    // 属性飞入数字
+    ['❤️ HP +'+(nextEvo.maxHp-(curEvo.maxHp)),
+     '⚔️ ATK +'+(nextEvo.atk-(curEvo.atk)),
+     '🛡️ DEF +'+(nextEvo.def-(curEvo.def))
+    ].forEach((txt,i)=>{
+      setTimeout(()=>{
+        const el=document.createElement('div');
+        el.className='evo-stat-fly';
+        el.textContent=txt;
+        el.style.left=(30+i*28)+'%';
+        el.style.top='55%';
+        document.getElementById('app').appendChild(el);
+        setTimeout(()=>el.remove(),1300);
+      },i*200);
+    });
+  }, 2400);
+
+  // 4000ms: 结束
+  setTimeout(()=>{
+    const l=document.getElementById('evo-anim-layer');
+    const f=document.getElementById('evo-anim-flash');
+    if(l) l.remove(); if(f) f.remove();
+    onDone();
+  }, 4000);
+}
+
+/* ══════════════════════════════════════════════════
+   图鉴页
+══════════════════════════════════════════════════ */
+function buildDexPage(){
+  // 统计解锁数
+  let unlocked=0, total=0;
+  PET_CONFIGS.forEach(cfg=>{
+    cfg.evo.forEach((e,si)=>{ total++; if(isEvoUnlocked(cfg,si)) unlocked++; });
+  });
+  const pct = total>0 ? unlocked/total*100 : 0;
+  document.getElementById('dex-progress-fill').style.width=pct+'%';
+  document.getElementById('dex-progress-lbl').textContent=`${unlocked} / ${total} 形态已解锁`;
+
+  const list = document.getElementById('dex-pet-list');
+  list.innerHTML = PET_CONFIGS.map((cfg,ci)=>{
+    const myPet = gd.petIndex===ci;
+    const curStage = myPet ? (gd.evoStage||0) : 0;
+    const headEvo = cfg.evo[curStage];
+    return `
+    <div class="dex-pet-card" id="dex-card-${ci}">
+      <div class="dex-pet-head" onclick="toggleDexDetail(${ci})">
+        <svg viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[headEvo.key]||'', ++_svgUid)}</svg>
+        <div class="dex-pet-head-info">
+          <div class="dex-pet-head-name">${headEvo.name}${myPet?'<span class="dex-new-badge">我的</span>':''}</div>
+          <div class="dex-pet-head-type"><span class="pet-type-badge ${cfg.typeClass}">${cfg.type}</span></div>
+          <div class="dex-pet-head-stage">${myPet
+            ? `当前 · Lv.${gd.level} · 第 ${curStage+1} 进化阶段`
+            : `点击查看详情`}</div>
+        </div>
+        <span style="color:rgba(241,240,255,0.3);font-size:20px;transition:transform .25s" id="dex-arrow-${ci}">›</span>
+      </div>
+      <div class="dex-detail" id="dex-detail-${ci}">
+        <!-- 天赋条 -->
+        <div class="dex-trait-bar">
+          <div class="dex-trait-icon">${cfg.trait.split(' ')[0]}</div>
+          <div>${cfg.trait.replace(/^[^ ]+ /,'')}</div>
+        </div>
+        <!-- 宠物简介 -->
+        <div class="dex-desc-txt">${cfg.desc}</div>
+        <!-- 进化链横排 -->
+        <div class="dex-evo-chain-wrap">
+          <div class="dex-evo-chain" id="dex-chain-${ci}">
+            ${cfg.evo.map((e,si)=>{
+              const locked = !isEvoUnlocked(cfg,si);
+              return `${si>0?'<div class="dex-evo-sep">›</div>':''}
+              <div class="dex-evo-node ${locked?'locked':''}" id="dex-node-${ci}-${si}" onclick="selectDexStage(${ci},${si})">
+                <svg viewBox="0 0 100 100">${locked
+                  ?'<rect width="100" height="100" fill="rgba(255,255,255,0.05)" rx="50"/><text x="50" y="58" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.18)">?</text>'
+                  :_uniquifySvg(SVG_PETS[e.key]||'', ++_svgUid)}</svg>
+                <div class="dex-evo-node-name">${locked?'???':e.name}</div>
+                <div class="dex-evo-node-cond">${si===0?'初始形态':`Lv.${e.condLv} 进化`}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <!-- 选中形态详情卡（默认展示当前/第0阶段） -->
+        <div id="dex-stage-detail-${ci}"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // 展开我的宠物，默认选中当前阶段
+  if(gd.petIndex>=0){
+    toggleDexDetail(gd.petIndex, false);
+    selectDexStage(gd.petIndex, gd.evoStage||0);
+  }
+}
+
+/* 展开/收起图鉴卡片 */
+function toggleDexDetail(ci, animate=true){
+  const detail = document.getElementById('dex-detail-'+ci);
+  const arrow  = document.getElementById('dex-arrow-'+ci);
+  if(!detail) return;
+  const open = detail.classList.toggle('open');
+  if(arrow) arrow.style.transform = open ? 'rotate(90deg)' : '';
+  // 展开时默认选中阶段0或当前阶段
+  if(open){
+    const myPet = gd.petIndex===ci;
+    const stage = myPet ? (gd.evoStage||0) : 0;
+    selectDexStage(ci, stage);
+  }
+}
+
+/* 点击进化链节点，展示该阶段属性详情 */
+function selectDexStage(ci, si){
+  const cfg = PET_CONFIGS[ci];
+  if(!cfg) return;
+  const e = cfg.evo[si];
+  const locked = !isEvoUnlocked(cfg, si);
+  const myPet = gd.petIndex===ci;
+  const isCurrent = myPet && (gd.evoStage||0)===si;
+  const prevE = si>0 ? cfg.evo[si-1] : null;
+
+  // 高亮选中节点
+  cfg.evo.forEach((_,idx)=>{
+    const node = document.getElementById(`dex-node-${ci}-${idx}`);
+    if(node) node.classList.toggle('selected', idx===si);
+  });
+
+  // 构建属性详情卡
+  const wrap = document.getElementById(`dex-stage-detail-${ci}`);
+  if(!wrap) return;
+
+  // 进化提升 chips（与上一阶段对比）
+  let diffHtml = '';
+  if(prevE && !locked){
+    const diffs = [
+      {lbl:'HP', diff: e.maxHp - prevE.maxHp},
+      {lbl:'ATK', diff: e.atk - prevE.atk},
+      {lbl:'DEF', diff: e.def - prevE.def},
+    ];
+    diffHtml = `<div class="dex-stage-diff">${
+      diffs.filter(d=>d.diff>0).map(d=>`<span class="dex-diff-chip">↑ ${d.lbl} +${d.diff}</span>`).join('')
+    }</div>`;
+  }
+
+  wrap.innerHTML = `
+    <div class="dex-stage-detail">
+      <div class="dex-stage-head">
+        <svg viewBox="0 0 100 100">${locked
+          ?'<rect width="100" height="100" fill="rgba(255,255,255,0.04)" rx="50"/><text x="50" y="60" text-anchor="middle" font-size="32" fill="rgba(255,255,255,0.15)">?</text>'
+          :_uniquifySvg(SVG_PETS[e.key]||'', ++_svgUid)}</svg>
+        <div class="dex-stage-head-info">
+          <div class="dex-stage-name">${locked?'???':e.name}</div>
+          <div class="dex-stage-cond">${si===0?'🐣 初始形态':'✨ Lv.'+e.condLv+' 进化'}</div>
+          ${isCurrent ? '<span class="dex-stage-tag current">▶ 当前形态</span>'
+            : locked   ? '<span class="dex-stage-tag locked">🔒 尚未解锁</span>'
+            :             '<span class="dex-stage-tag current" style="background:rgba(167,139,250,0.1);color:#a78bfa">✓ 已解锁</span>'}
+        </div>
+      </div>
+      <div class="dex-stage-stats">
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">❤️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.maxHp}</div>
+          <div class="dex-stat-lbl">HP 上限</div>
+        </div>
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">⚔️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.atk}</div>
+          <div class="dex-stat-lbl">攻击力</div>
+        </div>
+        <div class="dex-stat-item">
+          <div class="dex-stat-icon">🛡️</div>
+          <div class="dex-stat-val ${locked?'locked-val':''}">${locked?'???':e.def}</div>
+          <div class="dex-stat-lbl">防御力</div>
+        </div>
+      </div>
+      ${diffHtml}
+    </div>`;
+}
+
+function isEvoUnlocked(cfg, stage){
+  const idx = PET_CONFIGS.indexOf(cfg);
+  if(gd.petIndex===idx) return stage <= (gd.evoStage||0);
+  return false;
+}
+
+
+/* ══════════════════════════════════════════════════
+   我的页面
+══════════════════════════════════════════════════ */
+function updateMineUI(){
+  const curEvo = getCurrentEvoData();
+  setPetSvg(document.getElementById('mine-avatar-svg'), curEvo.key);
+  document.getElementById('mine-hero-name').textContent=curEvo.name||'冒险者';
+  document.getElementById('mine-hero-lv').textContent=`Lv.${gd.level} · ${gd.petType||'未知'}`;
+  document.getElementById('m-coins').textContent=gd.coins;
+  document.getElementById('m-vocab').textContent=gd.vocab;
+  document.getElementById('m-stamina').textContent=gd.stamina;
+  document.getElementById('sound-val').textContent=gd.settings.sound?'开启':'关闭';
+  updateNicknameVal();
+  
+  const el=document.getElementById('achieve-list');
+  el.innerHTML=ACHIEVE_LIST.map(a=>{
+    const ok=a.unlock(gd);
+    return `<div class="achieve-card ${ok?'':'achieve-locked'}">
+      <div class="achieve-ico">${a.icon}</div>
+      <div class="achieve-info">
+        <div class="achieve-name">${a.name}</div>
+        <div class="achieve-desc">${a.desc}</div>
+      </div>
+      <span class="achieve-status">${ok?'✅':'🔒'}</span>
+    </div>`;
+  }).join('');
+}
+function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
+function showAbout(){
+  showModal('🐾','WordPet v1.4.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.4.0 更新：\n• 新增宠物图鉴，支持多宠物切换与独立进度\n• 昵称系统：可在设置中自定义昵称\n• 社交分享：一键分享宠物状态到社交媒体\n\n✨ v1.3.x 更新：\n• 诊所治疗系统+错题巩固+HP不回满\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ HP 不满时去诊所做题回血。\n\n© 2026 WordPet');
+}
+
+/* ══════════════════════════════════════════════════
+   社交分享系统
+══════════════════════════════════════════════════ */
+function showSharePanel(){
+  if(gd.petIndex < 0){
+    showModal('📤','分享','请先孵化一只宠物！');
+    return;
+  }
+  const curEvo = getCurrentEvoData();
+  const nickname = gd.nickname || '训练家';
+  const lines = [
+    `🎮 我的宠物：${curEvo.name}`,
+    `⭐ 等级：Lv.${gd.level} · 词汇量：${gd.vocab}`,
+    `🪙 金币：${gd.coins}`,
+    '',
+    `用 WordPet 在玩单词对战游戏，一起来吧！`,
+    `https://joffywong.github.io/wordpet/`
+  ];
+  const shareText = lines.join('\n');
+  const shareData = {
+    title: '我在 WordPet 养了一只宠物！',
+    text: shareText
+  };
+  // 优先使用原生分享API
+  if(navigator.share){
+    navigator.share(shareData).catch(()=>showFallbackShare(shareText));
+  } else {
+    showFallbackShare(shareText);
+  }
+}
+function showFallbackShare(text){
+  // 创建一个可复制的文本区域
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.cssText='position:fixed;top:0;left:0;opacity:0;width:1px;height:1px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+  showModal('✅','分享','文案已复制到剪贴板！\n\n可直接粘贴到朋友圈/微博/微信等。');
+}
+
+/* ══════════════════════════════════════════════════
+   昵称设置
+══════════════════════════════════════════════════ */
+function showNicknameModal(){
+  const current = gd.nickname || '训练家';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = '输入你的昵称';
+  input.value = current;
+  input.maxLength = 12;
+  input.style.cssText='width:100%;padding:10px;border:1px solid rgba(255,255,255,0.2);border-radius:10px;background:rgba(0,0,0,0.3);color:#fff;font-size:15px;outline:none;box-sizing:border-box;font-family:"Noto Sans SC",-apple-system,sans-serif;';
+  input.focus();
+
+  const btns = document.createElement('div');
+  btns.innerHTML = `
+    <button class="btn btn-gold" style="flex:1;margin:0" onclick="saveNickname(this)">保存</button>
+  `;
+  btns.style.cssText='display:flex;gap:8px;margin-top:12px;';
+
+  const content = document.createElement('div');
+  content.style.cssText='min-width:240px;';
+  content.appendChild(input);
+  content.appendChild(btns);
+
+  showModal('👤','设置昵称', content);
+}
+function saveNickname(btn){
+  const input = btn.closest('div').previousElementSibling.previousElementSibling; // 找到 input
+  let val = input.value.trim();
+  if(!val){
+    showModal('⚠️','昵称不能为空','请输入1-12个字符的昵称');
+    return;
+  }
+  if(val.length > 12){
+    showModal('⚠️','昵称太长','最多支持12个字符');
+    return;
+  }
+  gd.nickname = val;
+  saveGame();
+  // 关闭模态框
+  closeModal();
+  // 更新UI
+  updateMineUI();
+  updateNicknameVal();
+}
+function updateNicknameVal(){
+  const el = document.getElementById('nickname-val');
+  if(el) el.textContent = gd.nickname || '训练家';
+}
+function confirmReset(){
+  if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
+}
+
+/* ══════════════════════════════════════════════════
+   弹窗
+══════════════════════════════════════════════════ */
+function showModal(ico,title,desc){
+  document.getElementById('modal-ico').textContent=ico;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-desc').textContent=desc;
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('on'); }
+
+/* ══════════════════════════════════════════════════
+   伤害飘字
+══════════════════════════════════════════════════ */
+function showDmg(txt, relEl, type){
+  const el=document.createElement('div');
+  el.className='dmg-float'+(type==='heal'?' heal':'');
+  el.textContent=txt;
+  if(relEl){
+    const r=relEl.getBoundingClientRect();
+    el.style.left=(r.left+r.width/2-24)+'px';
+    el.style.top=(r.top)+'px';
+  } else { el.style.left='50%'; el.style.top='40%'; }
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),950);
+}
+
+/* ══════════════════════════════════════════════════
+   打击感辅助函数
+══════════════════════════════════════════════════ */
+// 屏幕闪光
+function flashHit(type){
+  const el=document.getElementById('hit-flash');
+  el.className='';
+  void el.offsetWidth; // reflow
+  el.className=type==='correct'?'correct-flash':'wrong-flash';
+  setTimeout(()=>{ el.className=''; },350);
+}
+
+// 怪物受击抖动
+function monsterHitAnim(){
+  const art=document.getElementById('enemy-sprite');
+  art.classList.remove('hit');
+  void art.offsetWidth;
+  art.classList.add('hit');
+  setTimeout(()=>art.classList.remove('hit'),360);
+}
+
+// 答对粒子爆发
+function spawnSparks(btn){
+  if(!btn) return;
+  const r=btn.getBoundingClientRect();
+  const cx=r.left+r.width/2, cy=r.top+r.height/2;
+  const colors=['#34d399','#6ee7b7','#fbbf24','#a78bfa','#38bdf8'];
+  const count=10;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='opt-spark';
+    const angle=(i/count)*Math.PI*2;
+    const dist=50+Math.random()*40;
+    const sx=Math.cos(angle)*dist+'px';
+    const sy=Math.sin(angle)*dist+'px';
+    el.style.cssText=`left:${cx-4}px;top:${cy-4}px;background:${colors[i%colors.length]};--sx:${sx};--sy:${sy}`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),580);
+  }
+}
+
+// 连击爆字（在怪物区上方）
+function showComboBurst(combo){
+  const wrap=document.getElementById('battle-wrap');
+  const el=document.createElement('div');
+  el.className='combo-burst';
+  const labels=['','','双击!','三连!','四杀!','五连击!','超神!'];
+  el.textContent=(labels[combo]||`${combo}连击!`);
+  el.style.top='170px';
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(),520);
+}
+
+// Web Audio 音效（无需外部文件）
+let _audioCtx=null;
+function getAudioCtx(){
+  if(!_audioCtx){ try{ _audioCtx=new(window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  return _audioCtx;
+}
+function playBeep(freq, dur, type){
+  try{
+    const ctx=getAudioCtx(); if(!ctx) return;
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.type=type||'sine'; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.18,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime+dur);
+  }catch(e){}
+}
+
+/* ══════════════════════════════════════════════════
+   初始化
+══════════════════════════════════════════════════ */
+function init(){
+  loadGame(); initTasks(); buildFirstSelectPage();
+  if(gd.petIndex>=0){
+    // 若HP未满（如上次战败），启动恢复计时器
+    if(gd.hp < gd.maxHp && gd.hpRegenStart > 0) startHpRegen();
+    updateHomeUI(); tab('home');
+  }
+  else go('select-page');
+}
+init();
