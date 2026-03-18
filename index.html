@@ -619,6 +619,23 @@ body{
     <div class="dg-sub">选择副本，消耗精力，出发冒险</div>
   </div>
   <div class="scroll-area">
+    <!-- 诊所治疗入口（HP < maxHp 且有错题时显示） -->
+    <div id="heal-entry" style="display:none;padding:0 0 12px">
+      <div onclick="enterHeal()" style="
+        background:linear-gradient(135deg,rgba(16,185,129,0.18),rgba(52,211,153,0.1));
+        border:1.5px solid rgba(52,211,153,0.35);border-radius:18px;
+        padding:14px 16px;cursor:pointer;
+        display:flex;align-items:center;gap:14px;
+        transition:all .15s;
+      ">
+        <div style="font-size:40px;line-height:1">🏥</div>
+        <div style="flex:1">
+          <div style="font-family:'Fredoka One','Noto Sans SC',cursive;font-size:18px;color:#6ee7b7;margin-bottom:3px">诊所治疗</div>
+          <div id="heal-entry-desc" style="font-size:12px;color:rgba(110,231,183,0.65)">重温错题，恢复宠物HP</div>
+        </div>
+        <div style="font-size:22px;color:rgba(110,231,183,0.5)">›</div>
+      </div>
+    </div>
     <div class="dg-cards" id="dungeon-list"></div>
     <div class="tab-placeholder"></div>
   </div>
@@ -1517,6 +1534,183 @@ body{
 }
 </style>
 
+<!-- ══════ HEAL PAGE ══════ -->
+<style>
+/* ── HEAL PAGE ── */
+#heal-page{
+  background:radial-gradient(ellipse at 50% 20%, #0a2a1a 0%, #0a1225 60%, #0f0a1e 100%);
+}
+#heal-page.active{display:flex;flex-direction:column}
+.heal-wrap{
+  height:100vh;display:flex;flex-direction:column;
+  padding:10px 14px 12px;box-sizing:border-box;
+}
+/* 顶部标题栏 */
+.heal-topbar{
+  display:flex;align-items:center;gap:10px;
+  padding-bottom:8px;flex-shrink:0;
+}
+.heal-back-btn{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;padding:6px 12px;color:rgba(255,255,255,0.7);
+  font-size:13px;cursor:pointer;font-family:'Noto Sans SC',-apple-system,sans-serif;
+}
+.heal-title{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:20px;color:#fff;flex:1;
+  background:linear-gradient(90deg,#34d399,#6ee7b7);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.heal-hp-badge{
+  font-size:13px;color:#6ee7b7;font-weight:700;
+  background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);
+  border-radius:10px;padding:4px 10px;
+}
+/* 战斗演示区（护士 + 宠物） */
+.heal-arena{
+  position:relative;flex-shrink:0;height:180px;
+  background:linear-gradient(180deg,rgba(10,42,26,0) 0%,rgba(10,20,50,0.5) 55%,rgba(8,18,8,0.7) 100%);
+  border-radius:20px;overflow:visible;
+  margin-bottom:10px;
+}
+/* 护士（左侧） */
+.heal-nurse{
+  position:absolute;left:8%;top:10%;
+  font-size:64px;line-height:1;
+  animation:mFloat 3.5s ease-in-out infinite;
+  filter:drop-shadow(0 4px 12px rgba(52,211,153,0.4));
+}
+/* 宠物（右侧，与battle页player-sprite对称） */
+.heal-pet-wrap{
+  position:absolute;right:10%;bottom:12%;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.heal-pet-svg{
+  width:56px;height:56px;
+}
+/* HP 恢复进度条 */
+.heal-hp-row{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(0,0,0,0.25);border-radius:8px;padding:4px 8px;
+}
+.heal-hp-bar-bg{
+  width:80px;height:7px;background:rgba(255,255,255,0.12);border-radius:4px;overflow:hidden;
+}
+.heal-hp-bar-fill{
+  height:100%;background:linear-gradient(90deg,#34d399,#6ee7b7);
+  border-radius:4px;transition:width .5s ease;
+}
+.heal-hp-txt{ font-size:11px;color:#6ee7b7;font-weight:700;min-width:46px;text-align:right;}
+/* 治疗效果提示 */
+.heal-hint{
+  text-align:center;font-size:12px;color:rgba(110,231,183,0.7);
+  flex-shrink:0;margin-bottom:6px;
+}
+/* 答题卡 */
+.heal-q-card{
+  background:rgba(52,211,153,0.07);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(52,211,153,0.18);
+  border-radius:14px;
+  padding:10px 14px 8px;margin-bottom:8px;
+  text-align:center;flex-shrink:0;
+}
+.heal-q-cn{
+  font-family:'Fredoka One','Noto Sans SC',cursive;
+  font-size:26px;color:#fff;
+  text-shadow:0 0 20px rgba(52,211,153,0.5);
+  line-height:1.2;
+}
+.heal-q-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px}
+/* 选项区 */
+.heal-opts-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px;flex:1;max-height:160px;
+}
+.heal-opt-btn{
+  background:rgba(52,211,153,0.07);
+  backdrop-filter:blur(8px);
+  border:1.5px solid rgba(52,211,153,0.15);
+  border-radius:12px;padding:6px 6px;
+  font-family:'Noto Sans SC',-apple-system,sans-serif;
+  font-size:14px;font-weight:700;color:#fff;cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  min-height:44px;
+  position:relative;overflow:hidden;
+}
+.heal-opt-btn:active{transform:scale(0.95)}
+.heal-opt-btn:disabled{cursor:not-allowed}
+.heal-opt-btn.correct{
+  background:rgba(16,185,129,0.25);border-color:#10b981;color:#6ee7b7;
+  animation:optCorrect .3s ease;
+}
+.heal-opt-btn.wrong{
+  background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#fca5a5;
+  animation:optWrong .4s ease;
+}
+/* HP回复动画 */
+@keyframes healHpFlash{
+  0%{background:rgba(52,211,153,0.3)}
+  100%{background:rgba(52,211,153,0.07)}
+}
+.heal-q-card.heal-flash{ animation:healHpFlash .6s ease; }
+/* 无错题空态 */
+.heal-empty{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  color:rgba(255,255,255,0.4);font-size:14px;
+}
+.heal-empty-ico{font-size:52px;}
+</style>
+<div id="heal-page" class="page">
+  <div class="heal-wrap">
+    <!-- 顶部 -->
+    <div class="heal-topbar">
+      <button class="heal-back-btn" onclick="leaveHeal()">← 返回</button>
+      <div class="heal-title">🏥 诊所治疗</div>
+      <div class="heal-hp-badge" id="heal-hp-badge">❤️ 100/100</div>
+    </div>
+    <!-- 演示区 -->
+    <div class="heal-arena">
+      <div class="heal-nurse" id="heal-nurse">👩‍⚕️</div>
+      <div class="heal-pet-wrap">
+        <svg class="heal-pet-svg" id="heal-pet-svg" viewBox="0 0 100 100"></svg>
+        <div class="heal-hp-row">
+          <div class="heal-hp-bar-bg">
+            <div class="heal-hp-bar-fill" id="heal-hp-bar" style="width:100%"></div>
+          </div>
+          <div class="heal-hp-txt" id="heal-hp-txt">100/100</div>
+        </div>
+      </div>
+    </div>
+    <!-- 提示文字 -->
+    <div class="heal-hint" id="heal-hint">💊 重温错题，每答对一题恢复 <strong>+15 HP</strong></div>
+    <!-- 答题区（切换显示/隐藏） -->
+    <div id="heal-quiz-area" style="display:flex;flex-direction:column;flex:1;min-height:0;">
+      <div class="heal-q-card" id="heal-q-card">
+        <div class="heal-q-cn" id="heal-q-cn">—</div>
+        <div class="heal-q-sub" id="heal-q-sub">选出正确的英文单词</div>
+      </div>
+      <div class="heal-opts-grid" id="heal-opts-grid">
+        <button class="heal-opt-btn" id="hopt0" onclick="selectHealOption(0)"></button>
+        <button class="heal-opt-btn" id="hopt1" onclick="selectHealOption(1)"></button>
+        <button class="heal-opt-btn" id="hopt2" onclick="selectHealOption(2)"></button>
+        <button class="heal-opt-btn" id="hopt3" onclick="selectHealOption(3)"></button>
+      </div>
+    </div>
+    <!-- 无错题空态 -->
+    <div id="heal-empty-area" style="display:none;flex:1">
+      <div class="heal-empty">
+        <div class="heal-empty-ico">🌟</div>
+        <div>你还没有答错的题目！</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.25)">先去战斗，答错的单词会在这里出现</div>
+        <button class="btn btn-gold" style="margin-top:12px" onclick="leaveHeal()">去冒险</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══════ RESULT PAGE ══════ -->
 <div id="result-page" class="page">
   <div class="res-burst" id="res-burst">🏆</div>
@@ -2080,6 +2274,7 @@ const DEFAULT = {
   evoStage:0,
   feverTriggered:false,
   hpRegenStart:0,   // 失败后HP开始恢复的时间戳（0=不需要恢复）
+  wrongWords:[],    // 答错过的单词列表（用于治疗复习）
   settings:{ sound:true }
 };
 let gd = JSON.parse(JSON.stringify(DEFAULT));
@@ -2544,6 +2739,23 @@ function spawnEmote(wrap, emoji){
    副本站
 ══════════════════════════════════════════════════ */
 function buildDungeonList(){
+  // 更新治疗诊所入口
+  const healEntry = document.getElementById('heal-entry');
+  const healDesc  = document.getElementById('heal-entry-desc');
+  if(healEntry){
+    const hasWrong = gd.wrongWords && gd.wrongWords.length > 0;
+    const hpNotFull = gd.hp < gd.maxHp;
+    healEntry.style.display = (hasWrong || hpNotFull) ? 'block' : 'none';
+    if(healDesc){
+      const cnt = gd.wrongWords ? gd.wrongWords.length : 0;
+      if(cnt > 0){
+        healDesc.textContent = `${cnt} 道错题待复习 · 答对一题回 +15 HP（当前 HP: ${gd.hp}/${gd.maxHp}）`;
+      } else {
+        healDesc.textContent = `HP 未满，点击互动或入诊所治疗（当前 HP: ${gd.hp}/${gd.maxHp}）`;
+      }
+    }
+  }
+
   const el=document.getElementById('dungeon-list');
   el.innerHTML=DUNGEON_CONFIGS.map(d=>`
     <div class="dg-card" onclick="enterDungeon('${d.id}')">
@@ -3101,7 +3313,7 @@ function returnToMap(win, exp, coins, correctCount){
   if(win){
     emoji.textContent = '🏆';
     title.textContent = '胜利！'; title.className = 'map-rt-title win';
-    stats.innerHTML = `答对 <span>${correctCount}</span> 题 &nbsp;·&nbsp; +<span>${exp}</span> EXP &nbsp;·&nbsp; +<span>${coins}</span> 🪙`;
+    stats.innerHTML = `答对 <span>${correctCount}</span> 题 &nbsp;·&nbsp; +<span>${exp}</span> EXP &nbsp;·&nbsp; +<span>${coins}</span> 🪙 &nbsp;·&nbsp; ❤️ 剩余 <span>${gd.hp}/${gd.maxHp}</span>`;
   } else {
     emoji.textContent = '💔';
     title.textContent = '失败…'; title.className = 'map-rt-title lose';
@@ -3253,6 +3465,12 @@ function selectOption(idx){
     document.getElementById('opt'+idx).classList.add('wrong');
     for(let i=0;i<4;i++) if(curOpts[i].en===curQ.en) document.getElementById('opt'+i).classList.add('correct');
     bs.combo=0;
+    // 答错：记录到错题本（去重，最多保留 100 条）
+    if(!gd.wrongWords) gd.wrongWords=[];
+    if(!gd.wrongWords.find(w=>w.en===curQ.en)){
+      gd.wrongWords.push({en:curQ.en, cn:curQ.cn});
+      if(gd.wrongWords.length>100) gd.wrongWords.shift(); // 超出上限移除最旧的
+    }
     // 答错立即受到一次怪物攻击（额外惩罚，不受减伤）
     const petDef = getCurrentEvoData()?.def || 5;
     let wrongPen = Math.max(1, (bs.monsterAtk||10) - petDef);
@@ -3590,9 +3808,15 @@ function endBattle(win){
     let leveled=false;
     while(gd.exp>=50){ gd.exp-=50; gd.level++; gd.maxHp+=10; gd.hp=gd.maxHp; taskProgress('levelup',1); leveled=true; }
     if(leveled) showLevelUpToast();
-    // 胜利：无论战斗中受了多少伤，战后满血复活
-    gd.hp = gd.maxHp;
-    stopHpRegen(); // 确保恢复计时器不在运行
+    // 胜利：保留战斗结束时的实际HP，不自动满血
+    gd.hp = bs.playerHp;
+    // 若HP未满，启动缓慢恢复（鼓励玩家去治疗复习）
+    if(gd.hp < gd.maxHp){
+      if(!gd.hpRegenStart) gd.hpRegenStart = Date.now();
+      startHpRegen();
+    } else {
+      stopHpRegen();
+    }
   } else {
     // 失败：HP 归零，开始缓慢恢复计时
     gd.hp = 0;
@@ -3618,7 +3842,117 @@ function endBattle(win){
 }
 function backToHome(){ updateHomeUI(); tab('home'); }
 
-function showLevelUpToast(){
+/* ══════════════════════════════════════════════════
+   治疗系统（诊所 heal-page）
+══════════════════════════════════════════════════ */
+const HEAL_HP_PER_Q = 15; // 每题答对恢复HP量
+let healQ = null;         // 当前治疗题目
+let healOpts = [];        // 当前治疗选项
+let healAnswering = false;
+
+function enterHeal(){
+  if(gd.petIndex < 0){ showModal('🥚','先孵化宠物','请先选择并孵化宠物蛋！'); return; }
+  // 初始化界面
+  const curEvo = getCurrentEvoData();
+  setPetSvg(document.getElementById('heal-pet-svg'), curEvo.key);
+  updateHealUI();
+  if(!gd.wrongWords || gd.wrongWords.length === 0){
+    // 无错题：显示空态
+    document.getElementById('heal-quiz-area').style.display = 'none';
+    document.getElementById('heal-empty-area').style.display = 'flex';
+  } else {
+    document.getElementById('heal-quiz-area').style.display = 'flex';
+    document.getElementById('heal-empty-area').style.display = 'none';
+    nextHealQ();
+  }
+  go('heal-page');
+}
+
+function leaveHeal(){
+  saveGame();
+  buildDungeonList();
+  tab('dungeon');
+}
+
+function updateHealUI(){
+  const hp = gd.hp, maxHp = gd.maxHp;
+  const pct = maxHp > 0 ? Math.min(100, Math.round(hp/maxHp*100)) : 0;
+  document.getElementById('heal-hp-badge').textContent = `❤️ ${hp}/${maxHp}`;
+  document.getElementById('heal-hp-bar').style.width = pct + '%';
+  document.getElementById('heal-hp-txt').textContent  = `${hp}/${maxHp}`;
+  if(hp >= maxHp){
+    document.getElementById('heal-hint').innerHTML = '🌟 HP 已满！宠物精神满满，可以出发冒险了！';
+  } else {
+    document.getElementById('heal-hint').innerHTML = `💊 重温错题，每答对一题恢复 <strong>+${HEAL_HP_PER_Q} HP</strong>`;
+  }
+}
+
+function nextHealQ(){
+  healAnswering = false;
+  if(!gd.wrongWords || gd.wrongWords.length === 0){
+    // 错题清空了：切换到空态
+    document.getElementById('heal-quiz-area').style.display = 'none';
+    document.getElementById('heal-empty-area').style.display = 'flex';
+    return;
+  }
+  // 从错题池随机取一题
+  const pool = gd.wrongWords;
+  const correct = pool[Math.floor(Math.random() * pool.length)];
+
+  // 干扰项：从所有单词库里取不同单词
+  const allWords = Object.values(WORDBANK).flatMap(b=>b.words);
+  const distractors = allWords
+    .filter(w => w.en !== correct.en)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
+  healOpts = [...distractors, correct].sort(() => Math.random() - 0.5);
+  healQ = correct;
+
+  document.getElementById('heal-q-cn').textContent = correct.cn;
+  for(let i=0;i<4;i++){
+    const btn = document.getElementById('hopt'+i);
+    btn.textContent = healOpts[i].en;
+    btn.className = 'heal-opt-btn';
+    btn.disabled = false;
+  }
+}
+
+function selectHealOption(idx){
+  if(healAnswering || !healQ) return;
+  healAnswering = true;
+  for(let i=0;i<4;i++) document.getElementById('hopt'+i).disabled = true;
+
+  const chosen = healOpts[idx];
+  const ok = chosen.en === healQ.en;
+  if(ok){
+    document.getElementById('hopt'+idx).classList.add('correct');
+    // 答对：回血 + 从错题本移除
+    const heal = Math.min(HEAL_HP_PER_Q, gd.maxHp - gd.hp);
+    if(heal > 0) gd.hp = Math.min(gd.hp + heal, gd.maxHp);
+    if(gd.hp >= gd.maxHp){ gd.hpRegenStart = 0; stopHpRegen(); }
+    // 从错题本移除（已掌握）
+    gd.wrongWords = gd.wrongWords.filter(w => w.en !== healQ.en);
+    // 闪光动画
+    const card = document.getElementById('heal-q-card');
+    card.classList.remove('heal-flash');
+    void card.offsetWidth;
+    card.classList.add('heal-flash');
+    playBeep(660, 0.08, 'square');
+    setTimeout(()=>playBeep(880, 0.06, 'sine'), 80);
+    saveGame();
+    updateHealUI();
+    setTimeout(()=>nextHealQ(), 800);
+  } else {
+    document.getElementById('hopt'+idx).classList.add('wrong');
+    // 答错：高亮正确答案
+    for(let i=0;i<4;i++) if(healOpts[i].en === healQ.en) document.getElementById('hopt'+i).classList.add('correct');
+    playBeep(220, 0.1, 'sawtooth');
+    // 错了不移除题目、不减血，再出一题（重新随机，不一定是同一道）
+    setTimeout(()=>nextHealQ(), 1000);
+  }
+}
+
+
   const t=document.createElement('div');
   t.className='levelup-toast';
   t.textContent=`🎉 升级！Lv.${gd.level}`;
@@ -3951,7 +4285,7 @@ function updateMineUI(){
 }
 function toggleSound(){ gd.settings.sound=!gd.settings.sound; saveGame(); updateMineUI(); }
 function showAbout(){
-  showModal('🐾','WordPet v1.2.2','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.2.2 修复：\n• 蓄力条彻底修复，移至怪物脚下正常显示\n• 战场高度增加（160→200px），演示空间更充裕\n• 答题区整体压缩，界面不再拥挤\n\n✨ v1.2.0 更新：\n• 怪物持续蓄力，不被答题打断\n• Fever 模式怪物攻击减缓\n• HP 与精力概念分离\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败后缓慢恢复，回首页互动可加速。\n\n© 2026 WordPet');
+  showModal('🐾','WordPet v1.3.0','背单词 · 养宠物 · 打副本\n\n用对战的方式学英语！\n选择宠物伙伴，挑战副本，\n在战斗中积累词汇量。\n\n✨ v1.3.0 更新：\n• 战后HP不回满，保留实际剩余血量\n• 新增诊所治疗：重温错题回血，学习形成闭环！\n• 错题自动记录，掌握后从本移除\n\n✨ v1.2.x 更新：\n• 怪物持续蓄力、Fever模式降缓\n• 蓄力条位置修复、战场UI重布局\n• HP 与精力概念分离\n\n⚡ 精力每5分钟自动恢复1点（防沉迷机制）。\n❤️ 宠物 HP 战败/受伤后缓慢恢复，互动或治疗可加速。\n\n© 2026 WordPet');
 }
 function confirmReset(){
   if(confirm('确定重置存档？所有进度将清空。')){ localStorage.removeItem('wg2_save'); location.reload(); }
