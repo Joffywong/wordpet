@@ -2628,7 +2628,6 @@ function showUnlockCondition(idx){
   const msg = `解锁 ${p.name} 需要：\n• 达到 Lv.${unlockLv}`;
   showModal('🔒','宠物未解锁',msg);
 }
-}
 function selectPet(idx){
   selectedPet=idx;
   document.querySelectorAll('.pet-card').forEach((c,i)=>c.classList.toggle('selected',i===idx));
