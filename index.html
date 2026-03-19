@@ -826,8 +826,19 @@ body{
   align-self:flex-start;font-size:11px;font-weight:700;
   padding:3px 8px;border-radius:10px;
 }
-.dex-badge-current{background:#10b981;color:#fff}
+.dex-badge-current{background:#10b981;color:#fff;box-shadow:0 0 10px rgba(16,185,129,0.4)}
+.dex-badge-owned{background:#7c3aed;color:#fff}
 .dex-badge-locked{background:rgba(241,240,255,0.15);color:rgba(241,240,255,0.5)}
+
+/* 当前出战宠物卡片高亮 */
+.dex-pet-card.current{
+  border:2px solid #10b981;
+  box-shadow:0 0 20px rgba(16,185,129,0.3),inset 0 0 20px rgba(16,185,129,0.05);
+  background:rgba(16,185,129,0.08);
+}
+.dex-pet-card.current .dex-pet-art{
+  background:radial-gradient(circle,rgba(16,185,129,0.2),transparent 70%);
+}
 .dex-pet-desc{font-size:11px;color:rgba(241,240,255,0.4);line-height:1.4}
 
 /* ══════ HOME PAGE ══════ */
@@ -3038,15 +3049,86 @@ let selectedPet = -1;
    宠物图鉴系统
 ══════════════════════════════════════════════════ */
 function showPetDex(){
-  // 如果还没有宠物（首次进入），显示选蛋页面
-  if(gd.petIndex < 0){
-    tab('select');
-    buildFirstSelectPage();
-  } else {
-    // 有宠物：显示图鉴
-    buildDexPage();
-    tab('select');
+  // 显示宠物选择/图鉴页面
+  buildPetSelectPage();
+  go('select-page');
+}
+
+// 构建宠物选择页面（简单版本）
+function buildPetSelectPage(){
+  const list = document.getElementById('pet-list');
+  const unlocked = gd.pets || [];
+  
+  // 更新标题计数
+  document.getElementById('dex-count').textContent = `${unlocked.length}/${PET_CONFIGS.length}`;
+  
+  // 渲染宠物列表
+  list.innerHTML = PET_CONFIGS.map((p, i) => {
+    const isUnlocked = unlocked.some(u => u.petKey === p.key);
+    const isCurrent = gd.petIndex >= 0 && gd.petKey === p.key;
+    
+    // 获取宠物当前进化阶段的SVG
+    let svgKey = p.key;
+    if (isUnlocked) {
+      const petData = unlocked.find(u => u.petKey === p.key);
+      const evoStage = petData ? petData.evoStage : 0;
+      const evoData = p.evolutions[evoStage] || p.evolutions[0];
+      svgKey = evoData.key;
+    } else {
+      // 未解锁显示蛋
+      svgKey = `egg_${p.key}`;
+    }
+    
+    return `
+    <div class="dex-pet-card ${isCurrent ? 'current' : ''} ${!isUnlocked ? 'locked' : ''}" 
+         onclick="${isUnlocked ? `switchToPet('${p.key}')` : `showLockedPet('${p.name}')`}">
+      <div class="dex-pet-art">
+        <svg class="dex-pet-svg" viewBox="0 0 100 100">${_uniquifySvg(SVG_PETS[svgKey] || SVG_PETS[p.key], ++_svgUid)}</svg>
+      </div>
+      <div class="dex-pet-name">${p.name}</div>
+      <div class="dex-pet-badge ${isUnlocked ? (isCurrent ? 'dex-badge-current' : 'dex-badge-owned') : 'dex-badge-locked'}">
+        ${isUnlocked ? (isCurrent ? '当前出战' : '已拥有') : '未解锁'}
+      </div>
+      <div class="dex-pet-desc">${isUnlocked ? '点击切换' : p.desc}</div>
+    </div>`;
+  }).join('');
+}
+
+// 切换到指定宠物
+function switchToPet(petKey){
+  if (gd.petKey === petKey) {
+    showModal('🐾', '已是当前宠物', `${getPetName(petKey)} 已经在出战状态！`);
+    return;
   }
+  
+  const petIndex = PET_CONFIGS.findIndex(p => p.key === petKey);
+  const petData = gd.pets.find(p => p.petKey === petKey);
+  
+  if (petIndex >= 0 && petData) {
+    gd.petIndex = petIndex;
+    gd.petKey = petKey;
+    gd.evoStage = petData.evoStage;
+    gd.level = petData.level;
+    gd.exp = petData.exp;
+    gd.hp = petData.hp;
+    gd.maxHp = petData.maxHp;
+    
+    saveGame();
+    buildPetSelectPage(); // 刷新列表状态
+    updateHomeUI(); // 更新首页
+    showModal('✨', '切换成功', `${PET_CONFIGS[petIndex].name} 已成为当前出战宠物！`);
+  }
+}
+
+// 显示未解锁宠物提示
+function showLockedPet(petName){
+  showModal('🔒', '宠物未解锁', `${petName} 还未解锁，继续冒险收集更多宠物吧！`);
+}
+
+// 获取宠物名称
+function getPetName(petKey){
+  const pet = PET_CONFIGS.find(p => p.key === petKey);
+  return pet ? pet.name : petKey;
 }
 function buildFirstSelectPage(){
   // 首次选蛋（保持原有逻辑）
